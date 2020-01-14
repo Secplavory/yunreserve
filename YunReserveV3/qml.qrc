@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>img/channel/01-01.jpg</file>
+        <file>img/channel/02-01.jpg</file>
+        <file>img/channel/03-01.jpg</file>
+        <file>img/channel/04-01.jpg</file>
+        <file>img/channel/05-01.jpg</file>
+        <file>img/channel/06-01.jpg</file>
+        <file>img/channel/07-01.jpg</file>
+        <file>img/channel/08-01.jpg</file>
+        <file>img/channel/09-01.jpg</file>
+        <file>img/channel/10-01.jpg</file>
+        <file>img/channel/11-01.jpg</file>
+        <file>img/channel/12-01.jpg</file>
+        <file>img/channel/13-01.jpg</file>
+        <file>img/channel/14-01.jpg</file>
+        <file>img/channel/15-01.jpg</file>
+        <file>img/alreadyhave_button.png</file>
+        <file>img/background.jpg</file>
+        <file>img/flavored-ddns.png</file>
+        <file>img/loading.gif</file>
+        <file>img/purchaseButton.jpg</file>
+        <file>img/signup_button.png</file>
+        <file>img/uploadButton.jpg</file>
+        <file>img/uploadnow_button.png</file>
+        <file>img/welcome.jpg</file>
+    </qresource>
+</RCC>
