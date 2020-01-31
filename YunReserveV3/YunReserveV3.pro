@@ -1,9 +1,8 @@
-QT += quick virtualkeyboard sql
+QT += quick virtualkeyboard sql xml
 
 
 CONFIG += c++11
 #CONFIG += qzxing_qml
-
 #include(QZXing/QZXing.pri)
 
 # The following define makes your compiler emit warnings if you use
@@ -20,11 +19,11 @@ SOURCES += \
         controlchannel.cpp \
         database.cpp \
         main.cpp \
-        postxml.cpp \
         qrcode_generater/BitBuffer.cpp \
         qrcode_generater/QrCode.cpp \
         qrcode_generater/QrSegment.cpp \
-        redirect.cpp
+        redirect.cpp \
+        verifyuser.cpp
 
 RESOURCES += qml.qrc
 
@@ -42,18 +41,21 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     controlchannel.h \
     database.h \
-    postxml.h \
     qrcode_generater/BitBuffer.hpp \
     qrcode_generater/QrCode.hpp \
     qrcode_generater/QrSegment.hpp \
-    redirect.h
+    redirect.h \
+    verifyuser.h
 
 #INCLUDEPATH += $$PWD/cppconn
 
 
-DISTFILES += \
+DISTFILES += \ \
+    C:/Qt/5.12.3/mingw73_64/mkspecs/modules/qt_lib_virtualkeyboard.pri
 
 
-SUBDIRS += \
+SUBDIRS += \ \
+    C:/Qt/Examples/Qt-5.12.3/virtualkeyboard/basic/basic.pro \
+    C:/Qt/Examples/Qt-5.12.3/virtualkeyboard/virtualkeyboard.pro
 
 

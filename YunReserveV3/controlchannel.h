@@ -18,8 +18,8 @@ public:
 
 
 public slots:
-    void openChannel(int i);
-
+    bool openChannel(int i);
+    bool checkStatus();
 private:
 
 };

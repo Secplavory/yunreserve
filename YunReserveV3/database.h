@@ -67,6 +67,11 @@ public:
     void setQRcode(QString st, int ch=0);
 
     void setVisible(QString st);
+    int signupUSER(QString acc, QString pwd, QString bankACC, QString email, QString verifyCode);
+    int verifyUSER(QString acc, QString pwd);
+
+    int check_payment(QString currentCh);
+    void transferTOhistory(QString currentCh);
 signals:
     void ch1StateChanged();
     void ch2StateChanged();
@@ -89,15 +94,13 @@ public slots:
     void check();
     void whichSeleted(int i);
     void upload_whichSeleted(int i);
-    void uploadGood(QString item,QString price,QString remark);
-    void pricePayed(QString currentCh);
-    void isPricePayed();
+    bool uploadGood(QString item,QString price,QString remark, QString userACC,QString box_ch);
+//    void pricePayed(QString currentCh);
 private:
     QString state;
     QString QRcodeSRC;
     QString buy_whichCH;
     QString upload_whichCH;
-
 };
 
 #endif // DATABASECONNECTOR_H

@@ -206,6 +206,9 @@ void database::setChannelVisible(QString st,int ch){
 }
 
 int database::signupUSER(QString acc, QString pwd, QString bankACC, QString email, QString verifyCode){
+    if()
+    
+    
     QSqlDatabase sql = QSqlDatabase::addDatabase("QMYSQL");
     sql.setHostName("127.0.0.1");
     sql.setUserName("root");

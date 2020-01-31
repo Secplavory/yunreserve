@@ -2,7 +2,7 @@
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.2
 import QtQuick.VirtualKeyboard 2.3 //打包需要將qtQuick/virtualkeyboard 和 Qt5VirtualKeyboard加入
-//import QtQuick.virtualkeyboard.setting 2.3
+import QtQuick.VirtualKeyboard.Settings 2.0
 
 //import QZXing 2.3
 
@@ -15,6 +15,12 @@ Window {
     //    width: Screen.width + 1
     //    height: Screen.height + 1
     title: qsTr("新生文創")
+    BusyIndicator {
+        id: busyIndicator
+        x: 934
+        y: 691
+    }
+
 
     Image{
         id: welcome
@@ -120,7 +126,7 @@ Window {
             height: 120
             visible: true
 
-            source: "img/uploadButton.jpg"
+            source: "img/uploadButton.png"
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
@@ -136,6 +142,7 @@ Window {
 
     Image{
         id: chosechannel
+        visible: true
         anchors.fill: parent
         state: redirect.chosechannelVisible
         source: "img/background.jpg"
@@ -203,7 +210,7 @@ Window {
                     timer_button.stop();
                     database.whichSeleted(1);
                     redirect.toDisplayPrice(1);
-//                    timer_checkPayment.start();
+                    timer_checkPayment.start();
                     timer_button.start();
                 }
             }
@@ -241,9 +248,8 @@ Window {
                 onClicked: {
                     timer_button.stop();
                     database.whichSeleted(2);
-                    redirect.toDisplayPrice();                    timer_checkPayment.start();
-//                    timer_checkPayment.start();
-
+                    redirect.toDisplayPrice(2);
+                    timer_checkPayment.start();
                     timer_button.start();
                 }
             }
@@ -281,9 +287,8 @@ Window {
                 onClicked: {
                     timer_button.stop();
                     database.whichSeleted(3);
-                    redirect.toDisplayPrice();                    timer_checkPayment.start();
-//                    timer_checkPayment.start();
-
+                    redirect.toDisplayPrice(3);
+                    timer_checkPayment.start();
                     timer_button.start();
                 }
             }
@@ -587,6 +592,43 @@ Window {
             }
         }
 
+        Rectangle {
+            id: backtochooseBandSrectangle
+            x: 531
+            y: 701
+            width: 262
+            height: 91
+            color: "#ffffff"
+
+            Text {
+                width: 262
+                height: 91
+                text: qsTr("回上一頁")
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: 60
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    timer_button.stop();
+                    redirect.backtowelcomeNext();
+                    timer_button.start();
+                }
+            }
+        }
+
+        Timer{
+            id: timer_checkPayment
+            interval: 2500
+            repeat: true
+            running: false
+            triggeredOnStart: false
+            onTriggered: {
+                redirect.isPricePayed();
+            }
+        }
     }
     Image {
         id: displayPrice
@@ -625,46 +667,50 @@ Window {
 
         Image {
             id: qrcode
-            x: 362
-            y: 331
-//            source: "image://QZXing/encode/" + database.QRcode +
-//                    "?correctionLevel=M" +
-//                    "&format=qrcode"
-//            Connections{
-//                target:CodeImage
-//                onCallQmlRefeshImg:{
-//                    console.log("onCallQmlRefeshImg被呼叫")
-//                    img.source=""
-//                    img.source="image://CodeImg"
+            x: 715
+            y: 449
+            width: 200
+            height: 200
+            opacity: 1
+            source: "image://colors/"+database.QRcode
+            sourceSize.width: 200
+            sourceSize.height: 200
+//            MouseArea{
+//                anchors.fill: parent
+//                onClicked: {
+//                    timer_button.stop();
+//                    redirect.isPricePayed();
+//                    timer_button.start();
 //                }
 //            }
-            source: "image://colors/"+database.QRcode
+        }
 
-            sourceSize.width: 320
-            sourceSize.height: 320
-            MouseArea{
+        Rectangle {
+            id: backtochoosechannel
+            x: 715
+            y: 721
+            width: 200
+            height: 71
+            color: "#ffffff"
+
+            Text {
+                text: qsTr("回上一頁")
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.fill: parent
+                font.pixelSize: 48
+            }
+
+            MouseArea {
                 anchors.fill: parent
                 onClicked: {
                     timer_button.stop();
-//                    timer_checkPayment.stop();
-//                    database.pricePayed();
-                    redirect.isPricePayed();
-//                    redirect.pricePayed();
+                    redirect.backtochoosechannel();
                     timer_button.start();
                 }
             }
         }
 
-    }
-    Timer{
-        id: timer_checkPayment
-        interval: 2500
-        repeat: true
-        running: false
-        triggeredOnStart: true
-        onTriggered: {
-            database.isPricePayed();
-        }
     }
 
     Image {
@@ -701,6 +747,9 @@ Window {
                 }
             }
         ]
+        onStateChanged: {
+            timer_checkPayment.stop();
+        }
     }
 
 
@@ -711,7 +760,7 @@ Window {
         anchors.fill: parent
         state: redirect.signupORsigninVisible
         source: "img/background.jpg"
-        opacity: 0
+        opacity: 1
         enabled: false
 
         states: [
@@ -745,8 +794,8 @@ Window {
 
         Image {
             id: signinButton
-            x: 277
-            y: 262
+            x: 283
+            y: 122
             width: 150
             height: 100
             source: "img/alreadyhave_button.png"
@@ -762,8 +811,8 @@ Window {
         }
         Image {
             id: signupButton
-            x: 604
-            y: 262
+            x: 610
+            y: 122
             width: 150
             height: 100
             source: "img/signup_button.png"
@@ -812,15 +861,25 @@ Window {
                 }
             ]
             Text {
-                id: accForSignin
-                x: 154
-                y: 33
-                text: qsTr("學號")
+                id: notverifiedText
+                x: 247
+                y: -8
+                text: redirect.notverifyText
+                color: "#FF0000"
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 font.pixelSize: 30
             }
 
+            Text {
+                id: accForSignin
+                x: 154
+                y: 33
+                text: qsTr("帳號")
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: 30
+            }
             Text {
                 id: pwdForSignin
                 x: 154
@@ -830,7 +889,6 @@ Window {
                 horizontalAlignment: Text.AlignHCenter
                 font.pixelSize: 30
             }
-
             TextField {
                 id: accInputForSignin
                 x: 247
@@ -841,6 +899,11 @@ Window {
                     inputPanel.visible = true; //需要輸入，顯示鍵盤
                     timer_button.start();
                 }
+                onTextChanged: {
+                    timer_button.stop();
+                    timer_button.start();
+                }
+
             }
 
             TextField {
@@ -853,22 +916,34 @@ Window {
                     inputPanel.visible = true; //需要輸入，顯示鍵盤
                     timer_button.start();
                 }
+                onTextChanged: {
+                    timer_button.stop();
+                    timer_button.start();
+                }
             }
 
             Button {
                 id: submitForSignin
                 x: 478
                 y: 96
-                text: qsTr("送出")
+                text: qsTr("登入")
+                onClicked: {
+                    timer_button.stop()
+                    redirect.to_uploadCH(
+                                accInputForSignin.text
+                                ,pwdInputForSignin.text
+                                );
+                    timer_button.start()
+                }
             }
         }
 
         Item {
             id: itemForsignup
             x: 162
-            y: 340
+            y: 228
             width: 700
-            height: 432
+            height: 484
             state: redirect.toSignupVisible
             states: [
                 State {
@@ -898,10 +973,20 @@ Window {
                 }
             ]
             Text {
+                id: signupnotifyText
+                x: 224
+                y: 20
+                color: "#ff1515"
+                text: redirect.signupnotifyText
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: 30
+            }
+            Text {
                 id: accForsignup
-                x: 157
-                y: 30
-                text: qsTr("學號")
+                x: 129
+                y: 86
+                text: qsTr("設定帳號")
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 font.pixelSize: 30
@@ -910,8 +995,8 @@ Window {
 
             Text {
                 id: pwdForsignup
-                x: 127
-                y: 76
+                x: 129
+                y: 132
                 text: qsTr("設定密碼")
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
@@ -921,8 +1006,8 @@ Window {
 
             Text {
                 id: bankForsignup
-                x: 127
-                y: 122
+                x: 129
+                y: 178
                 text: qsTr("銀行帳號")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -931,8 +1016,8 @@ Window {
 
             Text {
                 id: emailForsignup
-                x: 130
-                y: 168
+                x: 132
+                y: 224
                 text: qsTr("電子郵件")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -941,62 +1026,80 @@ Window {
 
             TextField {
                 id: accInputForsignup
-                x: 280
-                y: 25
+                x: 282
+                y: 81
                 text: ""
                 onPressed: {
                     timer_button.stop();
                     inputPanel.visible = true; //需要輸入，顯示鍵盤
                     timer_button.start();
                 }
+                onTextChanged: {
+                    timer_button.stop();
+                    timer_button.start();
+                }
             }
             TextField {
                 id: pwdInputForsignup
-                x: 280
-                y: 71
+                x: 282
+                y: 127
                 onPressed: {
                     timer_button.stop();
                     inputPanel.visible = true; //需要輸入，顯示鍵盤
+                    timer_button.start();
+                }
+                onTextChanged: {
+                    timer_button.stop();
                     timer_button.start();
                 }
             }
 
             TextField {
                 id: bankInputForsignup
-                x: 280
-                y: 117
+                x: 282
+                y: 173
                 onPressed: {
                     timer_button.stop();
                     inputPanel.visible = true; //需要輸入，顯示鍵盤
                     timer_button.start();
                 }
+                onTextChanged: {
+                    timer_button.stop();
+                    timer_button.start();
+                }
             }
 
             TextField {
-                id: pwdInputForSignup
-                x: 280
-                y: 162
+                id: emailInputForSignup
+                x: 282
+                y: 218
                 onPressed: {
                     timer_button.stop();
                     inputPanel.visible = true; //需要輸入，顯示鍵盤
+                    timer_button.start();
+                }
+                onTextChanged: {
+                    timer_button.stop();
                     timer_button.start();
                 }
             }
 
             Button {
                 id: submitForSignup
-                x: 513
-                y: 163
-                text: qsTr("送出")
+                x: 515
+                y: 219
+                text: qsTr("註冊")
                 onClicked: {
-                    redirect.to_uploadCH();
+                    timer_button.stop();
+                    redirect.signup(
+                                accInputForsignup.text,
+                                pwdInputForsignup.text,
+                                bankInputForsignup.text,
+                                emailInputForSignup.text
+                                );
+                    timer_button.start();
                 }
             }
-
-
-
-
-
         }
     }
 
@@ -1049,7 +1152,7 @@ Window {
                 onClicked: {
                     timer_button.stop();
                     database.upload_whichSeleted(1);
-                    redirect.to_uploadInput();
+                    redirect.to_uploadInput(1);
                     timer_button.start();
                 }
             }
@@ -1086,7 +1189,7 @@ Window {
                 onClicked: {
                     timer_button.stop();
                     database.upload_whichSeleted(2);
-                    redirect.to_uploadInput();
+                    redirect.to_uploadInput(2);
                     timer_button.start();
                 }
             }
@@ -1123,7 +1226,7 @@ Window {
                 onClicked: {
                     timer_button.stop();
                     database.upload_whichSeleted(3);
-                    redirect.to_uploadInput();
+                    redirect.to_uploadInput(3);
                     timer_button.start();
                 }
             }
@@ -1489,7 +1592,10 @@ Window {
                 inputPanel.visible = true; //需要輸入，顯示鍵盤
                 timer_button.start();
             }
-
+            onTextChanged: {
+                timer_button.stop();
+                timer_button.start();
+            }
         }
 
         TextField {
@@ -1502,7 +1608,10 @@ Window {
                 inputPanel.visible = true; //需要輸入，顯示鍵盤
                 timer_button.start();
             }
-
+            onTextChanged: {
+                timer_button.stop();
+                timer_button.start();
+            }
         }
 
         TextField {
@@ -1515,20 +1624,21 @@ Window {
                 inputPanel.visible = true; //需要輸入，顯示鍵盤
                 timer_button.start();
             }
-
+            onTextChanged: {
+                timer_button.stop();
+                timer_button.start();
+            }
         }
 
         Button {
             id: submitForGood
             x: 647
             y: 455
-            text: qsTr("送出")
+            text: qsTr("上架商品")
             onClicked: {
                 timer_button.stop();
-                database.uploadGood(infoForGood_input.text,
-                                    priceForGood_input.text,
-                                    remarkForGood_input.text);
-                redirect.upload_finished();
+                redirect.uploadGood();
+                checkChennelStatus.start();
                 timer_button.start();
             }
         }
@@ -1559,7 +1669,76 @@ Window {
                 }
             }
         ]
-}
+
+    }
+
+    Timer{
+        id: checkChennelStatus
+        interval: 3000
+        repeat: true
+        running: false
+        triggeredOnStart: false
+        onTriggered: {
+            redirect.waitForUpload(
+                        infoForGood_input.text,
+                        priceForGood_input.text,
+                        remarkForGood_input.text
+                        );
+        }
+    }
+
+
+
+    Image {
+        id: uploading
+        anchors.fill: parent
+        state: redirect.uploadingVisible
+        source: "img/background.jpg"
+        opacity: 0
+        enabled: false
+
+        Text {
+            id: element
+            x: 285
+            y: 346
+            width: 454
+            height: 122
+            text: qsTr("請將物品放入，並關上蓋子")
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: 36
+        }
+        states: [
+            State {
+                name: "nextPage"
+                PropertyChanges {
+                    target: uploading
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "thisPage"
+                PropertyChanges {
+                    target: uploading
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+
+    }
+
+
 
     Image {
         id: uploadFinished
@@ -1595,15 +1774,12 @@ Window {
                 }
             }
         ]
-
-}
-
-
-
-
-
-
-
+        Connections{
+            onStateChanged:{
+                checkChennelStatus.stop();
+            }
+        }
+    }
 
     Item {
         id: forInputPanel
@@ -1625,299 +1801,32 @@ Window {
             onActiveChanged: {
                 if(!active) { visible = false; }
             }
+            Component.onCompleted: {
+                VirtualKeyboardSettings.activeLocales=["zh_TW","en_US"]
+            }
         }
     }
 
-
-
     Timer{
         id: timer_button
-        interval: 5000
+        interval: 10000
         repeat: false
         running: false
         triggeredOnStart: false
         onTriggered: {
             redirect.timeoutReset();
             timer_checkPayment.stop();
-        }
-    }
-    BusyIndicator {
-        id: busyIndicator
-        x: 934
-        y: 691
-    }
-
-
-
-
-
-
-    /*TextField {
-        anchors.top: parent.top
-        anchors.horizontalCenter: parent.horizontalCenter
-        onPressed: {
-            inputPanel.visible = true; //当选择输入框的时候才显示键盘
+            checkChennelStatus.stop();
         }
     }
 
-    Text {
-            text: qsTr("Hello world")
-            anchors.horizontalCenterOffset: 0
-            anchors.verticalCenterOffset: 1
-            anchors.centerIn: parent
-        }*/
-
-
-
-    /*Rectangle{
-        id: root
-        anchors.fill: parent
-        width: parent.width
-        height: parent.height
-        enabled: true
-        visible: true
-        transitions: [
-            Transition {
-                NumberAnimation {
-                    property: "opacity";
-                    easing.type: Easing.InOutQuad;
-                    duration: 1000;
-                }
-            }
-        ]
-
-        states: [
-            State {
-                name: "initial"
-                PropertyChanges {
-                    target: backGroundIMG
-                    opacity: 0
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: welcome
-                    opacity: 1
-                    enabled: true
-                }
-            },
-            State {
-                name: "displayBackGroundIMG"
-                PropertyChanges {
-                    target: welcome
-                    opacity: 0
-                    enabled: false
-                }
-                PropertyChanges {
-                    target: backGroundIMG
-                    opacity: 1
-                    enabled: true
-                }
-            }
-        ]
-
-        Image {
-            id: welcome
-            anchors.fill: parent
-            width: parent.width
-            height: parent.height
-            enabled: true
-            visible: true
-
-            source: "welcome.jpg"
-
-            NumberAnimation on opacity {
-            id: createAnimation
-            from: 1
-            to: 0
-            duration: 2000
-            onRunningChanged: {
-                if (!running) {
-                    welcome.destroy();
-                }
-            }
-        }
-
-            MouseArea{
-                id: welcomeDestroyButton
-                anchors.fill: parent
-                onClicked: {
-                    //gemini.begin()
-                    //connectMYSQL.begin()
-                    //welcomeDestroyButton.visible=false;
-                    //welcome.visible = false
-                    //welcomeDestroyButton.visible = false
-                    //root.state = "displayBackGroundIMG"
-                    //backGroundIMG.state = "start"
-                    //timer_button.start()
-                    //connectMYSQL.begin()
-                    fadeOut()
-                }
-            }
-        }
-        Image {
-            id: backGroundIMG
-            anchors.fill: parent
-            width: parent.width
-            height: parent.height
-            clip: false
-            source: "background.jpg"
-            state: "initial"
-            transitions: [
-                Transition {
-                    NumberAnimation {
-                        property: "opacity";
-                        easing.type: Easing.InOutQuad;
-                        duration: 1000;
-                    }
-                }
-            ]
-            states: [
-                State {
-                    name: "initial"
-                    PropertyChanges {
-                        target: purchaseORuploadWidget
-                        opacity: 0
-                        enabled: false
-                    }
-                    PropertyChanges {
-                        target: choseChannal
-                        opacity: 0
-                        enabled: false
-                    }
-                },
-                State {
-                    name: "start"
-                    PropertyChanges {
-                        target: choseChannal
-                        opacity: 0
-                        enabled: false
-                    }
-                    PropertyChanges {
-                        target: purchaseORuploadWidget
-                        opacity: 1
-                        enabled: true
-                    }
-                },
-                State {
-                    name: "toPurchase"
-                    PropertyChanges {
-                        target: purchaseORuploadWidget
-                        opacity: 0
-                        enabled: false
-                    }
-                    PropertyChanges {
-                        target: choseChannal
-                        opacity: 1
-                        enabled: true
-                    }
-                },
-                State {
-                    name: "itemINFO"
-                    PropertyChanges {
-                        target: purchaseORuploadWidget
-                        opacity: 0
-                        enabled: false
-                    }
-                    PropertyChanges {
-                        target: choseChannal
-                        opacity: 0
-                        enabled: false
-                    }
-                },
-                State {
-                    name: "toUpload"
-                    PropertyChanges {
-                        target: purchaseORuploadWidget
-                        opacity: 0
-                        enabled: false
-                    }
-                    PropertyChanges {
-                        target: choseChannal
-                        opacity: 0
-                        enabled: false
-                    }
-                }
-            ]
-
-            Item {
-                id: purchaseORuploadWidget
-                Image {
-                    id: purchaseIMG
-                    x: 180
-                    y: 300
-                    width: 160
-                    height: 120
-                    source: "purchaseButton.jpg"
-                    fillMode: Image.PreserveAspectFit
-                    MouseArea{
-                        id: toPerchaseButton
-                        anchors.fill: parent
-                        onClicked: {
-                            backGroundIMG.state = "toPurchase"
-                        }
-                    }
-                }
-                Image {
-                    id: uploadIMG
-                    x: 450
-                    y: 300
-                    width: 160
-                    height: 120
-                    source: "uploadButton.jpg"
-                    fillMode: Image.PreserveAspectFit
-                    MouseArea{
-                        id: toUploadButton
-                        anchors.fill: parent
-                        onClicked: {
-                            backGroundIMG.state = "toUpload"
-                        }
-                    }
-                }
-            }
-
-            Item {
-                id: choseChannal
-
-                Image {
-                    id: channal01
-                    x: 180
-                    y: 203
-                    width: 100
-                    height: 100
-                    source: "purchaseButton.jpg"
-                    fillMode: Image.PreserveAspectFit
-                    MouseArea{
-                        id: purchaseChannal01
-                        anchors.fill: parent
-                        onClicked: {
-                            backGroundIMG.state = "itemINFO"
-                        }
-                    }
-                }
-
-                Image {
-                    id: channal02
-                    x: 306
-                    y: 203
-                    width: 100
-                    height: 100
-                    source: "purchaseButton.jpg"
-                    fillMode: Image.PreserveAspectFit
-                }
-
-
-            }
-
-
-            TextField {
-                id: textField
-                x: 300
-                y: 229
-                onPressed: {
-                    inputPanel.visible = true; //当选择输入框的时候才显示键盘
-                }
-            }
-        }
-    }*/
 }
 
+/*##^##
+Designer {
+    D{i:1;invisible:true}D{i:2;invisible:true}D{i:10;invisible:true}D{i:102;anchors_height:100;anchors_width:100}
+D{i:103;invisible:true}D{i:21;invisible:true}D{i:113;invisible:true}D{i:104;invisible:true}
+D{i:120;invisible:true}D{i:133;invisible:true}D{i:159;invisible:true}D{i:239;invisible:true}
+D{i:254;invisible:true}D{i:262;invisible:true}D{i:270;invisible:true}
+}
+##^##*/

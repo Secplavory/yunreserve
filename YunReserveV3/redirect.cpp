@@ -15,6 +15,12 @@ void redirect::timeoutReset(){
     emit uploadCHVisibleChanged();
     emit to_uploadInputVisibleChanged();
     emit uploadFinishedVisibleChanged();
+    emit setuploadingVisibleChanged();
+    verifiedText = " ";
+    emit notverified();
+    signupnotifyText = " ";
+    emit signupnotifyTextchanged();
+
 
     setVisible(QString("thisPage"));
     emit welcomeVisibleChanged();
@@ -40,6 +46,14 @@ void redirect::toBuy(){
     setVisible(QString("thisPage"));
     emit chosechannelVisibleChanged();
 }
+void redirect::backtowelcomeNext(){
+    setVisible(QString("nextPage"));
+    emit chosechannelVisibleChanged();
+
+    setVisible(QString("thisPage"));
+    emit buyORsellVisibleChanged();
+}
+
 
 void redirect::toDisplayPrice(int i){
     currentCh = QString::number(i);
@@ -51,23 +65,26 @@ void redirect::toDisplayPrice(int i){
     setVisible(QString("thisPage"));
     emit displayPriceVisibleChanged();
 }
+void redirect::backtochoosechannel(){
+    setVisible(QString("nextPage"));
+    emit displayPriceVisibleChanged();
 
+    setVisible(QString("thisPage"));
+    emit chosechannelVisibleChanged();
+}
 void redirect::isPricePayed(){
     qDebug()<<"檢查付款"<<currentCh;
-
     //執行電文交換
-    postXML *post = new postXML();
-    post->check_payment();
-
-    if(true){
+    database *db = new database();
+    int rec = db->check_payment(currentCh);
+    if(rec==1){
         //如果付款完成切換UI
         pricePayed();
         //將櫃子打開
         controlChannel *cc = new controlChannel();
         cc->openChannel(currentCh.toUInt());
         //調整資料庫
-        database *db = new database();
-//        db->pricePayed(currentCh);
+        db->transferTOhistory(currentCh);
     }
 }
 
@@ -111,16 +128,50 @@ void redirect::toSignup(){
     emit toSignupVisibleChanged();
 }
 
-void redirect::to_uploadCH(){
-    qDebug("上架_選擇格子");
-    setVisible(QString("nextPage"));
-    emit signupORsigninVisibleChanged();
-
-    setVisible(QString("thisPage"));
-    emit uploadCHVisibleChanged();
+void redirect::signup(QString studentNumber,QString pwd,QString bankACC,QString email){
+    database *db = new database();
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+    QString verifyCode = QString("%1").arg(qrand()%(9999+1),4,10,QLatin1Char('0'));
+    verifyCode += QString("%1").arg(qrand()%(9999+1),4,10,QLatin1Char('0'));
+    verifyCode += QString("%1").arg(qrand()%(99+1),2,10,QLatin1Char('0'));
+    int singupHandler = db->signupUSER(studentNumber,pwd,bankACC,email,verifyCode);
+    if(singupHandler==1){
+        qDebug() << "true";
+        verifyUSER *vUser = new verifyUSER(email,studentNumber,verifyCode);
+    }else if(singupHandler==2){
+        qDebug() << "帳號至少五碼";
+        signupnotifyText = "帳號至少五碼";
+        emit signupnotifyTextchanged();
+    }else if(singupHandler==3){
+    }else{
+        qDebug() << "false";
+    }
 }
 
-void redirect::to_uploadInput(){
+void redirect::to_uploadCH(QString acc, QString pwd){
+    database *db = new database();
+    int signinHandler = db->verifyUSER(acc, pwd);
+    if(signinHandler==1){
+        userACC = acc;
+        qDebug("上架_選擇格子");
+        setVisible(QString("nextPage"));
+        emit signupORsigninVisibleChanged();
+
+        setVisible(QString("thisPage"));
+        emit uploadCHVisibleChanged();
+    }else if(signinHandler==2){
+        qDebug() << "帳號還沒驗證";
+        verifiedText = "帳號還沒驗證";
+        emit notverified();
+    }else{
+        qDebug() << "帳號錯誤";
+        verifiedText = "帳號密碼錯誤";
+        emit notverified();
+    }
+}
+
+void redirect::to_uploadInput(int channel){
+    box_ch = QString::number(channel);
     qDebug("已選格子，輸入商品資訊");
     setVisible(QString("nextPage"));
     emit uploadCHVisibleChanged();
@@ -129,23 +180,38 @@ void redirect::to_uploadInput(){
     emit to_uploadInputVisibleChanged();
 }
 
-void redirect::upload_finished(){
-    qDebug("完成上架程序");
-    setVisible(QString("nextPage"));
-    emit to_uploadInputVisibleChanged();
+void redirect::uploadGood(){
+    controlChannel *cc = new controlChannel();
+    if(cc->openChannel(box_ch.toInt())){
+        setVisible(QString("nextPage"));
+        emit to_uploadInputVisibleChanged();
 
-    setVisible(QString("thisPage"));
-    emit uploadFinishedVisibleChanged();
+        setVisible(QString("thisPage"));
+        emit setuploadingVisibleChanged();
+    }
 }
 
+void redirect::waitForUpload(QString item,QString price,QString remark){
+    qDebug() << "正在等待關閉";
+    controlChannel *cc = new controlChannel();
+    if(cc->checkStatus()){
+        upload_finished(item,price,remark);
+        emit stopChecking();
+    }
+}
 
+void redirect::upload_finished(QString item,QString price,QString remark){
+    database *db = new database();
+    if(db->uploadGood(item,price,remark,userACC,box_ch)){
+        setVisible(QString("nextPage"));
+        emit setuploadingVisibleChanged();
 
-
-
-
-
-
-
+        setVisible(QString("thisPage"));
+        emit uploadFinishedVisibleChanged();
+    }else{
+        qDebug("上架失敗");
+    }
+}
 
 void redirect::setVisible(QString st){
     state = st;
