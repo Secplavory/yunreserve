@@ -15,6 +15,10 @@ class verifyUSER
 {
 public:
     verifyUSER(QString receiver, QString studentNumber, QString verifyCode);
+    int toverifyUser();
+
+private:
+    int emailSentHandler;
 };
 
 #endif // VERIFYUSER_H

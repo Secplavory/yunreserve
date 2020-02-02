@@ -22,5 +22,6 @@
         <file>img/signup_button.png</file>
         <file>img/welcome.jpg</file>
         <file>img/uploadButton.png</file>
+        <file>img/thankForBuying.jpg</file>
     </qresource>
 </RCC>

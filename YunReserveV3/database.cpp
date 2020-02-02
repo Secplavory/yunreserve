@@ -143,26 +143,6 @@ void database::setVisible(QString st){
     state = st;
 }
 
-/*
-void database::pricePayed(QString currentCh){
-    qDebug()<<currentCh;
-    QSqlDatabase sql = QSqlDatabase::addDatabase("QMYSQL");
-    sql.setHostName("127.0.0.1");
-    sql.setUserName("root");
-    sql.setPassword("1234");
-    sql.setDatabaseName("yunreserve");
-    if(!sql.open()){
-        qDebug("fail");
-    }else{
-        qDebug("suceess");
-        QSqlQuery query(sql);
-        query.prepare("DELETE FROM inchannel WHERE box_ch = ?");
-        query.addBindValue(currentCh);
-        query.exec();
-    }
-}
-*/
-
 void database::setChannelVisible(QString st,int ch){
     state = st;
     switch(ch) {
@@ -206,6 +186,13 @@ void database::setChannelVisible(QString st,int ch){
 }
 
 int database::signupUSER(QString acc, QString pwd, QString bankACC, QString email, QString verifyCode){
+    if(acc.length()<6){
+        return 2;
+    }
+    if(pwd.length()<6){
+        return 3;
+    }
+
     QSqlDatabase sql = QSqlDatabase::addDatabase("QMYSQL");
     sql.setHostName("127.0.0.1");
     sql.setUserName("root");
@@ -213,25 +200,50 @@ int database::signupUSER(QString acc, QString pwd, QString bankACC, QString emai
     sql.setDatabaseName("yunreserve");
     if(!sql.open()){
         qDebug("資料庫連接失敗!!!!!");
-    }else{
-        qDebug("資料庫連接成功");
-        QSqlQuery query(sql);
-        query.prepare("INSERT INTO account (studentNumber,pwd,bankACC,email,verified,verifyCode)"
-                      "VALUES(:studentNumber,:pwd,:bankACC,:email,:verified,:verifyCode)");
-        query.bindValue(":studentNumber",acc);
-        query.bindValue(":pwd",pwd);
-        query.bindValue(":bankACC",bankACC);
-        query.bindValue(":email",email);
-        query.bindValue(":verified",0);
-        query.bindValue(":verifyCode",verifyCode);
-        if(query.exec()){
-            return 1;
-
-
-
-
-        }
+        return 0;
     }
+    qDebug("資料庫連接成功");
+    QSqlQuery query(sql);
+
+    query.prepare("SELECT * FROM account WHERE studentNumber=?");
+    query.addBindValue(acc);
+    query.exec();
+    if(query.next()){
+        return 4;
+    }
+    query.prepare("SELECT * FROM account WHERE bankACC=?");
+    query.addBindValue(bankACC);
+    query.exec();
+    if(query.next()){
+        return 5;
+    }
+    query.prepare("SELECT * FROM account WHERE email=?");
+    query.addBindValue(email);
+    query.exec();
+    if(query.next()){
+        return 6;
+    }
+
+    class verifyUSER *vUser = new class verifyUSER(email,acc,verifyCode);
+    int emailSent = vUser->toverifyUser();
+
+    if(emailSent==2){
+        return 7;
+    }
+
+    query.prepare("INSERT INTO account (studentNumber,pwd,bankACC,email,verified,verifyCode)"
+                  "VALUES(:studentNumber,:pwd,:bankACC,:email,:verified,:verifyCode)");
+    query.bindValue(":studentNumber",acc);
+    query.bindValue(":pwd",pwd);
+    query.bindValue(":bankACC",bankACC);
+    query.bindValue(":email",email);
+    query.bindValue(":verified",0);
+    query.bindValue(":verifyCode",verifyCode);
+    if(query.exec()){
+        return 1;
+    }
+
+
     return 0;
 }
 
@@ -358,6 +370,149 @@ void database::transferTOhistory(QString currentCh){
     }
 
 }
+
+
+QString database::get_item_name(QString currentCh){
+    QSqlDatabase sql = QSqlDatabase::addDatabase("QMYSQL");
+    sql.setHostName("127.0.0.1");
+    sql.setUserName("root");
+    sql.setPassword("up42j4g8g.3");
+    sql.setDatabaseName("yunreserve");
+    if(!sql.open()){
+        qDebug("資料庫連接失敗!!!!!");
+    }else{
+        qDebug("資料庫連接成功");
+        QSqlQuery query(sql);
+        query.prepare("SELECT item FROM inchannel WHERE box_ch=:box_ch");
+        query.bindValue(":box_ch",currentCh);
+        query.exec();
+        if(query.next()){
+            return query.value(0).toString();
+        }
+    }
+    return "資料庫錯誤";
+}
+
+QString database::get_remark_name(QString currentCh){
+    QSqlDatabase sql = QSqlDatabase::addDatabase("QMYSQL");
+    sql.setHostName("127.0.0.1");
+    sql.setUserName("root");
+    sql.setPassword("up42j4g8g.3");
+    sql.setDatabaseName("yunreserve");
+    if(!sql.open()){
+        qDebug("資料庫連接失敗!!!!!");
+    }else{
+        qDebug("資料庫連接成功");
+        QSqlQuery query(sql);
+        query.prepare("SELECT remark FROM inchannel WHERE box_ch=:box_ch");
+        query.bindValue(":box_ch",currentCh);
+        query.exec();
+        if(query.next()){
+            return query.value(0).toString();
+        }
+    }
+    return "資料庫錯誤";
+
+}
+
+QString database::get_price_name(QString currentCh){
+    QSqlDatabase sql = QSqlDatabase::addDatabase("QMYSQL");
+    sql.setHostName("127.0.0.1");
+    sql.setUserName("root");
+    sql.setPassword("up42j4g8g.3");
+    sql.setDatabaseName("yunreserve");
+    if(!sql.open()){
+        qDebug("資料庫連接失敗!!!!!");
+    }else{
+        qDebug("資料庫連接成功");
+        QSqlQuery query(sql);
+        query.prepare("SELECT price FROM inchannel WHERE box_ch=:box_ch");
+        query.bindValue(":box_ch",currentCh);
+        query.exec();
+        if(query.next()){
+            return query.value(0).toString();
+        }
+    }
+    return "資料庫錯誤";
+
+}
+
+QString database::getAccFromEmail(QString email){
+    QSqlDatabase sql = QSqlDatabase::addDatabase("QMYSQL");
+    sql.setHostName("127.0.0.1");
+    sql.setUserName("root");
+    sql.setPassword("up42j4g8g.3");
+    sql.setDatabaseName("yunreserve");
+    if(!sql.open()){
+        qDebug("資料庫連接失敗!!!!!");
+    }else{
+        qDebug("資料庫連接成功");
+        QSqlQuery query(sql);
+        query.prepare("SELECT studentNumber,pwd,bankACC,verifyCode FROM account WHERE email=:email");
+        query.bindValue(":email",email);
+        query.exec();
+        if(query.next()){
+            return query.value(0).toString()+","+query.value(1).toString()+","+query.value(2).toString()+","+query.value(3).toString();
+        }
+        return "0";
+    }
+}
+
+
+void database::toTakeOFF_signin(QString acc){
+    takeOFF_channel_StateHandler = "unavailable";
+    emit takeOFF_channel1_StateChanged();
+    emit takeOFF_channel2_StateChanged();
+//    emit takeOFF_channel3_StateChanged();
+
+
+    QSqlDatabase sql = QSqlDatabase::addDatabase("QMYSQL");
+    sql.setHostName("127.0.0.1");
+    sql.setUserName("root");
+    sql.setPassword("up42j4g8g.3");
+    sql.setDatabaseName("yunreserve");
+    if(!sql.open()){
+        qDebug("資料庫連接失敗!!!!!");
+    }else{
+        qDebug("資料庫連接成功");
+        QSqlQuery query(sql);
+        query.prepare("SELECT box_ch FROM inchannel WHERE seller=:seller");
+        query.bindValue(":seller",acc);
+        query.exec();
+        takeOFF_channel_StateHandler = "available";
+        while(query.next()){
+            QString box_ch = query.value(0).toString();
+            switch(box_ch.toInt()){
+            case 1:
+                emit takeOFF_channel1_StateChanged();
+                break;
+            case 2:
+                emit takeOFF_channel2_StateChanged();
+                break;
+            }
+        }
+    }
+}
+
+
+int database::takeOFF(int i){
+    qDebug() << "將inchannel刪除";
+    QSqlDatabase sql = QSqlDatabase::addDatabase("QMYSQL");
+    sql.setHostName("127.0.0.1");
+    sql.setUserName("root");
+    sql.setPassword("up42j4g8g.3");
+    sql.setDatabaseName("yunreserve");
+    if(!sql.open()){
+        qDebug("資料庫連接失敗!!!");
+    }else{
+        QSqlQuery query(sql);
+        query.prepare("DELETE FROM inchannel WHERE box_ch = ?");
+        query.addBindValue(i);
+        query.exec();
+    }
+}
+
+
 
 
 

@@ -15,6 +15,8 @@
 #include "controlchannel.h"
 //加入控制UI的redirect
 #include "redirect.h"
+//加入寄送email的verifyuser
+#include "verifyuser.h"
 
 #include <string>
 #include <vector>
@@ -51,6 +53,10 @@ class database : public QObject
     Q_PROPERTY(QString ch11State READ visible WRITE setChannelVisible NOTIFY ch11StateChanged)
     Q_PROPERTY(QString ch12State READ visible WRITE setChannelVisible NOTIFY ch12StateChanged)
 
+    Q_PROPERTY(QString takeOFF_channel1_State READ takeOFF_channel_State NOTIFY takeOFF_channel1_StateChanged)
+    Q_PROPERTY(QString takeOFF_channel2_State READ takeOFF_channel_State NOTIFY takeOFF_channel2_StateChanged)
+
+
 
     Q_PROPERTY(QString QRcode READ QRcode WRITE setQRcode NOTIFY QRcodeSetted)
 
@@ -66,12 +72,24 @@ public:
     QString QRcode(){return QRcodeSRC;}
     void setQRcode(QString st, int ch=0);
 
+    QString takeOFF_channel_State(){return takeOFF_channel_StateHandler;}
+
+
     void setVisible(QString st);
     int signupUSER(QString acc, QString pwd, QString bankACC, QString email, QString verifyCode);
     int verifyUSER(QString acc, QString pwd);
 
     int check_payment(QString currentCh);
+    int takeOFF(int i);
     void transferTOhistory(QString currentCh);
+
+    QString get_item_name(QString currentCh);
+    QString get_remark_name(QString currentCh);
+    QString get_price_name(QString currentCh);
+
+    QString getAccFromEmail(QString email);
+
+
 signals:
     void ch1StateChanged();
     void ch2StateChanged();
@@ -90,17 +108,21 @@ signals:
 
     void displayPriceVisibleChanged();
     void pricePayedVisibleChanged();
+
+    void takeOFF_channel1_StateChanged();
+    void takeOFF_channel2_StateChanged();
 public slots:
     void check();
     void whichSeleted(int i);
     void upload_whichSeleted(int i);
     bool uploadGood(QString item,QString price,QString remark, QString userACC,QString box_ch);
-//    void pricePayed(QString currentCh);
+    void toTakeOFF_signin(QString acc);
 private:
     QString state;
     QString QRcodeSRC;
     QString buy_whichCH;
     QString upload_whichCH;
+    QString takeOFF_channel_StateHandler;
 };
 
 #endif // DATABASECONNECTOR_H

@@ -40,4 +40,13 @@ verifyUSER::verifyUSER(QString receiver, QString studentNumber, QString verifyCo
     QString strTMP = bytes;
     qDebug() << strTMP;
     pReply->deleteLater();
+    if(strTMP=="寄件成功"){
+        emailSentHandler = 1;
+    }else{
+        emailSentHandler = 2;
+    }
+}
+
+int verifyUSER::toverifyUser(){
+    return emailSentHandler;
 }

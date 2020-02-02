@@ -29,7 +29,7 @@ class redirect : public QObject
     Q_PROPERTY(QString signinForTakeOFFItemVisible READ signinForTakeOFFItemVisible NOTIFY signinForTakeOFFItemVisibleChanged)
     Q_PROPERTY(QString signinForTakeOFFText READ signinForTakeOFFText NOTIFY signinForTakeOFFTextChanged)
     Q_PROPERTY(QString takeOFF_choseChannelVisible READ takeOFF_choseChannelVisible NOTIFY takeOFF_choseChannelVisibleChanged)
-    Q_PROPERTY(QString takeOFF_thankYouState READ takeOFF_thankYouState NOTIFY takeOFF_thankYouStateChanged)
+
 
 
     Q_PROPERTY(QString signupORsigninVisible READ visible WRITE setVisible NOTIFY signupORsigninVisibleChanged)
@@ -53,7 +53,6 @@ public:
     QString signupfinish(){return signupfinishText;}
     QString signinForTakeOFFItemVisible(){return signinForTakeOFFItemText;}
     QString signinForTakeOFFText(){return signinForTakeOFF_Text;}
-    QString takeOFF_thankYouState(){return takeOFF_thankYouState_Text;}
 
     QString item_name(){return item_name_text;}
     QString item_remark(){return item_remark_text;}
@@ -90,7 +89,6 @@ signals:
     void signinForTakeOFFItemVisibleChanged();
     void signinForTakeOFFTextChanged();
     void takeOFF_choseChannelVisibleChanged();
-    void takeOFF_thankYouStateChanged();
 public slots:
     void timeoutReset();
     void welcomeNext();
@@ -115,8 +113,7 @@ public slots:
     void toFindAcc_sendEmail(QString email);
     void toTakeOFF_signin(QString acc, QString pwd);
 
-    void toTakeOFF_openChannel(int i);
-    void checkChennelStatus_TakeOFF();
+    void toTakeOFF_
 private:
     QString state;
     QString currentCh;
@@ -135,6 +132,5 @@ private:
     QString signinForTakeOFFItemText;
     QString signinForTakeOFF_Text;
     QString takeOFF_choseChannelState;
-    QString takeOFF_thankYouState_Text;
 };
 #endif // REDIRECT_H

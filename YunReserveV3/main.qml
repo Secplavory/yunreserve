@@ -103,8 +103,8 @@ Window {
         ]
         Image {
             id: buyBtn
-            x: 227
-            y: 474
+            x: 235
+            y: 251
             width: 200
             height: 120
 
@@ -120,8 +120,8 @@ Window {
         }
         Image {
             id: sellBtn
-            x: 587
-            y: 474
+            x: 591
+            y: 251
             width: 200
             height: 120
             visible: true
@@ -136,9 +136,406 @@ Window {
                 }
             }
         }
+        Image {
+            id: changeAccountButton
+            x: 235
+            y: 443
+            width: 200
+            height: 120
+
+            source: "img/purchaseButton.jpg"
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    timer_button.stop();
+                    redirect.toChangeAccount();
+                    timer_button.start();
+                }
+            }
+        }
+        Image {
+            id: takeOFFButton
+            x: 591
+            y: 443
+            width: 200
+            height: 120
+
+            source: "img/purchaseButton.jpg"
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    timer_button.stop();
+                    redirect.toTakeOFF();
+                    timer_button.start();
+                }
+            }
+        }
+    }
+
+    Image {
+        id: changeAccount
+        x: 1
+        y: 0
+        visible: true
+        state: redirect.changeAccountVisible
+        source: "img/background.jpg"
+        opacity: 0
+        enabled: false
+        states: [
+            State {
+                name: "nextPage"
+                PropertyChanges {
+                    target: changeAccount
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "thisPage"
+                PropertyChanges {
+                    target: changeAccount
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+
+        Text {
+            id: emailInputText
+            x: 330
+            y: 325
+            text: redirect.changeAccountText
+            font.pointSize: 18
+        }
+
+        TextField {
+            id: emailInputField
+            x: 413
+            y: 460
+            text: ""
+            onPressed: {
+                timer_button.stop();
+                inputPanel.visible = true; //需要輸入，顯示鍵盤
+                timer_button.start();
+            }
+            onTextChanged: {
+                timer_button.stop();
+                timer_button.start();
+            }
+        }
+
+        Button {
+            id: emailSend
+            x: 666
+            y: 460
+            width: 100
+            height: 40
+            text: qsTr("送出")
+            font.pointSize: 12
+            onClicked: {
+                redirect.toFindAcc_sendEmail(emailInputField.text);
+            }
+        }
 
     }
 
+    Image {
+        id: takeOFF
+        visible: true
+        state: redirect.takeOFFVisible
+        source: "img/background.jpg"
+        opacity: 0
+        enabled: false
+        states: [
+            State {
+                name: "nextPage"
+                PropertyChanges {
+                    target: takeOFF
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "thisPage"
+                PropertyChanges {
+                    target: takeOFF
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+        Item {
+            id: signinForTakeOFFItem
+            state: redirect.signinForTakeOFFItemVisible
+            states: [
+                State {
+                    name: "signinForTakeOFF_End"
+                    PropertyChanges {
+                        target: signinForTakeOFFItem
+                        opacity: 0
+                        enabled: false
+                    }
+                },
+                State {
+                    name: "signinForTakeOFF_Start"
+                    PropertyChanges {
+                        target: signinForTakeOFFItem
+                        opacity: 1
+                        enabled: true
+                    }
+                }
+            ]
+            transitions: [
+                Transition {
+                    NumberAnimation {
+                        property: "opacity";
+                        easing.type: Easing.InOutQuad;
+                        duration: 1000;
+                    }
+                }
+            ]
+            Text {
+                id: signinForTakeOFFText
+                x: 335
+                y: 288
+                width: 364
+                height: 44
+                text: qsTr("登入後即可下架商品") + "\n" + redirect.signinForTakeOFFText
+                font.pointSize: 20
+            }
+            Text {
+                id: takeOFFAccText
+                x: 330
+                y: 368
+                text: qsTr("帳號")
+                font.pointSize: 18
+            }
+            Text {
+                id: takeOFFPwdText
+                x: 330
+                y: 426
+                text: qsTr("密碼")
+                font.pointSize: 18
+            }
+            TextField{
+                id: takeOFFAccField
+                x: 417
+                y: 363
+                onPressed: {
+                    timer_button.stop()
+                    timer_button.start()
+                    inputPanel.visible = true
+                }
+                onTextChanged: {
+                    timer_button.stop()
+                    timer_button.start()
+                }
+            }
+            TextField{
+                id: takeOFFPwdField
+                x: 417
+                y: 421
+                onPressed: {
+                    timer_button.stop()
+                    timer_button.start()
+                    inputPanel.visible = true
+                }
+                onTextChanged: {
+                    timer_button.stop()
+                    timer_button.start()
+                }
+
+            }
+            Button {
+                id: takeOFF_InputButton
+                x: 643
+                y: 421
+                text: qsTr("Button")
+                onClicked: {
+                    timer_button.stop()
+                    timer_button.start()
+                    database.toTakeOFF_signin(takeOFFAccField.text)
+                    redirect.toTakeOFF_signin(takeOFFAccField.text,takeOFFPwdField.text)
+                }
+            }
+        }
+        Item {
+            id: takeOFF_choseChannel
+            state: redirect.takeOFF_choseChannelVisible
+            states: [
+                State {
+                    name: "takeOFF_choseChannel_End"
+                    PropertyChanges {
+                        target: takeOFF_choseChannel
+                        opacity: 0
+                        enabled: false
+                    }
+                },
+                State {
+                    name: "takeOFF_choseChannel_Start"
+                    PropertyChanges {
+                        target: takeOFF_choseChannel
+                        opacity: 1
+                        enabled: true
+                    }
+                }
+            ]
+            transitions: [
+                Transition {
+                    NumberAnimation {
+                        property: "opacity";
+                        easing.type: Easing.InOutQuad;
+                        duration: 1000;
+                    }
+                }
+            ]
+
+            Image {
+                id: takeOFF_channel1
+                x: 76
+                y: 299
+                width: 200
+                height: 120
+                state: database.takeOFF_channel1_State
+                states: [
+                    State {
+                        name: "available"
+                        PropertyChanges {
+                            target: takeOFF_channel1
+                            source: "img/channel/01-01.jpg"
+                            opacity: 1
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "unavailable"
+                        PropertyChanges {
+                            target: takeOFF_channel1
+                            source: "img/channel/01-01.jpg"
+                            opacity: 0.3
+                            enabled: false
+                        }
+                    }
+                ]
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_button.stop();
+                        timer_button.start();
+                        redirect.toTakeOFF_openChannel(1)
+                        checkChennelStatus_TakeOFF.start()
+                    }
+                }
+            }
+            Image {
+                id: takeOFF_channel2
+                x: 292
+                y: 299
+                width: 200
+                height: 120
+                state: database.takeOFF_channel2_State
+                states: [
+                    State {
+                        name: "available"
+                        PropertyChanges {
+                            target: takeOFF_channel2
+                            source: "img/channel/01-01.jpg"
+                            opacity: 1
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "unavailable"
+                        PropertyChanges {
+                            target: takeOFF_channel2
+                            source: "img/channel/01-01.jpg"
+                            opacity: 0.3
+                            enabled: false
+                        }
+                    }
+                ]
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_button.stop();
+                        timer_button.start();
+                        redirect.toTakeOFF_openChannel(2)
+                        checkChennelStatus_TakeOFF.start()
+                    }
+                }
+            }
+
+        }
+        Item {
+            id: takeOFF_thankYou
+            state: redirect.takeOFF_thankYouState
+            states: [
+                State {
+                    name: "takeOFF_thankYou_End"
+                    PropertyChanges {
+                        target: takeOFF_thankYou
+                        opacity: 0
+                        enabled: false
+                    }
+                },
+                State {
+                    name: "takeOFF_thankYou_Start"
+                    PropertyChanges {
+                        target: takeOFF_thankYou
+                        opacity: 1
+                        enabled: true
+                    }
+                }
+            ]
+            transitions: [
+                Transition {
+                    NumberAnimation {
+                        property: "opacity";
+                        easing.type: Easing.InOutQuad;
+                        duration: 1000;
+                    }
+                }
+            ]
+
+            Text {
+                id: takeOFF_thankYou_TMP
+                text: qsTr("下架完成，感謝")
+            }
+        }
+
+        onStateChanged: {
+            checkChennelStatus_TakeOFF.stop()
+        }
+
+        Timer{
+            id: checkChennelStatus_TakeOFF
+            interval: 3000
+            repeat: true
+            running: false
+            triggeredOnStart: false
+            onTriggered: {
+                redirect.checkChennelStatus_TakeOFF()
+            }
+        }
+    }
 
     Image{
         id: chosechannel
@@ -668,7 +1065,7 @@ Window {
         Image {
             id: qrcode
             x: 715
-            y: 449
+            y: 292
             width: 200
             height: 200
             opacity: 1
@@ -704,11 +1101,54 @@ Window {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
+                    timer_checkPayment.stop();
                     timer_button.stop();
                     redirect.backtochoosechannel();
                     timer_button.start();
                 }
             }
+        }
+
+        Item {
+            id: itemInfo
+            x: 90
+            y: 292
+            width: 595
+            height: 200
+
+            Text {
+                id: item_name
+                x: 8
+                y: 8
+                width: 253
+                height: 55
+                text: qsTr("商品名稱：")+redirect.item_name_text
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 48
+            }
+
+            Text {
+                id: item_remark
+                x: 8
+                y: 69
+                width: 253
+                height: 55
+                text: qsTr("備註：")+redirect.item_remark_text
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 48
+            }
+
+            Text {
+                id: item_price
+                x: 8
+                y: 124
+                width: 253
+                height: 55
+                text: qsTr("價格：")+redirect.item_price_text
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 48
+            }
+
         }
 
     }
@@ -748,9 +1188,58 @@ Window {
             }
         ]
         onStateChanged: {
-            timer_checkPayment.stop();
+            if(state=="thisPage"){
+                timer_checkPayment.stop();
+                timer_button.stop();
+                timer_button.start();
+                checkChennelStatus_buy.start();
+            }
+            if(state=="nextPage"){
+                timer_button.stop();
+                timer_button.start();
+                checkChennelStatus_buy.stop();
+            }
         }
     }
+
+    Image {
+        id: thankForBuying
+        anchors.fill: parent
+        state: redirect.thankForBuyingVisible
+        source: "img/thankForBuying.jpg"
+        opacity: 0
+        enabled: false
+
+        states: [
+            State {
+                name: "nextPage"
+                PropertyChanges {
+                    target: thankForBuying
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "thisPage"
+                PropertyChanges {
+                    target: thankForBuying
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+
+    }
+
 
 
     Image {
@@ -760,7 +1249,7 @@ Window {
         anchors.fill: parent
         state: redirect.signupORsigninVisible
         source: "img/background.jpg"
-        opacity: 1
+        opacity: 0
         enabled: false
 
         states: [
@@ -828,8 +1317,8 @@ Window {
 
         Item {
             id: itemForsignin
-            x: 162
-            y: 379
+            x: 184
+            y: 222
             width: 700
             height: 432
             state: redirect.toSigninVisible
@@ -862,8 +1351,8 @@ Window {
             ]
             Text {
                 id: notverifiedText
-                x: 247
-                y: -8
+                x: 212
+                y: 0
                 text: redirect.notverifyText
                 color: "#FF0000"
                 verticalAlignment: Text.AlignVCenter
@@ -873,8 +1362,8 @@ Window {
 
             Text {
                 id: accForSignin
-                x: 154
-                y: 33
+                x: 157
+                y: 78
                 text: qsTr("帳號")
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
@@ -882,8 +1371,8 @@ Window {
             }
             Text {
                 id: pwdForSignin
-                x: 154
-                y: 96
+                x: 157
+                y: 141
                 text: qsTr("密碼")
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
@@ -891,8 +1380,8 @@ Window {
             }
             TextField {
                 id: accInputForSignin
-                x: 247
-                y: 28
+                x: 250
+                y: 73
                 text: ""
                 onPressed: {
                     timer_button.stop();
@@ -908,8 +1397,8 @@ Window {
 
             TextField {
                 id: pwdInputForSignin
-                x: 247
-                y: 96
+                x: 250
+                y: 141
                 text: ""
                 onPressed: {
                     timer_button.stop();
@@ -924,8 +1413,8 @@ Window {
 
             Button {
                 id: submitForSignin
-                x: 478
-                y: 96
+                x: 481
+                y: 141
                 text: qsTr("登入")
                 onClicked: {
                     timer_button.stop()
@@ -940,8 +1429,8 @@ Window {
 
         Item {
             id: itemForsignup
-            x: 162
-            y: 228
+            x: 184
+            y: 222
             width: 700
             height: 484
             state: redirect.toSignupVisible
@@ -974,8 +1463,8 @@ Window {
             ]
             Text {
                 id: signupnotifyText
-                x: 224
-                y: 20
+                x: 202
+                y: 0
                 color: "#ff1515"
                 text: redirect.signupnotifyText
                 verticalAlignment: Text.AlignVCenter
@@ -984,8 +1473,8 @@ Window {
             }
             Text {
                 id: accForsignup
-                x: 129
-                y: 86
+                x: 119
+                y: 41
                 text: qsTr("設定帳號")
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
@@ -995,8 +1484,8 @@ Window {
 
             Text {
                 id: pwdForsignup
-                x: 129
-                y: 132
+                x: 119
+                y: 87
                 text: qsTr("設定密碼")
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
@@ -1006,28 +1495,39 @@ Window {
 
             Text {
                 id: bankForsignup
-                x: 129
-                y: 178
+                x: 119
+                y: 133
                 text: qsTr("銀行帳號")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.pixelSize: 30
             }
 
+
             Text {
                 id: emailForsignup
-                x: 132
-                y: 224
+                x: 119
+                y: 185
                 text: qsTr("電子郵件")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.pixelSize: 30
             }
 
+            Text {
+                id: email_confirm_text
+                x: 89
+                y: 234
+                text: qsTr("確認電子郵件")
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 30
+                horizontalAlignment: Text.AlignHCenter
+            }
+
             TextField {
                 id: accInputForsignup
-                x: 282
-                y: 81
+                x: 272
+                y: 36
                 text: ""
                 onPressed: {
                     timer_button.stop();
@@ -1041,8 +1541,8 @@ Window {
             }
             TextField {
                 id: pwdInputForsignup
-                x: 282
-                y: 127
+                x: 272
+                y: 82
                 onPressed: {
                     timer_button.stop();
                     inputPanel.visible = true; //需要輸入，顯示鍵盤
@@ -1056,8 +1556,8 @@ Window {
 
             TextField {
                 id: bankInputForsignup
-                x: 282
-                y: 173
+                x: 272
+                y: 128
                 onPressed: {
                     timer_button.stop();
                     inputPanel.visible = true; //需要輸入，顯示鍵盤
@@ -1069,10 +1569,12 @@ Window {
                 }
             }
 
+
+
             TextField {
                 id: emailInputForSignup
-                x: 282
-                y: 218
+                x: 272
+                y: 180
                 onPressed: {
                     timer_button.stop();
                     inputPanel.visible = true; //需要輸入，顯示鍵盤
@@ -1082,12 +1584,40 @@ Window {
                     timer_button.stop();
                     timer_button.start();
                 }
+            }
+
+
+            TextField {
+                id: email_confirm_input
+                x: 272
+                y: 229
+                onPressed: {
+                    timer_button.stop();
+                    inputPanel.visible = true; //需要輸入，顯示鍵盤
+                    timer_button.start();
+                }
+                onTextChanged: {
+                    timer_button.stop();
+                    timer_button.start();
+                }
+            }
+
+            Text{
+                id: signupfinishedText
+                x: 194
+                color: "#3779ff"
+                text: redirect.signupfinishText
+                anchors.top: parent.top
+                anchors.topMargin: 270
+                verticalAlignment: Text.AlignTop
+                horizontalAlignment: Text.AlignHCenter
+                font.pointSize: 18
             }
 
             Button {
                 id: submitForSignup
-                x: 515
-                y: 219
+                x: 509
+                y: 224
                 text: qsTr("註冊")
                 onClicked: {
                     timer_button.stop();
@@ -1095,7 +1625,8 @@ Window {
                                 accInputForsignup.text,
                                 pwdInputForsignup.text,
                                 bankInputForsignup.text,
-                                emailInputForSignup.text
+                                emailInputForSignup.text,
+                                email_confirm_input.text,
                                 );
                     timer_button.start();
                 }
@@ -1673,6 +2204,17 @@ Window {
     }
 
     Timer{
+        id: checkChennelStatus_buy
+        interval: 3000
+        repeat: true
+        running: false
+        triggeredOnStart: false
+        onTriggered: {
+            redirect.waitForbuying();
+        }
+    }
+
+    Timer{
         id: checkChennelStatus
         interval: 3000
         repeat: true
@@ -1686,8 +2228,6 @@ Window {
                         );
         }
     }
-
-
 
     Image {
         id: uploading
@@ -1787,6 +2327,7 @@ Window {
         y: 546
         width: 845
         height: 254
+        anchors.bottomMargin: 0
         anchors.bottom: parent.bottom
         InputPanel {
             id: inputPanel
@@ -1822,11 +2363,3 @@ Window {
 
 }
 
-/*##^##
-Designer {
-    D{i:1;invisible:true}D{i:2;invisible:true}D{i:10;invisible:true}D{i:102;anchors_height:100;anchors_width:100}
-D{i:103;invisible:true}D{i:21;invisible:true}D{i:113;invisible:true}D{i:104;invisible:true}
-D{i:120;invisible:true}D{i:133;invisible:true}D{i:159;invisible:true}D{i:239;invisible:true}
-D{i:254;invisible:true}D{i:262;invisible:true}D{i:270;invisible:true}
-}
-##^##*/
