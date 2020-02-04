@@ -14,7 +14,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp
+        db.cpp \
+        main.cpp \
+        qrcode_generater/BitBuffer.cpp \
+        qrcode_generater/QrCode.cpp \
+        qrcode_generater/QrSegment.cpp \
+        ui.cpp
 
 RESOURCES += qml.qrc
 
@@ -30,3 +35,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+
+HEADERS += \
+    db.h \
+    qrcode_generater/BitBuffer.hpp \
+    qrcode_generater/QrCode.hpp \
+    qrcode_generater/QrSegment.hpp \
+    ui.h

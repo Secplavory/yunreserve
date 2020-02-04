@@ -9,26 +9,88 @@ Window {
     visible: true
     width: 1024
     height: 768
+    color: "#ffffff"
     title: qsTr("新生文創")
     BusyIndicator{
         width: 100
         height: 100
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 32
-        anchors.right: parent.right
-        anchors.rightMargin: 32
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
     }
 
     Image {
         id: welcome
         anchors.fill: parent
         source: "img/welcome.jpg"
+        state: ui.welcomeVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: welcome
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: welcome
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+        MouseArea{
+            anchors.fill: parent
+            onClicked: {
+                timer_Reset.start()
+                ui.chooseFunction()
+            }
+        }
     }
 
     Image {
         id: chooseFunction
         anchors.fill: parent
         source: "img/background.jpg"
+        state: ui.chooseFunctionVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: chooseFunction
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: chooseFunction
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
 
         Item {
             id: chooseFunction_Item
@@ -43,6 +105,14 @@ Window {
                 anchors.horizontalCenterOffset: -parent.width*0.2
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        db.receiveFunctionHandler(1)
+                        ui.setFunctionHandler(1)
+                        ui.choseChannel()
+                    }
+                }
             }
             Image {
                 id: chooseFunction_upload
@@ -101,6 +171,34 @@ Window {
         id: choseChannel
         anchors.fill: parent
         source: "img/background.jpg"
+        state: ui.choseChannelVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: choseChannel
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: choseChannel
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
         Item {
             id: choseChannel_Item
             anchors.fill: parent
@@ -111,7 +209,7 @@ Window {
                 y: 60
                 width: 100
                 height: 100
-                state: database.ch1State
+                state: db.ch1State
                 anchors.top: parent.top
                 enabled: true
                 anchors.left: parent.left
@@ -119,10 +217,16 @@ Window {
                 anchors.leftMargin: 30
                 MouseArea {
                     anchors.fill: parent
+                    onClicked: {
+                        ui.setBox_ch(1)
+                        ui.execFunction()
+                        db.setBox_ch(1)
+                        db.execFunction()
+                    }
                 }
                 states: [
                     State {
-                        name: "available"
+                        name: "1"
                         PropertyChanges {
                             target: choseChannel_1
                             opacity: 1
@@ -131,7 +235,7 @@ Window {
                         }
                     },
                     State {
-                        name: "unavailable"
+                        name: "0"
                         PropertyChanges {
                             target: choseChannel_1
                             opacity: 0.3
@@ -147,7 +251,7 @@ Window {
                 y: 60
                 width: 100
                 height: 100
-                state: database.ch2State
+                state: db.ch2State
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.topMargin: 20
@@ -156,7 +260,7 @@ Window {
                 }
                 states: [
                     State {
-                        name: "available"
+                        name: "1"
                         PropertyChanges {
                             target: choseChannel_2
                             opacity: 1
@@ -165,7 +269,7 @@ Window {
                         }
                     },
                     State {
-                        name: "unavailable"
+                        name: "0"
                         PropertyChanges {
                             target: choseChannel_2
                             opacity: 0.3
@@ -181,7 +285,7 @@ Window {
                 y: 60
                 width: 100
                 height: 100
-                state: database.ch3State
+                state: db.ch3State
                 anchors.top: parent.top
                 enabled: false
                 anchors.left: parent.left
@@ -191,7 +295,7 @@ Window {
                 }
                 states: [
                     State {
-                        name: "available"
+                        name: "1"
                         PropertyChanges {
                             target: choseChannel_3
                             opacity: 1
@@ -200,7 +304,7 @@ Window {
                         }
                     },
                     State {
-                        name: "unavailable"
+                        name: "0"
                         PropertyChanges {
                             target: choseChannel_3
                             opacity: 0.3
@@ -215,7 +319,7 @@ Window {
                 width: 100
                 height: 100
                 visible: true
-                state: database.ch4State
+                state: db.ch4State
                 anchors.top: parent.top
                 enabled: false
                 anchors.left: parent.left
@@ -225,7 +329,7 @@ Window {
                 }
                 states: [
                     State {
-                        name: "available"
+                        name: "1"
                         PropertyChanges {
                             target: choseChannel_4
                             opacity: 1
@@ -234,7 +338,7 @@ Window {
                         }
                     },
                     State {
-                        name: "unavailable"
+                        name: "0"
                         PropertyChanges {
                             target: choseChannel_4
                             opacity: 0.3
@@ -250,7 +354,7 @@ Window {
                 y: -9
                 width: 100
                 height: 100
-                state: database.ch5State
+                state: db.ch5State
                 anchors.top: parent.top
                 enabled: false
                 anchors.left: parent.left
@@ -260,7 +364,7 @@ Window {
                 }
                 states: [
                     State {
-                        name: "available"
+                        name: "1"
                         PropertyChanges {
                             target: choseChannel_5
                             opacity: 1
@@ -269,7 +373,7 @@ Window {
                         }
                     },
                     State {
-                        name: "unavailable"
+                        name: "0"
                         PropertyChanges {
                             target: choseChannel_5
                             opacity: 0.3
@@ -286,7 +390,7 @@ Window {
                 width: 100
                 height: 100
                 visible: true
-                state: database.ch6State
+                state: db.ch6State
                 anchors.top: parent.top
                 enabled: false
                 anchors.left: parent.left
@@ -296,7 +400,7 @@ Window {
                 }
                 states: [
                     State {
-                        name: "available"
+                        name: "1"
                         PropertyChanges {
                             target: choseChannel_6
                             opacity: 1
@@ -305,7 +409,7 @@ Window {
                         }
                     },
                     State {
-                        name: "unavailable"
+                        name: "0"
                         PropertyChanges {
                             target: choseChannel_6
                             opacity: 0.3
@@ -1063,6 +1167,35 @@ Window {
         id: perchase_Paying
         anchors.fill: parent
         source: "img/background.jpg"
+        state: ui.perchase_PayingVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: perchase_Paying
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: perchase_Paying
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+
         Image {
             id: displayQRcode
             x: 747
@@ -1073,13 +1206,20 @@ Window {
             anchors.bottomMargin: 80
             anchors.right: parent.right
             anchors.rightMargin: 80
-            source: "img/channel/01-01.jpg"
-
+            source: "image://colors/"+db.itemQRcode
+            sourceSize.width: 200
+            sourceSize.height: 200
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    ui.checkPayment()
+                }
+            }
         }
 
         Text {
             id: itemName
-            text: qsTr("商品名稱：")
+            text: qsTr("商品名稱：")+db.itemName
             anchors.left: parent.left
             anchors.leftMargin: 160
             anchors.top: parent.top
@@ -1088,7 +1228,7 @@ Window {
         }
         Text {
             id: itemPrice
-            text: qsTr("價格：")
+            text: qsTr("價格：")+db.itemPrice
             anchors.left: parent.left
             anchors.leftMargin: 160
             anchors.top: parent.top
@@ -1097,7 +1237,7 @@ Window {
         }
         Text {
             id: itemRemark
-            text: qsTr("備註：")
+            text: qsTr("備註：")+db.itemRemark
             anchors.left: parent.left
             anchors.leftMargin: 160
             anchors.top: parent.top
@@ -1110,12 +1250,69 @@ Window {
         id: thanksForPerchase
         anchors.fill: parent
         source: "img/thankForBuying.jpg"
+        state: ui.thanksForPerchaseVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: thanksForPerchase
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: thanksForPerchase
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+
     }
 
     Image {
         id: login_signup
         anchors.fill: parent
         source: "img/background.jpg"
+        state: ui.login_signupVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: login_signup
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: login_signup
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
 
         Item {
             id: login_signup_Item
@@ -1160,8 +1357,8 @@ Window {
             Text {
                 id: login_acc_text
                 text: qsTr("名稱:")
-                anchors.top: parent.top
-                anchors.topMargin: 65
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 135
                 anchors.left: parent.left
                 anchors.leftMargin: 100
                 font.pointSize: 18
@@ -1296,11 +1493,8 @@ Window {
             }
             TextField{
                 id: signup_email_Field
-                x: 218
                 anchors.right: parent.right
                 anchors.rightMargin: 94
-                anchors.top: parent.top
-                anchors.topMargin: 163
                 onPressed: {
                     inputPanel.active
                 }
@@ -1350,10 +1544,679 @@ Window {
         id: upload_ItemInfo
         anchors.fill: parent
         source: "img/background.jpg"
+        state: ui.upload_ItemInfoVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: upload_ItemInfo
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: upload_ItemInfo
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+
+        Item {
+            id: upload_ItemInfo_Item
+            anchors.bottomMargin: 0
+            anchors.fill: parent
+
+
+            Text {
+                id: upload_ItemInfo_Text
+                text: qsTr("商品資訊")
+                anchors.left: parent.left
+                anchors.leftMargin: 416
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 551
+                font.pixelSize: 48
+            }
+
+            Text {
+                id: upload_ItemName_Text
+                y: 216
+                text: qsTr("名稱:")
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 469
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 307
+                font.pixelSize: 38
+            }
+            TextField{
+                id: upload_ItemName_Field
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 468
+                anchors.left: parent.left
+                anchors.leftMargin: 429
+                onPressed: {
+                    inputPanel.active
+                }
+            }
+
+            Text {
+                id: upload_ItemPrice_Text
+                x: 3
+                y: 216
+                text: qsTr("價格:")
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 364
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 307
+                font.pixelSize: 38
+            }
+
+            TextField {
+                id: upload_ItemPrice_Field
+                x: -9
+                y: 8
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 364
+                anchors.left: parent.left
+                anchors.leftMargin: 429
+                onPressed: {
+                    inputPanel.active
+                }
+
+            }
+
+            Text {
+                id: upload_ItemRemark_Text
+                x: 8
+                y: 0
+                text: qsTr("備註:")
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 265
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 307
+                font.pixelSize: 38
+            }
+
+
+            TextField {
+                id: upload_ItemRemark_Field
+                x: -3
+                y: 4
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 265
+                anchors.left: parent.left
+                anchors.leftMargin: 429
+                onPressed: {
+                    inputPanel.active
+                }
+
+            }
+
+            Button {
+                id: upload_ItemInfo_submit
+                y: 464
+                text: qsTr("送出")
+                anchors.left: parent.left
+                anchors.leftMargin: 664
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 262
+                font.pointSize: 18
+            }
+
+
+        }
 
     }
 
+    Image {
+        id: upload_thankYou
+        source: "img/thankForBuying.jpg"
+        anchors.fill: parent
+        state: ui.upload_thankYouVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: upload_thankYou
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: upload_thankYou
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
 
+    }
+
+    Image {
+        id: takeOff_thankYou
+        source: "img/thankForBuying.jpg"
+        anchors.fill: parent
+        state: ui.takeOff_thankYouVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: takeOff_thankYou
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: takeOff_thankYou
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+
+    }
+
+    Image {
+        id: updateItem_thankYou
+        source: "img/thankForBuying.jpg"
+        anchors.fill: parent
+        state: ui.updateItem_thankYouVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: updateItem_thankYou
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: updateItem_thankYou
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+
+    }
+
+    Image {
+        id: signup_thankYou
+        source: "img/thankForBuying.jpg"
+        anchors.fill: parent
+        state: ui.signup_thankYouVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: signup_thankYou
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: signup_thankYou
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+
+    }
+
+    Image {
+        id: updateUser
+        anchors.fill: parent
+        source: "img/background.jpg"
+        state: ui.updateUserVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: updateUser
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: updateUser
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+
+        Item {
+            id: updateUser_Item
+            anchors.bottomMargin: 0
+            anchors.fill: parent
+            Text {
+                id: updateUser_Text
+                y: 203
+                text: qsTr("更改使用者資料")
+                anchors.left: parent.left
+                anchors.leftMargin: 372
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 525
+                font.pointSize: 24
+            }
+            Text {
+                id: updateUser_NameText
+                y: 275
+                text: qsTr("暱稱:")
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 453
+                anchors.left: parent.left
+                anchors.leftMargin: 284
+                font.pointSize: 24
+            }
+            TextField{
+                id: updateUser_NameField
+                y: 275
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 453
+                anchors.left: parent.left
+                anchors.leftMargin: 474
+            }
+
+            Text {
+                id: updateUser_BankACCText
+                y: 450
+                text: qsTr("銀行帳號:")
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 278
+                anchors.left: parent.left
+                anchors.leftMargin: 284
+                font.pointSize: 24
+            }
+            TextField{
+                id: updateUser_BankACCField
+                y: 364
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 364
+                anchors.left: parent.left
+                anchors.leftMargin: 474
+            }
+
+            Text {
+                id: updateUser_EmailText
+                y: 364
+                text: qsTr("電子郵件:")
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 364
+                anchors.left: parent.left
+                anchors.leftMargin: 284
+                font.pointSize: 24
+            }
+            TextField{
+                id:updateUser_EmailField
+                y: 450
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 278
+                anchors.left: parent.left
+                anchors.leftMargin: 474
+            }
+
+            Button {
+                id: updateUser_submit
+                y: 450
+                text: qsTr("送出")
+                anchors.left: parent.left
+                anchors.leftMargin: 694
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 276
+                font.pointSize: 18
+            }
+        }
+    }
+
+    Image {
+        id: updateItem
+        source: "img/background.jpg"
+        anchors.fill: parent
+        state: ui.updateItemVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: updateItem
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: updateItem
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+
+
+
+        Item {
+            id: updateItem_Item
+            anchors.fill: parent
+
+            Button {
+                id: updateItem_submit
+                x: 662
+                y: 436
+                text: qsTr("送出")
+                anchors.left: parent.left
+                anchors.leftMargin: 662
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 290
+                font.pointSize: 18
+            }
+
+            TextField{
+                id: updateItem_RemarkField
+                x: 432
+                y: 436
+                anchors.left: parent.left
+                anchors.leftMargin: 432
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 292
+                onPressed: {
+                    inputPanel.active
+                }
+            }
+
+            Text {
+                id: updateItem_Remark
+                x: 285
+                y: 440
+                text: qsTr("備註:")
+                anchors.left: parent.leftText
+                anchors.leftMargin: 331
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 295
+                font.pointSize: 20
+            }
+
+            TextField{
+                id: updateItem_PriceField
+                x: 432
+                y: 364
+                anchors.left: parent.left
+                anchors.leftMargin: 432
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 364
+                onPressed: {
+                    inputPanel.active
+                }
+            }
+
+            TextField{
+                id: updateItem_NameField
+                x: 432
+                y: 290
+                anchors.left: parent.left
+                anchors.leftMargin: 432
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 438
+                onPressed: {
+                    inputPanel.active
+                }
+            }
+
+            Text {
+                id: updateItem_NameText
+                x: 285
+                y: 294
+                text: qsTr("商品名稱:")
+                anchors.left: parent.left
+                anchors.leftMargin: 285
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 441
+                font.pointSize: 20
+            }
+
+            Text {
+                id: updateItem_Price
+                x: 285
+                y: 367
+                text: qsTr("價格:")
+                anchors.left: parent.left
+                anchors.leftMargin: 285
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 368
+                font.pointSize: 20
+            }
+
+            Text {
+                id: updateItem_Text
+                x: 392
+                y: 215
+                text: qsTr("更改商品資訊")
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 513
+                anchors.left: parent.left
+                anchors.leftMargin: 392
+                font.pointSize: 24
+
+            }
+        }
+    }
+
+
+    Image {
+        id: forgetUser
+        anchors.fill: parent
+        source: "img/background.jpg"
+        state: ui.forgetUserVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: forgetUser
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: forgetUser
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+
+        Item {
+            id: forgetUser_Item
+            anchors.fill: parent
+            Text {
+                id: forgetUser_Text
+                y: 227
+                text: qsTr("找回帳號")
+                anchors.right: parent.right
+                anchors.rightMargin: 432
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 501
+                font.pointSize: 24
+            }
+            Text {
+                id: forgetUser_EmailText
+                x: 283
+                y: 368
+                text: qsTr("電子郵件:")
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 368
+                anchors.right: parent.right
+                anchors.rightMargin: 609
+                font.pointSize: 20
+            }
+            TextField{
+                id: forgetUser_EmailField
+                x: 421
+                y: 364
+                anchors.right: parent.right
+                anchors.rightMargin: 403
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 365
+                onPressed: {
+                    inputPanel.active
+                }
+            }
+
+            Button {
+                id: forgetUser_submit
+                x: 635
+                y: 364
+                text: qsTr("送出")
+                anchors.right: parent.right
+                anchors.rightMargin: 289
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 362
+                font.pointSize: 18
+            }
+        }
+    }
+
+    Image {
+        id: forgetUser_thankYou
+        source: "img/thankForBuying.jpg"
+        anchors.fill: parent
+        state: ui.forgetUser_thankYouVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: forgetUser_thankYou
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: forgetUser_thankYou
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+    }
+
+
+
+
+
+
+    Timer{
+        id: timer_Reset
+        interval: 20000
+        repeat: false
+        running: false
+        triggeredOnStart: false
+        onTriggered: {
+
+        }
+    }
 
     InputPanel {
         id: inputPanel
@@ -1365,10 +2228,19 @@ Window {
             if(active) {
                 login_signup_Item.anchors.bottomMargin+=200
                 signup_Item.anchors.bottomMargin+=100
+                upload_ItemInfo_Item.anchors.bottomMargin+=100
+                updateUser_Item.anchors.bottomMargin+=100
+                updateItem_Item.anchors.bottomMargin+=100
+                forgetUser_Item.anchors.bottomMargin+=100
+
             }
             if(!active) {
                 login_signup_Item.anchors.bottomMargin-=200
                 signup_Item.anchors.bottomMargin-=100
+                upload_ItemInfo_Item.anchors.bottomMargin-=100
+                updateUser_Item.anchors.bottomMargin-=100
+                updateItem_Item.anchors.bottomMargin-=100
+                forgetUser_Item.anchors.bottomMargin-=100
             }
         }
         Component.onCompleted: {
@@ -1399,8 +2271,18 @@ Window {
 
 
 
+
+
+
+
+
 /*##^##
 Designer {
-    D{i:4;anchors_height:200;anchors_width:200}
+    D{i:1;invisible:true}D{i:2;invisible:true}D{i:4;anchors_height:200;anchors_width:200}
+D{i:3;invisible:true}D{i:11;invisible:true}D{i:181;invisible:true}D{i:186;invisible:true}
+D{i:187;invisible:true}D{i:211;anchors_x:416}D{i:212;anchors_x:203;anchors_y:216}
+D{i:214;anchors_x:203;anchors_y:216}D{i:218;anchors_x:664}D{i:225;anchors_x:123;anchors_y:133}
+D{i:232;anchors_x:694}D{i:235;anchors_x:662}D{i:238;anchors_x:478;anchors_y:376}D{i:241;anchors_x:331}
+D{i:234;anchors_height:200;anchors_width:200;anchors_x:108;anchors_y:88}
 }
 ##^##*/
