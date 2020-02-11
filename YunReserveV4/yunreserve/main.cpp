@@ -1,6 +1,8 @@
 ﻿#include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QApplication>
+#include <QWindow>
 
 #include "ui.h"
 
@@ -10,6 +12,8 @@ int main(int argc, char *argv[])
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
     qputenv("QT_OPENGL","angle");
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication::addLibraryPath("./plugins");
+
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
     QQmlContext* context = engine.rootContext();

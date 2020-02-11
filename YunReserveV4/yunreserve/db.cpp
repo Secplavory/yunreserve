@@ -120,6 +120,7 @@ void DB::displayQRcode(){
 bool DB::checkPayment(int i){
     db.setDatabaseName("yunreserve");
     if(!db.open()){
+        qDebug("db無法開啟");
         return false;
     }
     QString orderID;
@@ -149,6 +150,7 @@ bool DB::checkPayment(int i){
     query.addBindValue(orderPrice);
     query.exec();
     if(!query.next()){
+        qDebug("查無payment");
         return false;
     }
     query.clear();

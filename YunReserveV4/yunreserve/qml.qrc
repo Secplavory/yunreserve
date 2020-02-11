@@ -18,10 +18,14 @@
         <file>img/channel/15-01.jpg</file>
         <file>img/alreadyhave_button.png</file>
         <file>img/background.jpg</file>
-        <file>img/purchaseButton.jpg</file>
         <file>img/signup_button.png</file>
         <file>img/thankForBuying.jpg</file>
         <file>img/uploadButton.png</file>
         <file>img/welcome.jpg</file>
+        <file>img/purchaseButton.png</file>
+        <file>img/brandIcon2.png</file>
+        <file>img/DTSftZC.gif</file>
+        <file>img/clickToStart.gif</file>
+        <file>img/Spinner.gif</file>
     </qresource>
 </RCC>

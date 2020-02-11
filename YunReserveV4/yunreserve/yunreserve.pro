@@ -1,4 +1,4 @@
-QT += quick virtualkeyboard sql
+QT += quick virtualkeyboard sql widgets
 
 CONFIG += c++11
 
@@ -14,6 +14,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        controlchannel.cpp \
         db.cpp \
         main.cpp \
         qrcode_generater/BitBuffer.cpp \
@@ -37,6 +38,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
 
 HEADERS += \
+    controlchannel.h \
     db.h \
     qrcode_generater/BitBuffer.hpp \
     qrcode_generater/QrCode.hpp \
