@@ -15,11 +15,16 @@
 
 #include <QStringList>
 #include <QString>
+#include <QTimer>
 
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 
 #include <QTimer>
+
+#include <QNetworkProxy>
+
+#include <QDateTime>
 
 
 class UI : public QObject
@@ -88,6 +93,8 @@ class UI : public QObject
     Q_PROPERTY(QString forgetUser_notify READ forgetUser_notify NOTIFY forgetUser_notifyChanged)
     Q_PROPERTY(QString updateUser_notify READ updateUser_notify NOTIFY updateUser_notifyChanged)
     Q_PROPERTY(QString updateItem_notify READ updateItem_notify NOTIFY updateItem_notifyChanged)
+
+    Q_PROPERTY(QString choseChannel_notifyText READ choseChannel_notifyText NOTIFY choseChannel_notifyTextChanged)
 public:
     explicit UI(QObject *parent = nullptr);
     QString welcomeVisible(){return welcomeVisible_Text;}
@@ -151,6 +158,8 @@ public:
     QString forgetUser_notify(){return forgetUser_notify_Text;}
     QString updateUser_notify(){return updateUser_notify_Text;}
     QString updateItem_notify(){return updateItem_notify_Text;}
+    QString choseChannel_notifyText(){return choseChannel_notifyText_Text;}
+
 signals:
     void welcomeVisibleChanged();
     void chooseFunctionVisibleChanged();
@@ -214,6 +223,7 @@ signals:
     void forgetUser_notifyChanged();
     void updateUser_notifyChanged();
     void updateItem_notifyChanged();
+    void choseChannel_notifyTextChanged();
 public slots:
     void chooseFunction();
     void setFunctionHandler(int i);
@@ -233,12 +243,12 @@ public slots:
     void login();
     void signup();
     void getUser(QString acc, QString pwd);
-    void signupSubmit(QString acc,QString pwd, QString bank,QString email,QString ensureEmail);
+    void signupSubmit(QString acc,QString pwd, QString bank,QString email,QString ensureEmail,QString bankCode,QString phoneNum);
     void displayItemInfo();
 
     void upload_submit(QString name,QString price, QString remark);
     void updateItem_submit(QString item,QString price, QString remark);
-    void updateUser_submit(QString pwd, QString bank, QString email);
+    void updateUser_submit(QString pwd, QString bank, QString email, QString ensureEmail, QString phoneNum, QString bankCode);
 
     void forgetUser();
     void forgetUser_submit(QString email);
@@ -246,6 +256,12 @@ public slots:
     void reset();
     void logout();
     void keepChooseChannel();
+
+    void initWidget();
+    void initText();
+    void initBox(QString i);
+    void setChannelVisible_query(QString i,QString seller="None");
+    void initLogin_Lignup();
 private:
     QString widgetVisible;
     QString welcomeVisible_Text;
@@ -275,6 +291,7 @@ private:
     QString forgetUser_notify_Text;
     QString updateUser_notify_Text;
     QString updateItem_notify_Text;
+    QString choseChannel_notifyText_Text;
 };
 
 #endif // UI_H

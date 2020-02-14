@@ -8,6 +8,10 @@
 #include <QSqlQuery>
 #include <QVariant>
 
+#include <QDebug>
+#include <QJsonObject>
+#include <QJsonDocument>
+
 #include "qrcode_generater/QrCode.hpp"
 using namespace qrcodegen;
 

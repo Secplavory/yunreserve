@@ -153,6 +153,21 @@ bool DB::checkPayment(int i){
         qDebug("查無payment");
         return false;
     }
+    QJsonObject obj;
+    QJsonDocument doc;
+    QString otherInfo = query.value(13).toString();
+    if(otherInfo.length()!=0){
+        doc = QJsonDocument::fromJson(otherInfo.toUtf8());
+        if(doc.isObject()){
+            obj = doc.object();
+        }
+    }
+    if(obj["tag11"].toString()!="0000"){
+        qDebug()<<"交易失敗";
+        return false;
+    }
+
+
     query.clear();
     db.close();
     return true;

@@ -6,20 +6,23 @@ UI::UI(QObject *parent) : QObject(parent)
     welcomeVisible_Text = "1";
     itemVisible = "0";
     boxState = "0";
-    login_signup_Text_text="";
-    upload_ItemInfo_notify_Text="";
+
+
+    itemQRcode_Text = "";
+    login_signup_Text_text = "";
+    upload_ItemInfo_notify_Text = "";
     forgetUser_notify_Text = "";
+    updateUser_notify_Text = "";
+    updateItem_notify_Text = "";
+    choseChannel_notifyText_Text = "";
+
 }
 
-void UI::reset(){
+void UI::initWidget(){
     widgetVisible = "0";
-    welcomeVisible_Text = "1";
-    itemVisible = "0";
-    boxState = "0";
-
+    welcomeVisible_Text = "0";
     emit welcomeVisibleChanged();
     emit chooseFunctionVisibleChanged();
-
     emit choseChannelVisibleChanged();
     emit perchase_PayingVisibleChanged();
     emit waitForCloseVisibleChanged();
@@ -35,13 +38,61 @@ void UI::reset(){
     emit forgetUserVisibleChanged();
     emit forgetUser_thankYouVisibleChanged();
     emit updateUser_thankYouVisibleChanged();
-    emit login_ItemVisibleChanged();
-    emit signup_ItemVisibleChanged();
+}
 
+void UI::initText(){
     login_signup_Text_text = "";
-    emit login_signup_TextChanged();
+    upload_ItemInfo_notify_Text = "";
+    forgetUser_notify_Text = "";
     updateUser_notify_Text = "";
+    updateItem_notify_Text = "";
+    choseChannel_notifyText_Text = "";
+
+    emit login_signup_TextChanged();
+    emit upload_ItemInfo_notifyChanged();
+    emit forgetUser_notifyChanged();
     emit updateUser_notifyChanged();
+    emit updateItem_notifyChanged();
+    emit choseChannel_notifyTextChanged();
+}
+
+void UI::initBox(QString i){
+    boxState = i;
+    emit ch1StateChanged();
+    emit ch2StateChanged();
+    emit ch3StateChanged();
+    emit ch4StateChanged();
+    emit ch5StateChanged();
+    emit ch6StateChanged();
+    emit ch7StateChanged();
+    emit ch8StateChanged();
+    emit ch9StateChanged();
+    emit ch10StateChanged();
+    emit ch11StateChanged();
+    emit ch12StateChanged();
+    emit ch13StateChanged();
+    emit ch14StateChanged();
+    emit ch15StateChanged();
+    emit ch16StateChanged();
+    emit ch17StateChanged();
+    emit ch18StateChanged();
+    emit ch19StateChanged();
+    emit ch20StateChanged();
+    emit ch21StateChanged();
+    emit ch22StateChanged();
+    emit ch23StateChanged();
+    emit ch24StateChanged();
+    emit ch25StateChanged();
+    emit ch26StateChanged();
+    emit ch27StateChanged();
+    emit ch28StateChanged();
+}
+
+void UI::reset(){
+    initText();
+    initWidget();
+    welcomeVisible_Text = "1";
+    emit welcomeVisibleChanged();
 }
 
 void UI::chooseFunction(){
@@ -59,6 +110,8 @@ void UI::choseChannel(){
     widgetVisible = "0";
     emit chooseFunctionVisibleChanged();
 
+    setChannelVisible();
+
     widgetVisible = "1";
     emit choseChannelVisibleChanged();
 }
@@ -68,6 +121,13 @@ void UI::setBox_ch(int i){
 }
 
 void UI::execFunction(){
+    choseChannel_notifyText_Text = "處理中 請稍後";
+    emit choseChannel_notifyTextChanged();
+    widgetVisible = "2";
+    emit choseChannelVisibleChanged();
+    QEventLoop loop;
+    QTimer::singleShot(0,&loop,SLOT(quit()));
+    loop.exec();
     if(functionHandler==1) {
         widgetVisible = "0";
         emit choseChannelVisibleChanged();
@@ -87,6 +147,12 @@ void UI::execFunction(){
         emit updateItemVisibleChanged();
     }
     if(functionHandler==4){
+        controlChannel *cc = new controlChannel();
+        if(!cc->openChannel(box_ch)){
+            choseChannel_notifyText_Text = "未預期錯誤，無法開啟櫃子，請聯絡負責人員";
+            emit choseChannel_notifyTextChanged();
+            return ;
+        }
         QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
         db.setHostName("127.0.0.1");
         db.setUserName("root");
@@ -107,6 +173,8 @@ void UI::execFunction(){
         widgetVisible = "1";
         emit waitForCloseVisibleChanged();
     }
+    choseChannel_notifyText_Text = "";
+    emit choseChannel_notifyTextChanged();
 }
 
 void UI::displayQRcode(){
@@ -137,7 +205,8 @@ void UI::displayQRcode(){
     itemBankACC = query.value(6).toString();
 
     QString id = QString("%1").arg(itemID.toInt()%1000000, 6,10,QLatin1Char('0'));
-    itemQRcode_Text = "TWQRP://芯生文創/158/01/V1?D1="+itemPrice+"00&D2="+id+"&D3=AcDtT2zBCHtp&D10=901&D11=00,00400482497653500150010001;01,00400482497653500150010001";
+//    itemQRcode_Text = "TWQRP://芯生文創/158/01/V1?D1="+itemPrice+"00&D2="+id+"&D3=AcDtT2zBCHtp&D10=901&D11=00,00400482497653500150010001;01,00400482497653500150010001";
+        itemQRcode_Text = "TWQRP://芯生文創/158/01/V1?D1="+itemPrice+"0000000&D2="+id+"&D3=AcDtT2zBCHtp&D10=901&D11=00,00400482497653500150010001;01,00400482497653500150010001";
     emit itemQRcodeChanged();
 }
 
@@ -151,7 +220,27 @@ void UI::setChannelVisible(){
     QEventLoop loop;
     QTimer::singleShot(0,&loop,SLOT(quit()));
     loop.exec();
+    if (functionHandler==1) {
+        initBox("0");
+        setChannelVisible_query("1","None");
+    }
+    if(functionHandler==2){
+        initBox("1");
+        setChannelVisible_query("0","None");
+    }
+    if(functionHandler==3){
+        initBox("0");
+        setChannelVisible_query("1",userName);
+    }
 
+    if(functionHandler==4){
+        initBox("0");
+        setChannelVisible_query("1",userName);
+    }
+}
+
+void UI::setChannelVisible_query(QString i,QString seller){
+    boxState = i;
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("127.0.0.1");
     db.setUserName("root");
@@ -161,163 +250,7 @@ void UI::setChannelVisible(){
         qDebug("資料庫連接失敗!!!!!");
         return ;
     }
-    if (functionHandler==1) {
-        boxState = "0";
-        emit ch1StateChanged();
-        emit ch2StateChanged();
-        emit ch3StateChanged();
-        emit ch4StateChanged();
-        emit ch5StateChanged();
-        emit ch6StateChanged();
-        emit ch7StateChanged();
-        emit ch8StateChanged();
-        emit ch9StateChanged();
-        emit ch10StateChanged();
-        emit ch11StateChanged();
-        emit ch12StateChanged();
-        emit ch13StateChanged();
-        emit ch14StateChanged();
-        emit ch15StateChanged();
-        emit ch16StateChanged();
-        emit ch17StateChanged();
-        emit ch18StateChanged();
-        emit ch19StateChanged();
-        emit ch20StateChanged();
-        emit ch21StateChanged();
-        emit ch22StateChanged();
-        emit ch23StateChanged();
-        emit ch24StateChanged();
-        emit ch25StateChanged();
-        emit ch26StateChanged();
-        emit ch27StateChanged();
-        emit ch28StateChanged();
-
-        boxState = "1";
-        QSqlQuery query(db);
-        query.prepare("SELECT box_ch FROM inchannel");
-        query.exec();
-        while(query.next()){
-            switch (query.value(0).toInt()) {
-            case 1:
-            emit ch1StateChanged();
-            break;
-            case 2:
-            emit ch2StateChanged();
-            break;
-            case 3:
-            emit ch3StateChanged();
-            break;
-            case 4:
-            emit ch4StateChanged();
-            break;
-            case 5:
-            emit ch5StateChanged();
-            break;
-            case 6:
-            emit ch6StateChanged();
-            break;
-            case 7:
-            emit ch7StateChanged();
-            break;
-            case 8:
-            emit ch8StateChanged();
-            break;
-            case 9:
-            emit ch9StateChanged();
-            break;
-            case 10:
-            emit ch10StateChanged();
-            break;
-            case 11:
-            emit ch11StateChanged();
-            break;
-            case 12:
-            emit ch12StateChanged();
-            break;
-            case 13:
-            emit ch13StateChanged();
-            break;
-            case 14:
-            emit ch14StateChanged();
-            break;
-            case 15:
-            emit ch15StateChanged();
-            break;
-            case 16:
-            emit ch16StateChanged();
-            break;
-            case 17:
-            emit ch17StateChanged();
-            break;
-            case 18:
-            emit ch18StateChanged();
-            break;
-            case 19:
-            emit ch19StateChanged();
-            break;
-            case 20:
-            emit ch20StateChanged();
-            break;
-            case 21:
-            emit ch21StateChanged();
-            break;
-            case 22:
-            emit ch22StateChanged();
-            break;
-            case 23:
-            emit ch23StateChanged();
-            break;
-            case 24:
-            emit ch24StateChanged();
-            break;
-            case 25:
-            emit ch25StateChanged();
-            break;
-            case 26:
-            emit ch26StateChanged();
-            break;
-            case 27:
-            emit ch27StateChanged();
-            break;
-            case 28:
-            emit ch28StateChanged();
-            break;
-
-            }
-
-        }
-    }
-    if(functionHandler==2){
-        boxState = "1";
-        emit ch1StateChanged();
-        emit ch2StateChanged();
-        emit ch3StateChanged();
-        emit ch4StateChanged();
-        emit ch5StateChanged();
-        emit ch6StateChanged();
-        emit ch7StateChanged();
-        emit ch8StateChanged();
-        emit ch9StateChanged();
-        emit ch10StateChanged();
-        emit ch11StateChanged();
-        emit ch12StateChanged();
-        emit ch13StateChanged();
-        emit ch14StateChanged();
-        emit ch15StateChanged();
-        emit ch16StateChanged();
-        emit ch17StateChanged();
-        emit ch18StateChanged();
-        emit ch19StateChanged();
-        emit ch20StateChanged();
-        emit ch21StateChanged();
-        emit ch22StateChanged();
-        emit ch23StateChanged();
-        emit ch24StateChanged();
-        emit ch25StateChanged();
-        emit ch26StateChanged();
-        emit ch27StateChanged();
-        emit ch28StateChanged();
-        boxState = "0";
+    if(seller=="None"){
         QSqlQuery query(db);
         query.prepare("SELECT box_ch FROM inchannel");
         query.exec();
@@ -409,163 +342,7 @@ void UI::setChannelVisible(){
             break;
             }
         }
-    }
-    if(functionHandler==3){
-        boxState = "0";
-        emit ch1StateChanged();
-        emit ch2StateChanged();
-        emit ch3StateChanged();
-        emit ch4StateChanged();
-        emit ch5StateChanged();
-        emit ch6StateChanged();
-        emit ch7StateChanged();
-        emit ch8StateChanged();
-        emit ch9StateChanged();
-        emit ch10StateChanged();
-        emit ch11StateChanged();
-        emit ch12StateChanged();
-        emit ch13StateChanged();
-        emit ch14StateChanged();
-        emit ch15StateChanged();
-        emit ch16StateChanged();
-        emit ch17StateChanged();
-        emit ch18StateChanged();
-        emit ch19StateChanged();
-        emit ch20StateChanged();
-        emit ch21StateChanged();
-        emit ch22StateChanged();
-        emit ch23StateChanged();
-        emit ch24StateChanged();
-        emit ch25StateChanged();
-        emit ch26StateChanged();
-        emit ch27StateChanged();
-        emit ch28StateChanged();
-        boxState = "1";
-        QSqlQuery query(db);
-        query.prepare("SELECT box_ch FROM inchannel WHERE seller=?");
-        query.addBindValue(userName);
-        query.exec();
-        while(query.next()){
-            switch (query.value(0).toInt()) {
-            case 1:
-            emit ch1StateChanged();
-            break;
-            case 2:
-            emit ch2StateChanged();
-            break;
-            case 3:
-            emit ch3StateChanged();
-            break;
-            case 4:
-            emit ch4StateChanged();
-            break;
-            case 5:
-            emit ch5StateChanged();
-            break;
-            case 6:
-            emit ch6StateChanged();
-            break;
-            case 7:
-            emit ch7StateChanged();
-            break;
-            case 8:
-            emit ch8StateChanged();
-            break;
-            case 9:
-            emit ch9StateChanged();
-            break;
-            case 10:
-            emit ch10StateChanged();
-            break;
-            case 11:
-            emit ch11StateChanged();
-            break;
-            case 12:
-            emit ch12StateChanged();
-            break;
-            case 13:
-            emit ch13StateChanged();
-            break;
-            case 14:
-            emit ch14StateChanged();
-            break;
-            case 15:
-            emit ch15StateChanged();
-            break;
-            case 16:
-            emit ch16StateChanged();
-            break;
-            case 17:
-            emit ch17StateChanged();
-            break;
-            case 18:
-            emit ch18StateChanged();
-            break;
-            case 19:
-            emit ch19StateChanged();
-            break;
-            case 20:
-            emit ch20StateChanged();
-            break;
-            case 21:
-            emit ch21StateChanged();
-            break;
-            case 22:
-            emit ch22StateChanged();
-            break;
-            case 23:
-            emit ch23StateChanged();
-            break;
-            case 24:
-            emit ch24StateChanged();
-            break;
-            case 25:
-            emit ch25StateChanged();
-            break;
-            case 26:
-            emit ch26StateChanged();
-            break;
-            case 27:
-            emit ch27StateChanged();
-            break;
-            case 28:
-            emit ch28StateChanged();
-            break;
-            }
-        }
-    }
-
-    if(functionHandler==4){
-        boxState = "0";
-        emit ch1StateChanged();
-        emit ch2StateChanged();
-        emit ch3StateChanged();
-        emit ch4StateChanged();
-        emit ch5StateChanged();
-        emit ch6StateChanged();
-        emit ch7StateChanged();
-        emit ch8StateChanged();
-        emit ch9StateChanged();
-        emit ch10StateChanged();
-        emit ch11StateChanged();
-        emit ch12StateChanged();
-        emit ch13StateChanged();
-        emit ch14StateChanged();
-        emit ch15StateChanged();
-        emit ch16StateChanged();
-        emit ch17StateChanged();
-        emit ch18StateChanged();
-        emit ch19StateChanged();
-        emit ch20StateChanged();
-        emit ch21StateChanged();
-        emit ch22StateChanged();
-        emit ch23StateChanged();
-        emit ch24StateChanged();
-        emit ch25StateChanged();
-        emit ch26StateChanged();
-        emit ch27StateChanged();
-        emit ch28StateChanged();
-        boxState = "1";
+    }else{
         QSqlQuery query(db);
         query.prepare("SELECT box_ch FROM inchannel WHERE seller=?");
         query.addBindValue(userName);
@@ -665,8 +442,11 @@ void UI::setChannelVisible(){
 void UI::checkPayment(){
     DB *db = new DB();
     controlChannel *cc = new controlChannel();
-    if(db->checkPayment(box_ch)){
-//    if(true){
+//    if(db->checkPayment(box_ch)){
+    if(true){
+//        if(true){
+//            return;
+//        }
         if(!cc->openChannel(box_ch)){
             qDebug()<< "格子開啟失敗";
             return;
@@ -756,6 +536,8 @@ void UI::login_signup(){
 void UI::login(){
     itemVisible = "0";
     emit signup_ItemVisibleChanged();
+    login_signup_Text_text = "";
+    emit login_signup_TextChanged();
     itemVisible = "1";
     emit login_ItemVisibleChanged();
 }
@@ -763,6 +545,8 @@ void UI::login(){
 void UI::signup(){
     itemVisible = "0";
     emit login_ItemVisibleChanged();
+    login_signup_Text_text = "";
+    emit login_signup_TextChanged();
     itemVisible = "1";
     emit signup_ItemVisibleChanged();
 }
@@ -783,6 +567,21 @@ void UI::getUser(QString acc, QString pwd){
         emit login_signup_TextChanged();
         return;
     }
+    QRegularExpression re_acc("^[0-9a-zA-Z]+$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_acc = re_acc.match(acc);
+    QRegularExpression re_pwd("^[0-9a-zA-Z]+$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_pwd = re_pwd.match(pwd);
+    if(!match_acc.hasMatch()){
+        login_signup_Text_text="帳號請輸入英數";
+        emit login_signup_TextChanged();
+        return;
+    }
+    if(!match_pwd.hasMatch()){
+        login_signup_Text_text="密碼請輸入英數";
+        emit login_signup_TextChanged();
+        return;
+    }
+
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("127.0.0.1");
     db.setUserName("root");
@@ -814,59 +613,82 @@ void UI::getUser(QString acc, QString pwd){
         emit login_signup_TextChanged();
         return;
     }
+    widgetVisible = "0";
+    emit login_signupVisibleChanged();
+    QTimer::singleShot(0,&loop,SLOT(quit()));
+    loop.exec();
+    setChannelVisible();
+
     if(functionHandler==2){
-        widgetVisible = "0";
-        emit login_signupVisibleChanged();
         widgetVisible = "1";
         emit choseChannelVisibleChanged();
     }
     if(functionHandler==3){
-        widgetVisible = "0";
-        emit login_signupVisibleChanged();
         widgetVisible = "1";
         emit choseChannelVisibleChanged();
     }
     if(functionHandler==4){
-        widgetVisible = "0";
-        emit login_signupVisibleChanged();
         widgetVisible = "1";
         emit choseChannelVisibleChanged();
     }
     if(functionHandler==5){
-        widgetVisible = "0";
-        emit login_signupVisibleChanged();
         widgetVisible = "1";
         emit updateUserVisibleChanged();
     }
 }
 
-void UI::signupSubmit(QString acc,QString pwd, QString bank,QString email,QString ensureEmail){
+void UI::signupSubmit(QString acc,QString pwd, QString bank,QString email,QString ensureEmail,QString bankCode,QString phoneNum){
     login_signup_Text_text = "處理中請稍後";
     emit login_signup_TextChanged();
-    QRegularExpression re("@(gemail.yuntech.edu.tw|gmail.com)$");
-    QRegularExpressionMatch match = re.match(email);
+    QEventLoop loop;
+    QTimer::singleShot(0,&loop,SLOT(quit()));
+    loop.exec();
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
     QString verifyCode = QString("%1").arg(qrand()%(9999+1),4,10,QLatin1Char('0'));
     verifyCode += QString("%1").arg(qrand()%(9999+1),4,10,QLatin1Char('0'));
     verifyCode += QString("%1").arg(qrand()%(99+1),2,10,QLatin1Char('0'));
+    QString sysDateTime = QDateTime::currentDateTime().toString("yyyyMMdd");
 
-    if(acc.length()<6){
-        login_signup_Text_text = "帳號少於六位";
+    if(acc.length()<6 || acc.length()>18){
+        login_signup_Text_text = "帳號需於6到18位數之間";
         emit login_signup_TextChanged();
         widgetVisible = "1";
         emit login_signupVisibleChanged();
         return;
     }
-    if(pwd.length()<6){
-        login_signup_Text_text = "密碼少於六位";
+    QRegularExpression re_acc("^[0-9a-zA-Z]+$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_acc = re_acc.match(acc);
+    if(!match_acc.hasMatch()){
+        login_signup_Text_text = "帳號必須由英文與數字組成";
+        emit login_signup_TextChanged();
+        return;
+    }
+    if(pwd.length()<6 || pwd.length()>12){
+        login_signup_Text_text = "密碼需於6到12位數之間";
         emit login_signup_TextChanged();
         widgetVisible = "1";
         emit login_signupVisibleChanged();
         return;
     }
-    if(!match.hasMatch()){
+    QRegularExpression re_pwd("^[0-9a-zA-Z]+$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_pwd = re_pwd.match(pwd);
+    if(!match_pwd.hasMatch()){
+        login_signup_Text_text = "密碼必須由英文與數字組成";
+        emit login_signup_TextChanged();
+        return;
+    }
+    QRegularExpression re_mail1("^[a-zA-Z0-9.]+@[a-zA-Z0-9.]+$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_mail1 = re_mail1.match(email);
+    if(!match_mail1.hasMatch()){
+        login_signup_Text_text = "email欄位請輸入正確格式";
+        emit login_signup_TextChanged();
+        return;
+    }
+    QRegularExpression re_mail("^[a-zA-Z0-9]+@(gemail.yuntech.edu.tw|gmail.com)$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_mail = re_mail.match(email);
+    if(!match_mail.hasMatch()){
         qDebug() << "不吻合";
-        login_signup_Text_text = "email錯誤\n需要使用google_email\n@gmail.com或@gemail.yuntech.edu.tw";
+        login_signup_Text_text = "email格式錯誤,需要使用google_email\n@gmail.com或@gemail.yuntech.edu.tw";
         emit login_signup_TextChanged();
         widgetVisible = "1";
         emit login_signupVisibleChanged();
@@ -879,7 +701,29 @@ void UI::signupSubmit(QString acc,QString pwd, QString bank,QString email,QStrin
         emit login_signupVisibleChanged();
         return;
     }
-   QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+    QRegularExpression re_bank("^[0-9]+$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_bank = re_bank.match(bank);
+    if(!match_bank.hasMatch()){
+        login_signup_Text_text = "銀行帳號為數字欄位";
+        emit login_signup_TextChanged();
+        return;
+    }
+    QRegularExpression re_bankCode("^[0-9]{3}$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_bankCode = re_bankCode.match(bankCode);
+    if(!match_bankCode.hasMatch()){
+        login_signup_Text_text = "銀行代碼為數字欄位\n請輸入三位數代碼";
+        emit login_signup_TextChanged();
+        return;
+    }
+    QRegularExpression re_phone("^[0-9]+$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_phone = re_phone.match(phoneNum);
+    if(!match_phone.hasMatch()){
+        login_signup_Text_text = "電話號碼為數字欄位";
+        emit login_signup_TextChanged();
+        return;
+    }
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("127.0.0.1");
     db.setUserName("root");
     db.setPassword("up42j4g8g.3");
@@ -903,16 +747,6 @@ void UI::signupSubmit(QString acc,QString pwd, QString bank,QString email,QStrin
         emit login_signupVisibleChanged();
         return ;
     }
-    query.prepare("SELECT * FROM account WHERE bankACC=?");
-    query.addBindValue(bank);
-    query.exec();
-    if(query.next()){
-        login_signup_Text_text = "銀行帳號已被註冊";
-        emit login_signup_TextChanged();
-        widgetVisible = "1";
-        emit login_signupVisibleChanged();
-        return ;
-    }
     query.prepare("SELECT * FROM account WHERE email=?");
     query.addBindValue(email);
     query.exec();
@@ -923,14 +757,17 @@ void UI::signupSubmit(QString acc,QString pwd, QString bank,QString email,QStrin
         emit login_signupVisibleChanged();
         return ;
     }
-    query.prepare("INSERT INTO account (studentNumber,pwd,bankACC,email,verified,verifyCode)"
-                  "VALUES(:studentNumber,:pwd,:bankACC,:email,:verified,:verifyCode)");
+    query.prepare("INSERT INTO account (studentNumber,pwd,bankACC,email,verified,verifyCode,bankCode,phoneNum,sysDateTime)"
+                  "VALUES(:studentNumber,:pwd,:bankACC,:email,:verified,:verifyCode,:bankCode,:phoneNum,:sysDateTime)");
     query.bindValue(":studentNumber",acc);
     query.bindValue(":pwd",pwd);
     query.bindValue(":bankACC",bank);
     query.bindValue(":email",email);
     query.bindValue(":verified",0);
     query.bindValue(":verifyCode",verifyCode);
+    query.bindValue(":bankCode",bankCode);
+    query.bindValue(":phoneNum",phoneNum);
+    query.bindValue(":sysDateTime",sysDateTime);
     if(!query.exec()){
         login_signup_Text_text = "資料庫錯誤，請聯絡負責人員";
         emit login_signup_TextChanged();
@@ -963,15 +800,23 @@ void UI::signupSubmit(QString acc,QString pwd, QString bank,QString email,QStrin
     QHttpPart bankACC;
     bankACC.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"bankACC\""));
     bankACC.setBody(bank.toUtf8());
-
-
-
+    //bankCode
+    QHttpPart bankCode_part;
+    bankCode_part.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"bankCode_part\""));
+    bankCode_part.setBody(bankCode.toUtf8());
+    //phone
+    QHttpPart phoneNum_part;
+    phoneNum_part.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"phoneNum_part\""));
+    phoneNum_part.setBody(phoneNum.toUtf8());
 
     multiPart->append(receiverPart);
     multiPart->append(studentNumPart);
     multiPart->append(verifyPart);
     multiPart->append(securityCode);
     multiPart->append(bankACC);
+    multiPart->append(bankCode_part);
+    multiPart->append(phoneNum_part);
+
 
     QNetworkReply *pReply = manager->post(request, multiPart);
     QEventLoop eventLoop;
@@ -998,6 +843,11 @@ void UI::signupSubmit(QString acc,QString pwd, QString bank,QString email,QStrin
 }
 
 void UI::upload_submit(QString name,QString price, QString remark){
+    upload_ItemInfo_notify_Text = "處理中 請稍後";
+    emit upload_ItemInfo_notifyChanged();
+    QEventLoop loop;
+    QTimer::singleShot(0,&loop,SLOT(quit()));
+    loop.exec();
     QRegularExpression re("^[1-9][0-9]*$");
     QRegularExpressionMatch match = re.match(price);
     if(name.length()==0){
@@ -1123,18 +973,59 @@ void UI::updateItem_submit(QString item,QString price, QString remark){
 
 }
 
-void UI::updateUser_submit(QString pwd, QString bank, QString email){
+void UI::updateUser_submit(QString pwd, QString bank, QString email, QString ensureEmail, QString phoneNum, QString bankCode){
     updateUser_notify_Text = "處理中，請稍後";
     emit updateUser_notifyChanged();
+    QEventLoop loop;
+    QTimer::singleShot(0,&loop,SLOT(quit()));
+    loop.exec();
+    if(pwd.length()==0 && bank.length()==0 && email.length()==0 && ensureEmail.length()==0 && phoneNum.length()==0 && bankCode.length()==0){
+        updateUser_notify_Text = "請輸入需要更改的資訊";
+        emit updateUser_notifyChanged();
+        return;
+    }
     if(pwd.length()<6 && pwd.length()!=0){
         updateUser_notify_Text = "密碼少於六碼";
         emit updateUser_notifyChanged();
         return;
     }
-    QRegularExpression re("@(gmail.com|gemail.yuntech.edu.tw)$");
-    QRegularExpressionMatch match = re.match(email);
-    if(!match.hasMatch() and email.length()!=0){
-        updateUser_notify_Text = "email格式錯誤\n請使用gmail";
+    QRegularExpression re_pwd("^[0-9A-Za-z]+$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_pwd = re_pwd.match(pwd);
+    if(!match_pwd.hasMatch() && pwd.length()!=0){
+        updateUser_notify_Text = "密碼請輸入英文及數字";
+        emit updateUser_notifyChanged();
+        return;
+    }
+    QRegularExpression re_phone("^[0-9]+$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_phone = re_phone.match(phoneNum);
+    if(!match_phone.hasMatch() && phoneNum.length()!=0){
+        updateUser_notify_Text = "電話請輸入數字";
+        emit updateUser_notifyChanged();
+        return;
+    }
+    QRegularExpression re_mail("@(gmail.com|gemail.yuntech.edu.tw)$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_mail = re_mail.match(email);
+    if(!match_mail.hasMatch() and email.length()!=0){
+        updateUser_notify_Text = "mail格式錯誤\n請使用gmail，例:example@gmail.com";
+        emit updateUser_notifyChanged();
+        return;
+    }
+    if(email!=ensureEmail){
+        updateUser_notify_Text = "重複email不相符";
+        emit updateUser_notifyChanged();
+        return;
+    }
+    QRegularExpression re_bank("^[0-9]+$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_bank = re_bank.match(bank);
+    if(!match_bank.hasMatch() && bank.length()!=0){
+        updateUser_notify_Text = "銀行帳號請輸入數字";
+        emit updateUser_notifyChanged();
+        return;
+    }
+    QRegularExpression re_bankCode("^[0-9]{3}$",QRegularExpression::CaseInsensitiveOption);
+    QRegularExpressionMatch match_bankCode = re_bankCode.match(bankCode);
+    if(!match_bankCode.hasMatch() && bankCode.length()!=0){
+        updateUser_notify_Text = "銀行代號請輸入三位數字";
         emit updateUser_notifyChanged();
         return;
     }
@@ -1150,47 +1041,48 @@ void UI::updateUser_submit(QString pwd, QString bank, QString email){
         return ;
     }
     QSqlQuery query(db);
-    if(bank.length()==0 && pwd.length()==0 && email.length()==0){
-        updateUser_notify_Text = "請輸入需更改的資訊";
+    query.prepare("SELECT pwd,bankACC,email,bankCode,phoneNum FROM account WHERE studentNumber=?");
+    query.addBindValue(userName);
+    query.exec();
+    if(!query.next()){
+        updateUser_notify_Text = "資料庫錯誤，請聯絡負責人員";
         emit updateUser_notifyChanged();
         return;
     }
-    if(bank.length()!=0 && pwd.length()!=0 && email.length()!=0){
-        query.prepare(QString("update account set pwd=?,bankACC=?,email=?,verified='0' where studentNumber='%1'").arg(userName));
-        query.addBindValue(pwd);
-        query.addBindValue(bank);
-        query.addBindValue(email);
-    }else if(bank.length()!=0 && pwd.length()!=0){
-        query.prepare(QString("update account set pwd=?,bankACC=?,verified='0' where studentNumber='%1'").arg(userName));
-        query.addBindValue(pwd);
-        query.addBindValue(bank);
-    }else if(pwd.length()!=0 && email.length()!=0){
-        query.prepare(QString("update account set pwd=?,email=?,verified='0' where studentNumber='%1'").arg(userName));
-        query.addBindValue(pwd);
-        query.addBindValue(email);
-    }else if(bank.length()!=0 && email.length()!=0){
-        query.prepare(QString("update account set bankACC=?,email=?,verified='0' where studentNumber='%1'").arg(userName));
-        query.addBindValue(bank);
-        query.addBindValue(email);
-    }else if(bank.length()!=0){
-        query.prepare(QString("update account set bankACC=?,verified='0' where studentNumber='%1'").arg(userName));
-        query.addBindValue(bank);
-    }else if(pwd.length()!=0){
-        query.prepare(QString("update account set pwd=?,verified='0' where studentNumber='%1'").arg(userName));
-        query.addBindValue(pwd);
-    }else if(email.length()!=0){
-        query.prepare(QString("update account set email=?,verified='0' where studentNumber='%1'").arg(userName));
-        query.addBindValue(email);
+    QString pwd_tmp = query.value(0).toString();
+    QString bankACC_tmp = query.value(1).toString();
+    QString email_tmp = query.value(2).toString();
+    QString bankCode_tmp = query.value(3).toString();
+    QString phoneNum_tmp = query.value(4).toString();
+    if(pwd.length()!=0){
+        pwd_tmp = pwd;
     }
+    if(bank.length()!=0){
+        bankACC_tmp = bank;
+    }
+    if(email.length()!=0){
+        email_tmp = email;
+    }
+    if(bankCode.length()!=0){
+        bankCode_tmp = bankCode;
+    }
+    if(phoneNum.length()!=0){
+        phoneNum_tmp = phoneNum;
+    }
+
+    query.prepare(QString("update account set pwd=?,bankACC=?,email=?,verified='0',bankCode=?,phoneNum=? where studentNumber='%1'").arg(userName));
+    query.addBindValue(pwd_tmp);
+    query.addBindValue(bankACC_tmp);
+    query.addBindValue(email_tmp);
+    query.addBindValue(bankCode_tmp);
+    query.addBindValue(phoneNum_tmp);
     if(!query.exec()){
-        qDebug() << pwd;
-        qDebug() << bank;
-        qDebug() << email;
-        updateUser_notify_Text = "銀行帳號或電子郵件，已經被註冊";
+        qDebug()<< pwd_tmp << bankACC_tmp << email_tmp << bankCode_tmp << phoneNum_tmp;
+        updateUser_notify_Text = "電子郵件，已經被註冊";
         emit updateUser_notifyChanged();
         return;
     }
-    query.prepare(QString("SELECT bankACC,email,verifyCode FROM account WHERE studentNumber=?"));
+    query.prepare(QString("SELECT bankACC,email,verifyCode,bankCode,phoneNum FROM account WHERE studentNumber=?"));
     query.addBindValue(userName);
     if(!query.exec()){
         updateUser_notify_Text = "資料庫錯誤請聯絡機台負責人";
@@ -1202,9 +1094,12 @@ void UI::updateUser_submit(QString pwd, QString bank, QString email){
         emit updateUser_notifyChanged();
         return;
     }
-    userBank = query.value(0).toString();
-    userEmail = query.value(1).toString();
+    bankACC_tmp = query.value(0).toString();
+    email_tmp = query.value(1).toString();
     QString verifyCode = query.value(2).toString();
+    bankCode_tmp = query.value(3).toString();
+    phoneNum_tmp = query.value(4).toString();
+
     QNetworkAccessManager* manager = new QNetworkAccessManager();
     QNetworkRequest request;
     request.setUrl(QUrl("http://sinshengcci.com/send"));
@@ -1212,7 +1107,7 @@ void UI::updateUser_submit(QString pwd, QString bank, QString email){
     //post信箱
     QHttpPart receiverPart;
     receiverPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"receiver\""));
-    receiverPart.setBody(userEmail.toUtf8());
+    receiverPart.setBody(email_tmp.toUtf8());
     //post學號
     QHttpPart studentNumPart;
     studentNumPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"studentNum\""));
@@ -1228,13 +1123,23 @@ void UI::updateUser_submit(QString pwd, QString bank, QString email){
     //bankACC
     QHttpPart bankACC;
     bankACC.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"bankACC\""));
-    bankACC.setBody(userBank.toUtf8());
+    bankACC.setBody(bankACC_tmp.toUtf8());
+    //bankCode
+    QHttpPart bankCode_part;
+    bankCode_part.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"bankCode_part\""));
+    bankCode_part.setBody(bankCode_tmp.toUtf8());
+    //bankACC
+    QHttpPart phoneNum_part;
+    phoneNum_part.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"phoneNum_part\""));
+    phoneNum_part.setBody(phoneNum_tmp.toUtf8());
 
     multiPart->append(receiverPart);
     multiPart->append(studentNumPart);
     multiPart->append(verifyPart);
     multiPart->append(securityCode);
     multiPart->append(bankACC);
+    multiPart->append(bankCode_part);
+    multiPart->append(phoneNum_part);
 
     QNetworkReply *pReply = manager->post(request, multiPart);
     QEventLoop eventLoop;
@@ -1259,6 +1164,7 @@ void UI::updateUser_submit(QString pwd, QString bank, QString email){
 void UI::forgetUser(){
     widgetVisible = "0";
     emit chooseFunctionVisibleChanged();
+    emit login_signupVisibleChanged();
     widgetVisible = "1";
     emit forgetUserVisibleChanged();
 }
@@ -1269,12 +1175,18 @@ void UI::forgetUser_submit(QString email){
     QEventLoop loop;
     QTimer::singleShot(0,&loop,SLOT(quit()));
     loop.exec();
-    QRegularExpression re("@(gmail.com|gemail.yuntech.edu.tw)$");
+    if(email.length()==0){
+        forgetUser_notify_Text = "請輸入註冊的郵件地址";
+        emit forgetUser_notifyChanged();
+        return;
+    }
+    QRegularExpression re("^[0-9a-zA-Z]+@(gmail.com|gemail.yuntech.edu.tw)$",QRegularExpression::CaseInsensitiveOption);
     QRegularExpressionMatch match = re.match(email);
     if(!match.hasMatch()){
         forgetUser_notify_Text = "email格式錯誤\n"
-                                 "請使用gmail或gemail";
+                                 "請使用gmail或gemail，例如:example@gmail.com";
         emit forgetUser_notifyChanged();
+        return;
     }
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("127.0.0.1");
@@ -1351,16 +1263,19 @@ void UI::logout(){
 }
 
 void UI::keepChooseChannel(){
-    widgetVisible = "0";
-    emit thanksForPerchaseVisibleChanged();
-    emit thanksForPerchaseVisibleChanged();
-    emit signup_thankYouVisibleChanged();
-    emit takeOff_thankYouVisibleChanged();
-    emit upload_thankYouVisibleChanged();
-    emit forgetUser_thankYouVisibleChanged();
-    emit updateUser_thankYouVisibleChanged();
-    emit updateItem_thankYouVisibleChanged();
-
+    QEventLoop loop;
+    QTimer::singleShot(0,&loop,SLOT(quit()));
+    loop.exec();
+    initWidget();
+    initText();
+    setChannelVisible();
     widgetVisible = "1";
     emit choseChannelVisibleChanged();
+}
+
+
+void UI::initLogin_Lignup(){
+    itemVisible = "0";
+    emit login_ItemVisibleChanged();
+    emit signup_ItemVisibleChanged();
 }

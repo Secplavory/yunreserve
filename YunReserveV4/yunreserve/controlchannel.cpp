@@ -16,8 +16,12 @@ bool controlChannel::openChannel(int i){
         QTextStream out(&file);
         out << "Cmd=Unlock-"+QString::number(i)+"\nEnd";
         file.close();
-//        QFile file(statuPath);
-//        file.remove();
+        QEventLoop loop;
+        QTimer::singleShot(3000,&loop,SLOT(quit()));
+        loop.exec();
+
+        QFile file(statuPath);
+        file.remove();
         return true;
     }
 
@@ -36,8 +40,9 @@ bool controlChannel::checkChannel(){
             QString str(line);
             qDebug() << str;
             if(str.mid(6,1)=="0"){
-//                QFile file(statusPath);
-//                file.remove();
+                file.close();
+                QFile file(statusPath);
+                file.remove();
                 return false;
             }
         }

@@ -5,6 +5,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QIODevice>
+#include <QEventLoop>
+#include <QTimer>
 
 class controlChannel
 {

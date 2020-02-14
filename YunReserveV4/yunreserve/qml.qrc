@@ -27,5 +27,9 @@
         <file>img/DTSftZC.gif</file>
         <file>img/clickToStart.gif</file>
         <file>img/Spinner.gif</file>
+        <file>img/welcome_Text.png</file>
+        <file>img/forgetUser.png</file>
+        <file>img/takeOff.png</file>
+        <file>img/updateUser.png</file>
     </qresource>
 </RCC>
