@@ -31,5 +31,18 @@
         <file>img/forgetUser.png</file>
         <file>img/takeOff.png</file>
         <file>img/updateUser.png</file>
+        <file>img/thankYou_Text.png</file>
+        <file>img/updateItem.png</file>
+        <file>img/mail_icon.gif</file>
+        <file>img/verifyMail_Text.gif</file>
+        <file>img/HOME.png</file>
+        <file>img/keepChooseChannel.png</file>
+        <file>img/dataFile.png</file>
+        <file>img/pleaseCloseDoor.gif</file>
+        <file>img/submit.png</file>
+        <file>img/bankCode_view.png</file>
+        <file>img/signup_qrcode.jpg</file>
+        <file>img/changeUser_qrcode.jpg</file>
+        <file>img/forgetUser_qrcode.jpg</file>
     </qresource>
 </RCC>

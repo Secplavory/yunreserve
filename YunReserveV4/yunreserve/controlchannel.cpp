@@ -17,9 +17,8 @@ bool controlChannel::openChannel(int i){
         out << "Cmd=Unlock-"+QString::number(i)+"\nEnd";
         file.close();
         QEventLoop loop;
-        QTimer::singleShot(3000,&loop,SLOT(quit()));
+        QTimer::singleShot(5000,&loop,SLOT(quit()));
         loop.exec();
-
         QFile file(statuPath);
         file.remove();
         return true;

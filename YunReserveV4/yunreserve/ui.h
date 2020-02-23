@@ -95,6 +95,17 @@ class UI : public QObject
     Q_PROPERTY(QString updateItem_notify READ updateItem_notify NOTIFY updateItem_notifyChanged)
 
     Q_PROPERTY(QString choseChannel_notifyText READ choseChannel_notifyText NOTIFY choseChannel_notifyTextChanged)
+    Q_PROPERTY(QString choseChannel_contract_Text READ choseChannel_contract_Text NOTIFY choseChannel_contract_TextChanged)
+    Q_PROPERTY(QString contractVisible READ contractVisible NOTIFY contractVisibleChanged)
+
+    Q_PROPERTY(QString contract_text READ contract_text NOTIFY contract_textChanged)
+    Q_PROPERTY(QString toSeeContractState READ toSeeContractState NOTIFY toSeeContractStateChanged)
+
+    Q_PROPERTY(QString contractContent READ contractContent NOTIFY contractContentChanged)
+    Q_PROPERTY(QString contractPage READ contractPage NOTIFY contractPageChanged)
+
+    Q_PROPERTY(QString signupVisible READ signupVisible NOTIFY signupVisibleChanged)
+    Q_PROPERTY(QString changedUserVisble READ changedUserVisble NOTIFY changedUserVisbleChanged)
 public:
     explicit UI(QObject *parent = nullptr);
     QString welcomeVisible(){return welcomeVisible_Text;}
@@ -114,6 +125,7 @@ public:
     QString forgetUserVisible(){return widgetVisible;}
     QString forgetUser_thankYouVisible(){return widgetVisible;}
     QString updateUser_thankYouVisible(){return widgetVisible;}
+    QString contractVisible(){return widgetVisible;}
 
     QString login_ItemVisible(){return itemVisible;}
     QString signup_ItemVisible(){return itemVisible;}
@@ -159,7 +171,14 @@ public:
     QString updateUser_notify(){return updateUser_notify_Text;}
     QString updateItem_notify(){return updateItem_notify_Text;}
     QString choseChannel_notifyText(){return choseChannel_notifyText_Text;}
+    QString choseChannel_contract_Text(){return choseChannel_contract_Text_Text;}
+    QString contract_text(){return contract_text_Text;}
+    QString toSeeContractState(){return toSeeContract_state;}
+    QString contractContent(){return contractContent_Text;}
+    QString contractPage(){return contractPage_Text;}
 
+    QString signupVisible(){return widgetVisible;}
+    QString changedUserVisble(){return widgetVisible;}
 signals:
     void welcomeVisibleChanged();
     void chooseFunctionVisibleChanged();
@@ -224,6 +243,14 @@ signals:
     void updateUser_notifyChanged();
     void updateItem_notifyChanged();
     void choseChannel_notifyTextChanged();
+    void choseChannel_contract_TextChanged();
+    void contractVisibleChanged();
+    void contract_textChanged();
+    void toSeeContractStateChanged();
+    void contractContentChanged();
+    void contractPageChanged();
+    void signupVisibleChanged();
+    void changedUserVisbleChanged();
 public slots:
     void chooseFunction();
     void setFunctionHandler(int i);
@@ -262,6 +289,18 @@ public slots:
     void initBox(QString i);
     void setChannelVisible_query(QString i,QString seller="None");
     void initLogin_Lignup();
+    void toSeeContract(QString i="none");
+    void contract_to_choseChannel();
+    void contract_to_Login_signup();
+
+    void seeSellContract();
+    void seeUseContract();
+    void seePriContract();
+
+    void contractNextPage();
+    void contractLastPage();
+    void signupUser();
+    void changeUser();
 private:
     QString widgetVisible;
     QString welcomeVisible_Text;
@@ -292,6 +331,13 @@ private:
     QString updateUser_notify_Text;
     QString updateItem_notify_Text;
     QString choseChannel_notifyText_Text;
+    QString choseChannel_contract_Text_Text;
+    QString contract_text_Text;
+    QString toSeeContract_state;
+    QString contractType;
+    QString contractContent_Text;
+    QString contractPage_Text;
+    QString contractPage_handler;
 };
 
 #endif // UI_H
