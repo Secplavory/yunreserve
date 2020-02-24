@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>img/background/background.jpg</file>
+        <file>img/button/changeItem.png</file>
+        <file>img/button/changeUser.png</file>
+        <file>img/button/contract.png</file>
+        <file>img/button/forgetUser.png</file>
+        <file>img/button/HOME.png</file>
+        <file>img/button/keepChooseChannel.png</file>
+        <file>img/button/perchase.png</file>
+        <file>img/button/signup.png</file>
+        <file>img/button/submit.png</file>
+        <file>img/button/takeOff.png</file>
+        <file>img/button/upload.png</file>
+        <file>img/icon/brand.png</file>
+        <file>img/icon/mail.gif</file>
+        <file>img/icon/Spinner.gif</file>
+        <file>img/qrcode/bankCode.png</file>
+        <file>img/qrcode/changeUser.jpg</file>
+        <file>img/qrcode/forgetUser.jpg</file>
+        <file>img/qrcode/signup.jpg</file>
+        <file>img/word/close.gif</file>
+        <file>img/word/mail.gif</file>
+        <file>img/word/start.gif</file>
+        <file>img/word/thanks.png</file>
+        <file>img/word/welcome.png</file>
+        <file>img/channel/ch01.jpg</file>
+    </qresource>
+</RCC>
