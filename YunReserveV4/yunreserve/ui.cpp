@@ -231,7 +231,7 @@ void UI::displayQRcode(){
     itemSeller = query.value(4).toString();
 
     QString id = QString("%1").arg(itemID.toInt()%1000000, 6,10,QLatin1Char('0'));
-    itemQRcode_Text = "TWQRP://芯生文創/158/01/V1?D1="+itemPrice+"00&D2="+id+"&D3=AcDtT2zBCHtp&D10=901&D11=00,00400482497653500150010001;01,00400482497653500150010001";
+    itemQRcode_Text = "TWQRP://藏藝點/158/01/V1?D1="+itemPrice+"00&D2="+id+"&D3=AeHoYzwSULbZ&D10=901&D11=00,00400482497653500150010001;01,00400482497653500150010001";
 //        itemQRcode_Text = "TWQRP://芯生文創/158/01/V1?D1="+itemPrice+"0000000&D2="+id+"&D3=AcDtT2zBCHtp&D10=901&D11=00,00400482497653500150010001;01,00400482497653500150010001";
     emit itemQRcodeChanged();
 }
