@@ -19,12 +19,14 @@
 
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
+#include <QCryptographicHash>
 
 #include <QTimer>
 
 #include <QNetworkProxy>
 
 #include <QDateTime>
+#include <QProcess>
 
 
 class UI : public QObject
@@ -301,6 +303,7 @@ public slots:
     void contractLastPage();
     void signupUser();
     void changeUser();
+    void admin();
 private:
     QString widgetVisible;
     QString welcomeVisible_Text;
@@ -322,7 +325,7 @@ private:
     QString itemSeller;
     QString itemEmail;
     QString itemBankACC;
-
+    QString user_name;
     QString itemQRcode_Text;
 
     QString login_signup_Text_text;

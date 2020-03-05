@@ -201,6 +201,14 @@ void UI::execFunction(){
         emit waitForCloseVisibleChanged();
         return;
     }
+    if(functionHandler==99){
+        qDebug() << functionHandler << box_ch;
+        controlChannel *cc = new controlChannel();
+        cc->admin_openChannel(box_ch);
+        widgetVisible = "1";
+        emit choseChannelVisibleChanged();
+        return;
+    }
     widgetVisible = "1";
     emit choseChannelVisibleChanged();
 }
@@ -487,8 +495,8 @@ void UI::checkPayment(){
     controlChannel *cc = new controlChannel();
     if(db->checkPayment(box_ch)){
 //    if(true){
-//        if(true){
-//            return;
+        widgetVisible = "3";
+        emit perchase_PayingVisibleChanged();
         if(!cc->openChannel(box_ch)){
             qDebug()<< "格子開啟失敗";
             return;
@@ -515,9 +523,10 @@ void UI::checkPayment(){
         QString remark = query.value(3).toString();
         QString seller = query.value(4).toString();
         QString upload_dateTime = query.value(6).toString();
+        QString seller_name = query.value(7).toString();
         QString perchase_dateTime = QDateTime::currentDateTime().toString("yyyyMMdd");
-        query.prepare("INSERT INTO transaction_history(item,price,remark,seller,box_ch,upload_dateTime,perchase_dateTime)"
-                      "VALUES(:item,:price,:remark,:seller,:box_ch,:upload_dateTime,:perchase_dateTime)");
+        query.prepare("INSERT INTO transaction_history(item,price,remark,seller,box_ch,upload_dateTime,perchase_dateTime,seller_name)"
+                      "VALUES(:item,:price,:remark,:seller,:box_ch,:upload_dateTime,:perchase_dateTime,:seller_name)");
         query.bindValue(":item",item);
         query.bindValue(":price",price);
         query.bindValue(":remark",remark);
@@ -525,6 +534,7 @@ void UI::checkPayment(){
         query.bindValue(":box_ch",box_ch);
         query.bindValue(":upload_dateTime",upload_dateTime);
         query.bindValue(":perchase_dateTime",perchase_dateTime);
+        query.bindValue(":seller_name",seller_name);
         if(!query.exec()){
             qDebug()<< "資料庫無法存取";
             return;
@@ -535,10 +545,65 @@ void UI::checkPayment(){
             qDebug()<< "無法刪除資料";
             return;
         }
-        widgetVisible = "0";
-        emit perchase_PayingVisibleChanged();
+        initWidget();
         widgetVisible = "1";
         emit waitForCloseVisibleChanged();
+/*
+        query.prepare("SELECT email FROM account WHERE studentNumber=?");
+        query.addBindValue(seller);
+        query.exec();
+        if(!query.next()){
+            return;
+        }
+        QNetworkAccessManager* manager = new QNetworkAccessManager();
+        QNetworkRequest request;
+        request.setUrl(QUrl("http://yunreserve.com/user/perchase_notify_seller"));
+        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+        //post賣家姓名
+        QHttpPart namePart;
+        namePart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"namePart\""));
+        namePart.setBody(seller_name.toUtf8());
+        //post賣家帳號
+        QHttpPart accPart;
+        accPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"accPart\""));
+        accPart.setBody(seller_name.toUtf8());
+        //post信箱
+        QHttpPart emailPart;
+        emailPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"emailPart\""));
+        emailPart.setBody(query.value(0).toString().toUtf8());
+        //post物品
+        QHttpPart itemPart;
+        itemPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"itemPart\""));
+        itemPart.setBody(item.toUtf8());
+        //post價格
+        QHttpPart pricePart;
+        pricePart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"pricePart\""));
+        pricePart.setBody(price.toUtf8());
+        //post密碼
+        QHttpPart pwdPart;
+        pwdPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"pwdPart\""));
+        pwdPart.setBody("OFA824976535001123");
+
+        multiPart->append(namePart);
+        multiPart->append(accPart);
+        multiPart->append(emailPart);
+        multiPart->append(itemPart);
+        multiPart->append(pricePart);
+        multiPart->append(pwdPart);
+
+        QNetworkReply *pReply = manager->post(request, multiPart);
+        QEventLoop eventLoop;
+        QObject::connect(manager,&QNetworkAccessManager::finished,
+                         &eventLoop,&QEventLoop::quit);
+        eventLoop.exec();
+        QByteArray bytes = pReply->readAll();
+        QString strTMP = bytes;
+        qDebug() << strTMP;
+        pReply->deleteLater();
+*/
+
+
     }else{
         widgetVisible = "1";
         emit perchase_PayingVisibleChanged();
@@ -635,10 +700,15 @@ void UI::getUser(QString acc, QString pwd){
         emit login_signup_TextChanged();
         return ;
     }
+    qDebug()<<pwd;
+    QCryptographicHash *hash = new QCryptographicHash(QCryptographicHash::Sha256);
+    hash->addData(pwd.toUtf8());
+    QByteArray pwd_hash = hash->result().toHex();
+    qDebug()<< pwd_hash;
     QSqlQuery query(db);
-    query.prepare("SELECT studentNumber,bankACC,email,verified FROM account WHERE studentNumber=? AND pwd=?");
+    query.prepare("SELECT studentNumber,bankACC,email,verified,name FROM account WHERE studentNumber=? AND pwd=?");
     query.addBindValue(acc);
-    query.addBindValue(pwd);
+    query.addBindValue(pwd_hash);
     query.exec();
     if(!query.next()){
         login_signup_Text_text="帳號密碼錯誤";
@@ -649,6 +719,7 @@ void UI::getUser(QString acc, QString pwd){
     userBank = query.value(1).toString();
     userEmail = query.value(2).toString();
     userVerified = query.value(3).toString();
+    user_name = query.value(4).toString();
     if(userVerified=="0" && functionHandler!=5){
         login_signup_Text_text="帳號尚未驗證\n"
                                "請查看email並驗證帳號";
@@ -915,6 +986,13 @@ void UI::upload_submit(QString name,QString price, QString remark){
         emit upload_ItemInfoVisibleChanged();
         return ;
     }
+    if(price.toInt()<10){
+        upload_ItemInfo_notify_Text = "價格必須大於十元";
+        emit upload_ItemInfo_notifyChanged();
+        widgetVisible = "1";
+        emit upload_ItemInfoVisibleChanged();
+        return ;
+    }
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("127.0.0.1");
     db.setUserName("root");
@@ -929,14 +1007,15 @@ void UI::upload_submit(QString name,QString price, QString remark){
     }
     QString upload_dateTime = QDateTime::currentDateTime().toString("yyyyMMdd");
     QSqlQuery query(db);
-    query.prepare("INSERT INTO inchannel(item,price,remark,seller,box_ch,upload_dateTime)"
-                  "VALUES(:item,:price,:remark,:seller,:box_ch,:upload_dateTime)");
+    query.prepare("INSERT INTO inchannel(item,price,remark,seller,box_ch,upload_dateTime,seller_name)"
+                  "VALUES(:item,:price,:remark,:seller,:box_ch,:upload_dateTime,:seller_name)");
     query.bindValue(":item",name);
     query.bindValue(":price",price);
     query.bindValue(":remark",remark);
     query.bindValue(":seller",userName);
     query.bindValue(":box_ch",box_ch);
     query.bindValue(":upload_dateTime",upload_dateTime);
+    query.bindValue(":seller_name",user_name);
     if(!query.exec()){
         upload_ItemInfo_notify_Text = "資料庫連接失敗，請聯絡機台負責人員";
         emit upload_ItemInfo_notifyChanged();
@@ -956,6 +1035,57 @@ void UI::upload_submit(QString name,QString price, QString remark){
     emit upload_ItemInfoVisibleChanged();
     widgetVisible = "1";
     emit waitForCloseVisibleChanged();
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager();
+    QNetworkRequest request;
+    request.setUrl(QUrl("http://yunreserve.com/user/upload_notify"));
+    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    //post信箱
+    QHttpPart emailPart;
+    emailPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"emailPart\""));
+    emailPart.setBody(userEmail.toUtf8());
+    //post學號
+    QHttpPart accPart;
+    accPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"accPart\""));
+    accPart.setBody(userName.toUtf8());
+    //post姓名
+    QHttpPart namePart;
+    namePart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"namePart\""));
+    namePart.setBody(user_name.toUtf8());
+    //post商品名稱
+    QHttpPart itemPart;
+    itemPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"itemPart\""));
+    itemPart.setBody(name.toUtf8());
+    //post價格
+    QHttpPart pricePart;
+    pricePart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"pricePart\""));
+    pricePart.setBody(price.toUtf8());
+    //post上架日期
+    QHttpPart dateTimePart;
+    dateTimePart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"dateTimePart\""));
+    dateTimePart.setBody(upload_dateTime.toUtf8());
+    //post密碼
+    QHttpPart pwdPart;
+    pwdPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"pwdPart\""));
+    pwdPart.setBody("OFA824976535001123");
+
+    multiPart->append(emailPart);
+    multiPart->append(accPart);
+    multiPart->append(namePart);
+    multiPart->append(itemPart);
+    multiPart->append(pricePart);
+    multiPart->append(dateTimePart);
+    multiPart->append(pwdPart);
+
+    QNetworkReply *pReply = manager->post(request, multiPart);
+    QEventLoop eventLoop;
+    QObject::connect(manager,&QNetworkAccessManager::finished,
+                     &eventLoop,&QEventLoop::quit);
+    eventLoop.exec();
+    QByteArray bytes = pReply->readAll();
+    QString strTMP = bytes;
+    qDebug() << strTMP;
+    pReply->deleteLater();
 }
 
 void UI::updateItem_submit(QString item,QString price, QString remark){
@@ -2293,5 +2423,27 @@ void UI::changeUser(){
 }
 
 
-
+void UI::admin(){
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+    db.setHostName("127.0.0.1");
+    db.setUserName("root");
+    db.setPassword("up42j4g8g.3");
+    db.setDatabaseName("yunreserve");
+    if(!db.open()){
+        qDebug("資料庫連接失敗!!!!!");
+        return ;
+    }
+    QSqlQuery query(db);
+    query.prepare("SELECT * FROM admin WHERE id=\"1\" AND handler=\"1\"");
+    if(!query.exec()){
+        return;
+    }
+    if(query.next()){
+        initWidget();
+        initBox("1");
+        functionHandler=99;
+        widgetVisible = "1";
+        emit choseChannelVisibleChanged();
+    }
+}
 

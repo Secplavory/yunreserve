@@ -10,7 +10,7 @@ Window {
     visible: true
     width: 1024
     height: 768
-    //    visibility: Window.FullScreen
+    visibility: Window.FullScreen
     color: "#ffffff"
     title: qsTr("新生文創")
 
@@ -30,7 +30,7 @@ Window {
 
     Timer{
         id: timer_CheckChannel
-        interval: 5000
+        interval: 2000
         repeat: true
         running: false
         triggeredOnStart: false
@@ -74,7 +74,7 @@ Window {
         property var a;
         onRunningChanged: {
             if(running==true){
-                a = 30;
+                a = 45;
             }
         }
         onTriggered: {
@@ -98,10 +98,10 @@ Window {
         width: window.width*0.5*2
         onActiveChanged: {
             if(active) {
-                upload_ItemInfo_Item.anchors.bottomMargin+=100
+                upload_ItemInfo_Item.anchors.bottomMargin+=50
                 login_signup_Item.anchors.bottomMargin+=100
                 signup_Item.anchors.bottomMargin+=100
-                login_Item.anchors.bottomMargin+=100
+                login_Item.anchors.bottomMargin+=50
                 updateUser_Item.anchors.bottomMargin+=100
                 updateItem_Item.anchors.bottomMargin+=100
                 forgetUser_Item.anchors.bottomMargin+=100
@@ -110,8 +110,8 @@ Window {
             if(!active) {
                 login_signup_Item.anchors.bottomMargin-=100
                 signup_Item.anchors.bottomMargin-=100
-                login_Item.anchors.bottomMargin-=100
-                upload_ItemInfo_Item.anchors.bottomMargin-=100
+                login_Item.anchors.bottomMargin-=50
+                upload_ItemInfo_Item.anchors.bottomMargin-=50
                 updateUser_Item.anchors.bottomMargin-=100
                 updateItem_Item.anchors.bottomMargin-=100
                 forgetUser_Item.anchors.bottomMargin-=100
@@ -154,7 +154,7 @@ Window {
         height: 75
         anchors.horizontalCenterOffset: 0
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 35
+        anchors.bottomMargin: 40
         anchors.horizontalCenter: parent.horizontalCenter
         onEnabledChanged: {
             if(enabled==false){
@@ -195,7 +195,7 @@ Window {
         opacity: 0
         anchors.horizontalCenterOffset: -60
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 35
+        anchors.bottomMargin: 40
         anchors.horizontalCenter: parent.horizontalCenter
         onEnabledChanged: {
             if(enabled==false){
@@ -671,261 +671,6 @@ Window {
 
 
 
-    Image {
-        id: contract
-        source: "img/background.jpg"
-        width: 1024
-        height: 768
-        state: ui.contractVisible
-        states: [
-            State {
-                name: "0"
-                PropertyChanges {
-                    target: contract
-                    opacity: 0
-                    enabled: false
-                }
-            },
-            State {
-                name: "1"
-                PropertyChanges {
-                    target: contract
-                    opacity: 1
-                    enabled: true
-                }
-            },
-            State {
-                name: "2"
-                PropertyChanges {
-                    target: contract
-                    opacity: 1
-                    enabled: true
-                }
-            },
-            State {
-                name: "3"
-                PropertyChanges {
-                    target: contract
-                    opacity: 1
-                    enabled: true
-                }
-            }
-        ]
-        onStateChanged: {
-            if(state=="0"){
-                backLogin_signup_button.enabled = false
-                backLogin_signup_button.opacity = 0
-                backChannel_button.enabled = false
-                backChannel_button.opacity = 0
-                logout_button.enabled = true
-                logout_button.opacity = 1
-                contract_button.anchors.bottomMargin = 0
-            }else{
-                logout_button.enabled = false
-                logout_button.opacity = 0
-                nextPage_button.enabled = false
-                lastPage_button.enabled = false
-                nextPage_button.opacity = 0
-                lastPage_button.opacity = 0
-            }
-            if(state=="1"){
-                backLogin_signup_button.enabled = false
-                backLogin_signup_button.opacity = 0
-                backChannel_button.enabled = true
-                backChannel_button.opacity = 1
-            }
-            if(state=="2"){
-                backLogin_signup_button.enabled = true
-                backLogin_signup_button.opacity = 1
-                backChannel_button.enabled = false
-                backChannel_button.opacity = 0
-            }
-            if(state=="3"){
-                backLogin_signup_button.enabled = false
-                backLogin_signup_button.opacity = 0
-                backChannel_button.enabled = true
-                backChannel_button.opacity = 1
-            }
-        }
-        transitions: [
-            Transition {
-                NumberAnimation {
-                    property: "opacity";
-                    easing.type: Easing.InOutQuad;
-                    duration: 1000;
-                }
-            }
-        ]
-        Image {
-            id: backChannel_button
-            source: "img/keepChooseChannel.png"
-            width: 100
-            height: 100
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 30
-            anchors.horizontalCenter: parent.horizontalCenter
-            MouseArea{
-                anchors.fill: parent
-                onClicked: {
-                    timer_Reset.restart()
-                    ui.contract_to_choseChannel()
-                }
-                onPressed: {
-                    parent.opacity = 0.5
-                }
-                onReleased: {
-                    parent.opacity = 1
-                }
-            }
-        }
-        Image {
-            id: backLogin_signup_button
-            source: "img/keepChooseChannel.png"
-            width: 100
-            height: 100
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 30
-            anchors.horizontalCenter: parent.horizontalCenter
-            MouseArea{
-                anchors.fill: parent
-                onClicked: {
-                    timer_Reset.restart()
-                    ui.contract_to_Login_signup()
-                }
-                onPressed: {
-                    parent.opacity = 0.5
-                }
-                onReleased: {
-                    parent.opacity = 1
-                }
-            }
-        }
-
-        Item {
-            id: contract_button
-            width: 1024
-            height: 768
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-
-            Button {
-                id: sellContract
-                text: qsTr("寄賣契約")
-                anchors.verticalCenterOffset: 0
-                anchors.horizontalCenterOffset: -200
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                onClicked: {
-                    timer_Reset.restart()
-                    ui.seeSellContract()
-                    contract_button.anchors.bottomMargin = 300
-                    nextPage_button.enabled = true
-                    lastPage_button.enabled = true
-                    nextPage_button.opacity = 1
-                    lastPage_button.opacity = 1
-                }
-            }
-            Button {
-                id: useContract
-                text: qsTr("使用契約")
-                anchors.verticalCenterOffset: 0
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                onClicked: {
-                    timer_Reset.restart()
-                    ui.seeUseContract()
-                    contract_button.anchors.bottomMargin = 300
-                    nextPage_button.enabled = true
-                    lastPage_button.enabled = true
-                    nextPage_button.opacity = 1
-                    lastPage_button.opacity = 1
-                }
-            }
-            Button {
-                id: priContract
-                x: 51
-                y: 52
-                text: qsTr("隱私權政策")
-                anchors.horizontalCenterOffset: 200
-                anchors.verticalCenterOffset: 0
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                onClicked: {
-                    timer_Reset.restart()
-                    ui.seePriContract()
-                    contract_button.anchors.bottomMargin = 300
-                    nextPage_button.enabled = true
-                    lastPage_button.enabled = true
-                    nextPage_button.opacity = 1
-                    lastPage_button.opacity = 1
-                }
-            }
-
-            Text {
-                id: contract_text
-                x: 410
-                y: 259
-                width: 273
-                height: 33
-                text: ui.contract_text
-                anchors.verticalCenterOffset: 50
-                font.pointSize: 24
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenterOffset: 0
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-        }
-
-        Button {
-            id: lastPage_button
-            text: qsTr("上一頁")
-            anchors.verticalCenterOffset: 225
-            anchors.horizontalCenterOffset: -100
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            onClicked: {
-                timer_Reset.restart()
-                ui.contractLastPage()
-            }
-        }
-
-        Button {
-            id: nextPage_button
-            x: 71
-            y: 8
-            text: qsTr("下一頁")
-            anchors.verticalCenterOffset: 225
-            anchors.horizontalCenterOffset: 100
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            onClicked: {
-                timer_Reset.restart()
-                ui.contractNextPage()
-            }
-        }
-        Text {
-            id: contractContent
-            text: ui.contractContent
-            anchors.top: parent.top
-            anchors.topMargin: 160
-            font.pointSize: 16
-            anchors.horizontalCenter: parent.horizontalCenter
-            verticalAlignment: Text.AlignTop
-            horizontalAlignment: Text.AlignLeft
-        }
-        Text {
-            id: currentPage_Text
-            text: ui.contractPage
-            anchors.verticalCenterOffset: 225
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-            font.pointSize: 16
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-        }
-    }
 
     Image {
         id: waitForClose
@@ -991,1345 +736,6 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             source: "img/pleaseCloseDoor.gif"
-        }
-    }
-    Image {
-        id: choseChannel
-        anchors.fill: parent
-        source: "img/background.jpg"
-        state: ui.choseChannelVisible
-        states: [
-            State {
-                name: "0"
-                PropertyChanges {
-                    target: choseChannel
-                    opacity: 0
-                    enabled: false
-                }
-            },
-            State {
-                name: "1"
-                PropertyChanges {
-                    target: choseChannel
-                    opacity: 1
-                    enabled: true
-                }
-            },
-            State {
-                name: "2"
-                PropertyChanges {
-                    target: choseChannel
-                    opacity: 1
-                    enabled: false
-                }
-            },
-            State {
-                name: "3"
-                PropertyChanges {
-                    target: choseChannel
-                    opacity: 1
-                    enabled: true
-                }
-            }
-        ]
-        onStateChanged: {
-            if(state=="3"){
-                keepChooseChannel.enabled = false
-                keepChooseChannel.opacity = 0
-            }
-            if(state=="2"){
-                logout_button.enabled = false
-                logout_button.opacity = .5
-            }
-            if(state=="1"){
-                logout_button.enabled = true
-                logout_button.opacity = 1
-            }
-        }
-        transitions: [
-            Transition {
-                NumberAnimation {
-                    property: "opacity";
-                    easing.type: Easing.InOutQuad;
-                    duration: 1000;
-                }
-            }
-        ]
-        Item {
-            id: choseChannel_Item
-            anchors.fill: parent
-
-            Image {
-                id: choseChannel_1
-                x: 60
-                y: 60
-                width: 100
-                height: 100
-                state: ui.ch1State
-                anchors.top: parent.top
-                enabled: true
-                anchors.left: parent.left
-                anchors.topMargin: 20
-                anchors.leftMargin: 30
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.restart()
-
-                        ui.setBox_ch(1)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_1
-                            opacity: 1
-                            source: "img/channel/01-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_1
-                            opacity: 0.3
-                            source: "img/channel/01-01.jpg"
-                            enabled: false
-                        }
-                    }
-                ]
-            }
-
-            Image {
-                id: choseChannel_2
-                y: 60
-                width: 100
-                height: 100
-                state: ui.ch2State
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.topMargin: 20
-                anchors.leftMargin: 150
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.restart()
-
-                        ui.setBox_ch(2)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_2
-                            opacity: 1
-                            source: "img/channel/02-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_2
-                            opacity: 0.3
-                            source: "img/channel/02-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_3
-                x: 300
-                y: 60
-                width: 100
-                height: 100
-                state: ui.ch3State
-                anchors.top: parent.top
-                enabled: false
-                anchors.left: parent.left
-                anchors.topMargin: 20
-                anchors.leftMargin: 270
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.restart()
-
-                        ui.setBox_ch(3)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_3
-                            opacity: 1
-                            source: "img/channel/03-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_3
-                            opacity: 0.3
-                            source: "img/channel/03-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_4
-                width: 100
-                height: 100
-                visible: true
-                state: ui.ch4State
-                anchors.top: parent.top
-                enabled: false
-                anchors.left: parent.left
-                anchors.topMargin: 130
-                anchors.leftMargin: 30
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.restart()
-
-                        ui.setBox_ch(4)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_4
-                            opacity: 1
-                            source: "img/channel/04-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_4
-                            opacity: 0.3
-                            source: "img/channel/04-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_5
-                x: -9
-                y: -9
-                width: 100
-                height: 100
-                state: ui.ch5State
-                anchors.top: parent.top
-                enabled: false
-                anchors.left: parent.left
-                anchors.topMargin: 130
-                anchors.leftMargin: 150
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.restart()
-
-                        ui.setBox_ch(5)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_5
-                            opacity: 1
-                            source: "img/channel/05-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_5
-                            opacity: 0.3
-                            source: "img/channel/05-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_6
-                x: -9
-                y: -9
-                width: 100
-                height: 100
-                visible: true
-                state: ui.ch6State
-                anchors.top: parent.top
-                enabled: false
-                anchors.left: parent.left
-                anchors.topMargin: 130
-                anchors.leftMargin: 270
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.restart()
-
-                        ui.setBox_ch(6)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_6
-                            opacity: 1
-                            source: "img/channel/06-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_6
-                            opacity: 0.3
-                            source: "img/channel/06-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_7
-                x: -9
-                y: -9
-                width: 167
-                height: 120
-                state: ui.ch7State
-                anchors.top: parent.top
-                enabled: false
-                anchors.left: parent.left
-                anchors.topMargin: 240
-                anchors.leftMargin: 30
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(7)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_7
-                            opacity: 1
-                            source: "img/channel/07-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_7
-                            opacity: 0.3
-                            source: "img/channel/07-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_8
-                x: -9
-                y: -9
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch8State
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.topMargin: 240
-                anchors.leftMargin: 203
-                MouseArea {
-                    id: mouseArea
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(8)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_8
-                            opacity: 1
-                            source: "img/channel/08-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_8
-                            opacity: 0.3
-                            source: "img/channel/08-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_9
-                x: -9
-                y: -9
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch9State
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.topMargin: 366
-                anchors.leftMargin: 30
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(9)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_9
-                            opacity: 1
-                            source: "img/channel/09-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_9
-                            opacity: 0.3
-                            source: "img/channel/09-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_10
-                x: -9
-                y: -9
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch10State
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.topMargin: 366
-                anchors.leftMargin: 203
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(10)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_10
-                            opacity: 1
-                            source: "img/channel/10-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_10
-                            opacity: 0.3
-                            source: "img/channel/10-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_11
-                x: 30
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch11State
-                anchors.rightMargin: 827
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.topMargin: 492
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(11)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_11
-                            opacity: 1
-                            source: "img/channel/11-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_11
-                            opacity: 0.3
-                            source: "img/channel/11-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_12
-                x: 203
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch12State
-                anchors.rightMargin: 654
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.topMargin: 492
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(12)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_12
-                            opacity: 1
-                            source: "img/channel/12-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_12
-                            opacity: 0.3
-                            source: "img/channel/12-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_13
-                x: 30
-                y: 5
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch13State
-                anchors.rightMargin: 827
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.topMargin: 618
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(13)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_13
-                            opacity: 1
-                            source: "img/channel/11-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_13
-                            opacity: 0.3
-                            source: "img/channel/11-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_14
-                x: 203
-                y: 5
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch14State
-                anchors.rightMargin: 654
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.topMargin: 618
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(14)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_14
-                            opacity: 1
-                            source: "img/channel/12-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_14
-                            opacity: 0.3
-                            source: "img/channel/12-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_15
-                x: 656
-                y: 69
-                width: 100
-                height: 100
-                state: ui.ch15State
-                anchors.rightMargin: 268
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.topMargin: 20
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(15)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_15
-                            opacity: 1
-                            source: "img/channel/02-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_15
-                            opacity: 0.3
-                            source: "img/channel/02-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_16
-                x: 776
-                y: 69
-                width: 100
-                height: 100
-                state: ui.ch16State
-                anchors.rightMargin: 148
-                anchors.top: parent.top
-                anchors.right: parent.right
-                enabled: false
-                anchors.topMargin: 20
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(16)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_16
-                            opacity: 1
-                            source: "img/channel/03-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_16
-                            opacity: 0.3
-                            source: "img/channel/03-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_17
-                x: 896
-                y: 9
-                width: 100
-                height: 100
-                visible: true
-                state: ui.ch17State
-                anchors.rightMargin: 28
-                anchors.top: parent.top
-                anchors.right: parent.right
-                enabled: false
-                anchors.topMargin: 20
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(17)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_17
-                            opacity: 1
-                            source: "img/channel/04-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_17
-                            opacity: 0.3
-                            source: "img/channel/04-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_18
-                x: 656
-                y: 9
-                width: 100
-                height: 100
-                state: ui.ch18State
-                anchors.rightMargin: 268
-                anchors.top: parent.top
-                anchors.right: parent.right
-                enabled: false
-                anchors.topMargin: 126
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(18)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_18
-                            opacity: 1
-                            source: "img/channel/05-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_18
-                            opacity: 0.3
-                            source: "img/channel/05-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_19
-                x: 776
-                y: 9
-                width: 100
-                height: 100
-                visible: true
-                state: ui.ch19State
-                anchors.rightMargin: 148
-                anchors.top: parent.top
-                anchors.right: parent.right
-                enabled: false
-                anchors.topMargin: 126
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(19)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_19
-                            opacity: 1
-                            source: "img/channel/06-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_19
-                            opacity: 0.3
-                            source: "img/channel/06-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_20
-                x: 896
-                y: 69
-                width: 100
-                height: 100
-                state: ui.ch20State
-                anchors.rightMargin: 28
-                anchors.top: parent.top
-                anchors.right: parent.right
-                enabled: true
-                anchors.topMargin: 126
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(20)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_20
-                            opacity: 1
-                            source: "img/channel/01-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_20
-                            opacity: 0.3
-                            source: "img/channel/01-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_21
-                x: -6
-                y: -6
-                width: 167
-                height: 120
-                state: ui.ch21State
-                anchors.top: parent.top
-                enabled: false
-                anchors.left: parent.left
-                anchors.topMargin: 240
-                anchors.leftMargin: 656
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(21)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_21
-                            opacity: 1
-                            source: "img/channel/07-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_21
-                            opacity: 0.3
-                            source: "img/channel/07-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_22
-                x: -15
-                y: -15
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch22State
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.topMargin: 240
-                anchors.leftMargin: 829
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(22)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_22
-                            opacity: 1
-                            source: "img/channel/08-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_22
-                            opacity: 0.3
-                            source: "img/channel/08-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_23
-                x: -15
-                y: -15
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch23State
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.topMargin: 366
-                anchors.leftMargin: 656
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(23)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_23
-                            opacity: 1
-                            source: "img/channel/09-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_23
-                            opacity: 0.3
-                            source: "img/channel/09-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_24
-                x: -15
-                y: -15
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch24State
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.topMargin: 366
-                anchors.leftMargin: 829
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(24)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_24
-                            opacity: 1
-                            source: "img/channel/10-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_24
-                            opacity: 0.3
-                            source: "img/channel/10-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_25
-                x: 656
-                y: -6
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch25State
-                anchors.rightMargin: 201
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.topMargin: 492
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(25)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_25
-                            opacity: 1
-                            source: "img/channel/11-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_25
-                            opacity: 0.3
-                            source: "img/channel/11-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_26
-                x: 829
-                y: -6
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch26State
-                anchors.rightMargin: 28
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.topMargin: 492
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(26)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_26
-                            opacity: 1
-                            source: "img/channel/12-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_26
-                            opacity: 0.3
-                            source: "img/channel/12-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_27
-                x: 656
-                y: -1
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch27State
-                anchors.rightMargin: 201
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.topMargin: 618
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(27)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_27
-                            opacity: 1
-                            source: "img/channel/11-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_27
-                            opacity: 0.3
-                            source: "img/channel/11-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_28
-                x: 829
-                y: -1
-                width: 167
-                height: 120
-                visible: true
-                state: ui.ch28State
-                anchors.rightMargin: 28
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.topMargin: 618
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        timer_Reset.start()
-
-                        ui.setBox_ch(28)
-                        ui.execFunction()
-                    }
-                }
-                states: [
-                    State {
-                        name: "1"
-                        PropertyChanges {
-                            target: choseChannel_28
-                            opacity: 1
-                            source: "img/channel/12-01.jpg"
-                            enabled: true
-                        }
-                    },
-                    State {
-                        name: "0"
-                        PropertyChanges {
-                            target: choseChannel_28
-                            opacity: 0.3
-                            source: "img/channel/12-01.jpg"
-                            enabled: false
-                        }
-                    }]
-            }
-
-            Image {
-                id: choseChannel_icon
-                width: 300
-                height: 300
-                anchors.verticalCenterOffset: -280
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                source: "img/brandIcon2.png"
-                fillMode: Image.PreserveAspectFit
-            }
-
-        }
-        Text {
-            id: choseChannel_notifyText
-            color: "#e60000"
-            text: ui.choseChannel_notifyText
-            anchors.horizontalCenterOffset: 0
-            anchors.verticalCenterOffset: -144
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            verticalAlignment: Text.AlignTop
-            horizontalAlignment: Text.AlignHCenter
-            font.pointSize: 12
-        }
-        Text {
-            id: choseChannel_contract_Text
-            text: ui.choseChannel_contract_Text
-            font.pointSize: 12
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            verticalAlignment: Text.AlignTop
-            horizontalAlignment: Text.AlignHCenter
-        }
-        Image {
-            id: toSeeContract
-            width: 50
-            height: 50
-            state: ui.toSeeContractState
-            states: [
-                State {
-                    name: "0"
-                    PropertyChanges {
-                        target: toSeeContract
-                        opacity: 0
-                        enabled: false
-                    }
-                },
-                State {
-                    name: "1"
-                    PropertyChanges {
-                        target: toSeeContract
-                        opacity: 1
-                        enabled: true
-                    }
-                }
-            ]
-            anchors.horizontalCenterOffset: -20
-            anchors.verticalCenterOffset: 40
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            source: "img/dataFile.png"
-            MouseArea{
-                anchors.fill: parent
-                onClicked: {
-                    timer_Reset.restart()
-                    ui.toSeeContract()
-                }
-                onPressed: {
-                    parent.opacity = 0.5
-                }
-                onReleased: {
-                    parent.opacity = 1
-                }
-            }
         }
     }
     Image {
@@ -2460,226 +866,6 @@ Window {
         ]
     }
     Image {
-        id: upload_ItemInfo
-        anchors.fill: parent
-        source: "img/background.jpg"
-        state: ui.upload_ItemInfoVisible
-        states: [
-            State {
-                name: "0"
-                PropertyChanges {
-                    target: upload_ItemInfo
-                    opacity: 0
-                    enabled: false
-                }
-            },
-            State {
-                name: "1"
-                PropertyChanges {
-                    target: upload_ItemInfo
-                    opacity: 1
-                    enabled: true
-                }
-            },
-            State {
-                name: "2"
-                PropertyChanges {
-                    target: upload_ItemInfo
-                    opacity: 1
-                    enabled: false
-                }
-            }
-
-        ]
-        transitions: [
-            Transition {
-                NumberAnimation {
-                    property: "opacity";
-                    easing.type: Easing.InOutQuad;
-                    duration: 1000;
-                }
-            }
-        ]
-        onStateChanged: {
-            if(state=="0"){
-                upload_ItemName_Field.text = ""
-                upload_ItemPrice_Field.text = ""
-                upload_ItemRemark_Field.text = ""
-                logout_button.anchors.horizontalCenterOffset = 0
-            }
-            if(state=="1"){
-                logout_button.anchors.horizontalCenterOffset = 60
-                keepChooseChannel.enabled = true
-                logout_button.enabled = true
-                login_button.opacity = 1
-                keepChooseChannel.opacity = 1
-            }
-            if(state=="2"){
-                keepChooseChannel.enabled = false
-                logout_button.enabled = false
-                keepChooseChannel.opacity = .5
-                logout_button.opacity = .5
-            }
-        }
-
-        Item {
-            id: upload_ItemInfo_Item
-            x: 160
-            y: 169
-            width: 715
-            height: 430
-            anchors.right: parent.right
-            anchors.rightMargin: 149
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 200
-
-            Text {
-                id: upload_ItemInfo_Text
-                y: 38
-                text: qsTr("商品資訊")
-                anchors.left: parent.left
-                anchors.leftMargin: 262
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 376
-                font.pixelSize: 48
-            }
-            Text {
-                id: upload_ItemInfo_notify
-                x: 430
-                y: 129
-                color: "#fa1f1f"
-                text: ui.upload_ItemInfo_notify
-                anchors.horizontalCenterOffset: 0
-                verticalAlignment: Text.AlignBottom
-                horizontalAlignment: Text.AlignHCenter
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 313
-                anchors.horizontalCenter: parent.horizontalCenter
-                font.pointSize: 12
-            }
-
-            Text {
-                id: upload_ItemName_Text
-                y: 158
-                text: qsTr("名稱:")
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 266
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                anchors.left: parent.left
-                anchors.leftMargin: 136
-                font.pixelSize: 38
-            }
-            TextField{
-                id: upload_ItemName_Field
-                y: 157
-                anchors.bottom: parent.bottom
-                maximumLength: 20
-                anchors.bottomMargin: 265
-                anchors.left: parent.left
-                anchors.leftMargin: 258
-                onPressed: {
-                    timer_Reset.restart()
-                    inputPanel.active
-                }
-                onTextChanged: {
-                    timer_Reset.restart()
-                }
-            }
-
-            Text {
-                id: upload_ItemPrice_Text
-                x: 3
-                y: 263
-                text: qsTr("價格:")
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 161
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                anchors.left: parent.left
-                anchors.leftMargin: 136
-                font.pixelSize: 38
-            }
-
-            TextField {
-                id: upload_ItemPrice_Field
-                x: -9
-                y: 261
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 161
-                maximumLength: 5
-                anchors.left: parent.left
-                anchors.leftMargin: 258
-                onPressed: {
-                    timer_Reset.restart()
-                    inputPanel.active
-                }
-                onTextChanged: {
-                    timer_Reset.restart()
-                }
-            }
-
-            Text {
-                id: upload_ItemRemark_Text
-                x: 8
-                y: 362
-                text: qsTr("備註:")
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 62
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                anchors.left: parent.left
-                anchors.leftMargin: 136
-                font.pixelSize: 38
-            }
-
-
-            TextField {
-                id: upload_ItemRemark_Field
-                x: -3
-                y: 360
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 62
-                maximumLength: 10
-                anchors.left: parent.left
-                anchors.leftMargin: 258
-                onPressed: {
-                    timer_Reset.restart()
-                    inputPanel.active
-                }
-                onTextChanged: {
-                    timer_Reset.restart()
-                }
-            }
-            Image {
-                id: upload_ItemInfo_submit
-                source: "img/submit.png"
-                y: 314
-                width: 70
-                height: 70
-                anchors.left: parent.left
-                anchors.leftMargin: 483
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 46
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: {
-                        timer_Reset.stop()
-                        ui.upload_submit(
-                                    upload_ItemName_Field.text,
-                                    upload_ItemPrice_Field.text,
-                                    upload_ItemRemark_Field.text
-                                    )
-                        //                    logout_button.enabled = true
-                        //                    keepChooseChannel.enabled = true
-                    }
-                    onPressed: parent.opacity = 0.5
-                    onReleased: parent.opacity = 1
-                }
-            }
-        }
-    }
-    Image {
         id: updateItem
         source: "img/background.jpg"
         anchors.fill: parent
@@ -2721,6 +907,8 @@ Window {
             }
             if(state=="1"){
                 logout_button.anchors.horizontalCenterOffset = 60
+                logout_button.opacity=1
+                logout_button.enabled=true
                 keepChooseChannel.enabled = true
             }
         }
@@ -2773,7 +961,9 @@ Window {
                 anchors.bottomMargin: 104
                 onPressed: {
                     inputPanel.active
+                    timer_Reset.restart()
                 }
+                onTextChanged: timer_Reset.restart()
             }
 
             Text {
@@ -2800,7 +990,9 @@ Window {
                 anchors.bottomMargin: 176
                 onPressed: {
                     inputPanel.active
+                    timer_Reset.restart()
                 }
+                onTextChanged: timer_Reset.restart()
             }
 
             TextField{
@@ -2815,7 +1007,10 @@ Window {
                 anchors.bottomMargin: 250
                 onPressed: {
                     inputPanel.active
+                    timer_Reset.restart()
                 }
+                onTextChanged: timer_Reset.restart()
+
             }
 
             Text {
@@ -2882,142 +1077,6 @@ Window {
         }
     }
     Image {
-        id: perchase_Paying
-        anchors.fill: parent
-        source: "img/background.jpg"
-        state: ui.perchase_PayingVisible
-        states: [
-            State {
-                name: "0"
-                PropertyChanges {
-                    target: perchase_Paying
-                    opacity: 0
-                    enabled: false
-                }
-            },
-            State {
-                name: "1"
-                PropertyChanges {
-                    target: perchase_Paying
-                    opacity: 1
-                    enabled: true
-                }
-            }
-        ]
-        transitions: [
-            Transition {
-                NumberAnimation {
-                    property: "opacity";
-                    easing.type: Easing.InOutQuad;
-                    duration: 1000;
-                }
-            }
-        ]
-        Timer{
-            id: timer_displayItemInfo
-            interval: 150
-            repeat: false
-            running: false
-            triggeredOnStart: false
-            onTriggered: {
-                ui.displayQRcode()
-                ui.displayItemInfo()
-            }
-        }
-        Timer{
-            id: timer_CheckPayment
-            interval: 5000
-            repeat: false
-            running: false
-            triggeredOnStart: false
-            onTriggered: {
-                ui.checkPayment()
-            }
-        }
-        onStateChanged: {
-            if(state=="1"){
-                timer_displayItemInfo.start()
-                timer_CheckPayment.start()
-                logout_button.anchors.horizontalCenterOffset = 60
-                keepChooseChannel.enabled = true;
-                logout_button.enabled = true;
-                logout_button.opacity = 1
-            }
-            if(state=="0"){
-                timer_CheckPayment.stop()
-                logout_button.anchors.horizontalCenterOffset = 0
-            }
-            if(state=="2"){
-                keepChooseChannel.enabled = false
-                logout_button.enabled = false
-            }
-        }
-        Image {
-            id: displayQRcode
-            x: 726
-            y: 488
-            width: 200
-            height: 200
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 80
-            anchors.right: parent.right
-            anchors.rightMargin: 98
-            source: "image://colors/"+ui.itemQRcode
-            sourceSize.width: 200
-            sourceSize.height: 200
-            //            MouseArea{
-            //                anchors.fill: parent
-            //                onClicked: {
-            //                    ui.checkPayment()
-            //                }
-            //            }
-        }
-
-        Text {
-            id: itemName
-            text: "商品名稱："+ui.itemNameDisplay
-            anchors.left: parent.left
-            anchors.leftMargin: 129
-            anchors.top: parent.top
-            anchors.topMargin: 160
-            font.pixelSize: 36
-        }
-        Text {
-            id: payingNotify_Text
-            x: 636
-            y: 452
-            color: "#b70000"
-            text: qsTr("此為付款條碼\n請使用【台灣pay】掃此QR碼")
-            font.pointSize: 18
-            verticalAlignment: Text.AlignBottom
-            horizontalAlignment: Text.AlignHCenter
-            anchors.right: parent.right
-            anchors.rightMargin: 8
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 286
-        }
-
-        Text {
-            id: itemPrice
-            text: "價格："+ui.itemPriceDisplay
-            anchors.left: parent.left
-            anchors.leftMargin: 129
-            anchors.top: parent.top
-            anchors.topMargin: 280
-            font.pixelSize: 36
-        }
-        Text {
-            id: itemRemark
-            text: "備註："+ui.itemRemarkDisplay
-            anchors.left: parent.left
-            anchors.leftMargin: 129
-            anchors.top: parent.top
-            anchors.topMargin: 400
-            font.pixelSize: 36
-        }
-
-    }
-    Image {
         id: updateUser
         width: 300
         height: 300
@@ -3078,6 +1137,8 @@ Window {
                 horizontalAlignment: Text.AlignHCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
+                font.family: "Microsoft YaHei UI"
+
             }
 
             Text {
@@ -3110,6 +1171,7 @@ Window {
                 anchors.bottomMargin: 408
                 anchors.left: parent.left
                 anchors.leftMargin: 313
+                onPressed: timer_Reset.restart()
             }
 
             Text {
@@ -3423,7 +1485,7 @@ Window {
             y: 188
             color: "#181616"
             text: qsTr("請由網頁進行帳密恢復")
-            font.family: "標楷體"
+            font.family: "Microsoft YaHei UI"
             horizontalAlignment: Text.AlignHCenter
             anchors.verticalCenterOffset: -38
             anchors.horizontalCenterOffset: 0
@@ -3478,7 +1540,7 @@ Window {
         Text {
             id: signup_text
             text: qsTr("請由網頁進行註冊")
-            font.family: "標楷體"
+            font.family: "Microsoft YaHei UI"
             anchors.verticalCenterOffset: -48
             anchors.horizontalCenterOffset: 0
             font.pointSize: 16
@@ -3532,6 +1594,7 @@ Window {
         id: changeUser
         source: "img/background.jpg"
         state: ui.changedUserVisble
+        anchors.fill: parent
 
         Image {
             id: changeUser_icon
@@ -3547,7 +1610,7 @@ Window {
         Text {
             id: changeUser_text
             text: qsTr("請由網頁更改帳戶資訊")
-            font.family: "標楷體"
+            font.family: "Microsoft YaHei UI"
             anchors.verticalCenterOffset: -43
             anchors.horizontalCenterOffset: 0
             font.pointSize: 16
@@ -3595,6 +1658,290 @@ Window {
                 }
             }
         ]
+    }
+
+    Image {
+        id: contract
+        source: "img/background.jpg"
+        width: 1024
+        height: 768
+        state: ui.contractVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: contract
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: contract
+                    opacity: 1
+                    enabled: true
+                }
+            },
+            State {
+                name: "2"
+                PropertyChanges {
+                    target: contract
+                    opacity: 1
+                    enabled: true
+                }
+            },
+            State {
+                name: "3"
+                PropertyChanges {
+                    target: contract
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        onStateChanged: {
+            if(state=="0"){
+                backLogin_signup_button.enabled = false
+                backLogin_signup_button.opacity = 0
+                backChannel_button.enabled = false
+                backChannel_button.opacity = 0
+                logout_button.enabled = true
+                logout_button.opacity = 1
+                contract_button.anchors.bottomMargin = 0
+            }else{
+                logout_button.enabled = false
+                logout_button.opacity = 0
+                nextPage_button.enabled = false
+                lastPage_button.enabled = false
+                nextPage_button.opacity = 0
+                lastPage_button.opacity = 0
+            }
+            if(state=="1"){
+                backLogin_signup_button.enabled = false
+                backLogin_signup_button.opacity = 0
+                backChannel_button.enabled = true
+                backChannel_button.opacity = 1
+            }
+            if(state=="2"){
+                backLogin_signup_button.enabled = true
+                backLogin_signup_button.opacity = 1
+                backChannel_button.enabled = false
+                backChannel_button.opacity = 0
+            }
+            if(state=="3"){
+                backLogin_signup_button.enabled = false
+                backLogin_signup_button.opacity = 0
+                backChannel_button.enabled = true
+                backChannel_button.opacity = 1
+            }
+        }
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+        Image {
+            id: backChannel_button
+            source: "img/keepChooseChannel.png"
+            width: 75
+            height: 75
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 40
+            anchors.horizontalCenter: parent.horizontalCenter
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    timer_Reset.restart()
+                    ui.contract_to_choseChannel()
+                }
+                onPressed: {
+                    parent.opacity = 0.5
+                }
+                onReleased: {
+                    parent.opacity = 1
+                }
+            }
+        }
+        Image {
+            id: backLogin_signup_button
+            source: "img/keepChooseChannel.png"
+            width: 100
+            height: 100
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 30
+            anchors.horizontalCenter: parent.horizontalCenter
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    timer_Reset.restart()
+                    ui.contract_to_Login_signup()
+                }
+                onPressed: {
+                    parent.opacity = 0.5
+                }
+                onReleased: {
+                    parent.opacity = 1
+                }
+            }
+        }
+
+        Item {
+            id: contract_button
+            width: 1024
+            height: 768
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
+
+            Button {
+                id: sellContract
+                text: qsTr("寄賣契約")
+                anchors.verticalCenterOffset: 0
+                anchors.horizontalCenterOffset: -200
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                enabled: false
+                opacity: 0
+                onClicked: {
+                    timer_Reset.restart()
+                    ui.seeSellContract()
+                    contract_button.anchors.bottomMargin = 300
+                    nextPage_button.enabled = true
+                    lastPage_button.enabled = true
+                    nextPage_button.opacity = 1
+                    lastPage_button.opacity = 1
+                }
+            }
+            Button {
+                id: useContract
+                text: qsTr("使用契約")
+                anchors.verticalCenterOffset: 0
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                enabled: false
+                opacity: 0
+                onClicked: {
+                    timer_Reset.restart()
+                    ui.seeUseContract()
+                    contract_button.anchors.bottomMargin = 300
+                    nextPage_button.enabled = true
+                    lastPage_button.enabled = true
+                    nextPage_button.opacity = 1
+                    lastPage_button.opacity = 1
+                }
+            }
+            Button {
+                id: priContract
+                x: 51
+                y: 52
+                text: qsTr("隱私權政策")
+                anchors.horizontalCenterOffset: 200
+                anchors.verticalCenterOffset: 0
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                enabled: false
+                opacity: 0
+                onClicked: {
+                    timer_Reset.restart()
+                    ui.seePriContract()
+                    contract_button.anchors.bottomMargin = 300
+                    nextPage_button.enabled = true
+                    lastPage_button.enabled = true
+                    nextPage_button.opacity = 1
+                    lastPage_button.opacity = 1
+                }
+            }
+
+            Text {
+                id: contract_text
+                x: 410
+                y: 259
+                width: 273
+                height: 33
+                text: ui.contract_text
+                anchors.verticalCenterOffset: 50
+                font.pointSize: 24
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenterOffset: 0
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+        }
+
+        Button {
+            id: lastPage_button
+            text: qsTr("上一頁")
+            anchors.verticalCenterOffset: 225
+            anchors.horizontalCenterOffset: -100
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            onClicked: {
+                timer_Reset.restart()
+                ui.contractLastPage()
+            }
+        }
+
+        Button {
+            id: nextPage_button
+            x: 71
+            y: 8
+            text: qsTr("下一頁")
+            anchors.verticalCenterOffset: 225
+            anchors.horizontalCenterOffset: 100
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            onClicked: {
+                timer_Reset.restart()
+                ui.contractNextPage()
+            }
+        }
+        Text {
+            id: contractContent
+            text: ui.contractContent
+            anchors.top: parent.top
+            anchors.topMargin: 160
+            font.pointSize: 16
+            anchors.horizontalCenter: parent.horizontalCenter
+            verticalAlignment: Text.AlignTop
+            horizontalAlignment: Text.AlignLeft
+        }
+        Text {
+            id: currentPage_Text
+            text: ui.contractPage
+            anchors.verticalCenterOffset: 225
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            font.pointSize: 16
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        Image {
+            id: contract_qrcode
+            width: 150
+            height: 150
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            fillMode: Image.PreserveAspectFit
+            source: "img/contract_qrcode.png"
+        }
+
+        Text {
+            id: contract_qrcode_text
+            text: qsTr("請掃碼閱讀合約內容")
+            font.family: "Microsoft YaHei UI"
+            anchors.verticalCenterOffset: -100
+            font.pointSize: 16
+            verticalAlignment: Text.AlignBottom
+            horizontalAlignment: Text.AlignHCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+        }
     }
     Image {
         id: chooseFunction
@@ -3653,11 +2000,13 @@ Window {
 
             Image {
                 id: chooseFunction_perchase
+                x: 64
+                y: 247
                 source: "img/purchaseButton.png"
                 width: 200
                 height: 200
-                anchors.horizontalCenterOffset: -135
-                anchors.verticalCenterOffset: -55
+                anchors.horizontalCenterOffset: -250
+                anchors.verticalCenterOffset: 0
                 opacity: 1
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
@@ -3680,11 +2029,13 @@ Window {
             }
             Image {
                 id: chooseFunction_upload
+                x: 64
+                y: 247
                 source: "img/uploadButton.png"
                 width: 200
                 height: 200
-                anchors.horizontalCenterOffset: 137
-                anchors.verticalCenterOffset: -55
+                anchors.horizontalCenterOffset: 0
+                anchors.verticalCenterOffset: 0
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 MouseArea{
@@ -3706,11 +2057,14 @@ Window {
             }
             Image {
                 id: chooseFunction_updataItemInfo
+                x: 64
+                y: 247
                 source: "img/updateItem.png"
                 width: 200
                 height: 200
-                anchors.verticalCenterOffset: 151
-                anchors.horizontalCenterOffset: -135
+                visible: false
+                anchors.verticalCenterOffset: 0
+                anchors.horizontalCenterOffset: 115
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 MouseArea{
@@ -3732,11 +2086,13 @@ Window {
             }
             Image {
                 id: chooseFunction_takeOff
+                x: 64
+                y: 247
                 source: "img/takeOff.png"
                 width: 200
                 height: 200
-                anchors.horizontalCenterOffset: 137
-                anchors.verticalCenterOffset: 151
+                anchors.horizontalCenterOffset: 250
+                anchors.verticalCenterOffset: 0
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 MouseArea{
@@ -3759,11 +2115,13 @@ Window {
 
             Image {
                 id: chooseFunction_updataUserInfo
+                x: 64
+                y: 247
                 source: "img/updateUser.png"
                 width: 100
                 height: 100
-                anchors.horizontalCenterOffset: 431
-                anchors.verticalCenterOffset: 201
+                anchors.horizontalCenterOffset: 0
+                anchors.verticalCenterOffset: 180
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 MouseArea{
@@ -3786,11 +2144,13 @@ Window {
             }
             Image {
                 id: chooseFunction_forgetUser
+                x: 64
+                y: 247
                 source: "img/forgetUser.png"
                 width: 100
                 height: 100
-                anchors.horizontalCenterOffset: 431
-                anchors.verticalCenterOffset: 307
+                anchors.horizontalCenterOffset: 160
+                anchors.verticalCenterOffset: 180
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 MouseArea{
@@ -3812,8 +2172,8 @@ Window {
 
             Image {
                 id: chooseFunction_signup
-                x: -6
-                y: -3
+                x: 64
+                y: 247
                 width: 100
                 height: 100
                 source: "img/signup_button.png"
@@ -3832,12 +2192,21 @@ Window {
                         parent.opacity = 1
                     }
                 }
-                anchors.verticalCenterOffset: 95
-                anchors.horizontalCenterOffset: 431
+                anchors.verticalCenterOffset: 180
+                anchors.horizontalCenterOffset: -170
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
+            Button {
+                id: admin
+                anchors.left: parent.left
+                anchors.leftMargin: -50
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 0
+                opacity: 0
+                onClicked: ui.admin()
+            }
         }
     }
     Image {
@@ -3884,7 +2253,7 @@ Window {
                 signup_ensureEmail_Field.text = ""
                 signup_phone_Field.text = ""
                 signup_bankCode_Field.text = ""
-//                ui.initLogin_Lignup()
+                //                ui.initLogin_Lignup()
             }
         }
 
@@ -3977,7 +2346,7 @@ Window {
             width: parent.width*0.5
             height: parent.height*0.3
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 240
+            anchors.bottomMargin: 220
             anchors.horizontalCenterOffset: 0
             anchors.horizontalCenter: parent.horizontalCenter
             state: "1"
@@ -4008,7 +2377,20 @@ Window {
                     }
                 }
             ]
-
+            Text {
+                id: login_text
+                x: 290
+                y: 24
+                text: "請登入帳號"
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 230
+                anchors.horizontalCenterOffset: 0
+                font.pointSize: 20
+                verticalAlignment: Text.AlignBottom
+                horizontalAlignment: Text.AlignHCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.family: "Microsoft YaHei UI"
+            }
             Text {
                 id: login_signup_Text
                 x: 290
@@ -4016,32 +2398,34 @@ Window {
                 color: "#fa1717"
                 text: ui.login_signup_Text
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 186
+                anchors.bottomMargin: 180
                 anchors.horizontalCenterOffset: 1
                 font.pointSize: 12
                 verticalAlignment: Text.AlignBottom
                 horizontalAlignment: Text.AlignHCenter
                 anchors.horizontalCenter: parent.horizontalCenter
+                font.family: "Microsoft YaHei UI"
             }
             Text {
                 id: login_acc_text
-                y: 63
+                y: 53
                 text: qsTr("帳號:")
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 137
+                anchors.bottomMargin: 138
                 anchors.left: parent.left
-                anchors.leftMargin: 72
+                anchors.leftMargin: 65
                 font.pointSize: 18
+                font.family: "Microsoft YaHei UI"
             }
             TextField{
                 id: login_acc_Field
-                x: 164
-                y: 58
+                x: 157
+                y: 57
                 anchors.bottom: parent.bottom
                 maximumLength: 18
-                anchors.bottomMargin: 132
+                anchors.bottomMargin: 133
                 anchors.right: parent.right
-                anchors.rightMargin: 148
+                anchors.rightMargin: 156
                 onPressed: {
                     timer_Reset.restart()
                     inputPanel.active
@@ -4052,24 +2436,25 @@ Window {
             }
             Text {
                 id: login_pwd_text
-                y: 133
+                y: 123
                 text: qsTr("密碼:")
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 67
+                anchors.bottomMargin: 68
                 anchors.left: parent.left
-                anchors.leftMargin: 72
+                anchors.leftMargin: 65
                 font.pointSize: 18
+                font.family: "Microsoft YaHei UI"
             }
             TextField{
                 id: login_pwd_Field
-                x: 164
-                y: 129
+                x: 157
+                y: 128
                 anchors.bottom: parent.bottom
                 echoMode: "Password"
                 maximumLength: 12
-                anchors.bottomMargin: 61
+                anchors.bottomMargin: 62
                 anchors.right: parent.right
-                anchors.rightMargin: 148
+                anchors.rightMargin: 156
                 onPressed: {
                     timer_Reset.restart()
 
@@ -4082,12 +2467,12 @@ Window {
             Image {
                 id: login_submit
                 source: "img/submit.png"
-                x: 380
+                x: 375
                 y: 113
                 width: 70
                 height: 70
                 anchors.right: parent.right
-                anchors.rightMargin: 62
+                anchors.rightMargin: 67
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 47
                 MouseArea{
@@ -4475,310 +2860,1788 @@ Window {
             fillMode: Image.PreserveAspectFit
         }
     }
+    Image {
+        id: upload_ItemInfo
+        anchors.fill: parent
+        source: "img/background.jpg"
+        state: ui.upload_ItemInfoVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: upload_ItemInfo
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: upload_ItemInfo
+                    opacity: 1
+                    enabled: true
+                }
+            },
+            State {
+                name: "2"
+                PropertyChanges {
+                    target: upload_ItemInfo
+                    opacity: 1
+                    enabled: false
+                }
+            }
 
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+        onStateChanged: {
+            if(state=="0"){
+                upload_ItemName_Field.text = ""
+                upload_ItemPrice_Field.text = ""
+                upload_ItemRemark_Field.text = ""
+                logout_button.anchors.horizontalCenterOffset = 0
+            }
+            if(state=="1"){
+                logout_button.anchors.horizontalCenterOffset = 60
+                keepChooseChannel.enabled = true
+                logout_button.enabled = true
+                login_button.opacity = 1
+                keepChooseChannel.opacity = 1
+            }
+            if(state=="2"){
+                keepChooseChannel.enabled = false
+                logout_button.enabled = false
+                keepChooseChannel.opacity = .5
+                logout_button.opacity = .5
+            }
+        }
+
+        Item {
+            id: upload_ItemInfo_Item
+            x: 154
+            y: 189
+            width: 715
+            height: 430
+            anchors.horizontalCenterOffset: 5
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 149
+
+            Text {
+                id: upload_ItemInfo_Text
+                y: 90
+                text: qsTr("商品資訊")
+                verticalAlignment: Text.AlignBottom
+                horizontalAlignment: Text.AlignHCenter
+                font.pointSize: 20
+                font.family: "Microsoft YaHei UI"
+                anchors.left: parent.left
+                anchors.leftMargin: 292
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 298
+            }
+            Text {
+                id: upload_ItemInfo_notify
+                x: 430
+                y: 138
+                color: "#fa1f1f"
+                text: ui.upload_ItemInfo_notify
+                anchors.horizontalCenterOffset: 0
+                verticalAlignment: Text.AlignBottom
+                horizontalAlignment: Text.AlignHCenter
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 266
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.pointSize: 12
+                font.family: "Microsoft YaHei UI"
+            }
+
+            Text {
+                id: upload_ItemName_Text
+                y: 181
+                text: qsTr("名稱:")
+                font.pointSize: 18
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 211
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 161
+                font.family: "Microsoft YaHei UI"
+            }
+            TextField{
+                id: upload_ItemName_Field
+                y: 180
+                anchors.bottom: parent.bottom
+                maximumLength: 20
+                anchors.bottomMargin: 210
+                anchors.left: parent.left
+                anchors.leftMargin: 258
+                onPressed: {
+                    timer_Reset.restart()
+                    inputPanel.active
+                }
+                onTextChanged: {
+                    timer_Reset.restart()
+                }
+            }
+
+            Text {
+                id: upload_ItemPrice_Text
+                x: 3
+                y: 257
+                text: qsTr("價格:")
+                font.pointSize: 18
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 135
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 161
+                font.family: "Microsoft YaHei UI"
+            }
+
+            TextField {
+                id: upload_ItemPrice_Field
+                x: -9
+                y: 257
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 133
+                maximumLength: 5
+                anchors.left: parent.left
+                anchors.leftMargin: 258
+                onPressed: {
+                    timer_Reset.restart()
+                    inputPanel.active
+                }
+                onTextChanged: {
+                    timer_Reset.restart()
+                }
+            }
+
+            Text {
+                id: upload_ItemRemark_Text
+                x: 8
+                y: 275
+                text: qsTr("備註:")
+                visible: false
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 106
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 143
+                font.pixelSize: 38
+                font.family: "Microsoft YaHei UI"
+            }
+
+
+            TextField {
+                id: upload_ItemRemark_Field
+                x: -3
+                y: 284
+                visible: false
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 106
+                maximumLength: 10
+                anchors.left: parent.left
+                anchors.leftMargin: 265
+                onPressed: {
+                    timer_Reset.restart()
+                    inputPanel.active
+                }
+                onTextChanged: {
+                    timer_Reset.restart()
+                }
+            }
+            Image {
+                id: upload_ItemInfo_submit
+                source: "img/submit.png"
+                y: 241
+                width: 70
+                height: 70
+                anchors.left: parent.left
+                anchors.leftMargin: 479
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 119
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        ui.upload_submit(
+                                    upload_ItemName_Field.text,
+                                    upload_ItemPrice_Field.text,
+                                    upload_ItemRemark_Field.text
+                                    )
+                        //                    logout_button.enabled = true
+                        //                    keepChooseChannel.enabled = true
+                    }
+                    onPressed: parent.opacity = 0.5
+                    onReleased: parent.opacity = 1
+                }
+            }
+        }
+
+        Image {
+            id: upload_brand
+            width: 300
+            height: 300
+            anchors.verticalCenterOffset: -280
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            source: "img/brandIcon2.png"
+            fillMode: Image.PreserveAspectFit
+        }
+    }
+    Image {
+        id: perchase_Paying
+        anchors.fill: parent
+        source: "img/background.jpg"
+        state: ui.perchase_PayingVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: perchase_Paying
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: perchase_Paying
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+        Timer{
+            id: timer_displayItemInfo
+            interval: 150
+            repeat: false
+            running: false
+            triggeredOnStart: false
+            onTriggered: {
+                ui.displayQRcode()
+                ui.displayItemInfo()
+            }
+        }
+        Timer{
+            id: timer_CheckPayment
+            interval: 5000
+            repeat: false
+            running: false
+            triggeredOnStart: false
+            onTriggered: {
+                ui.checkPayment()
+            }
+        }
+        onStateChanged: {
+            if(state=="1"){
+                timer_displayItemInfo.start()
+                timer_CheckPayment.start()
+                logout_button.anchors.horizontalCenterOffset = 60
+                keepChooseChannel.enabled = true;
+                logout_button.enabled = true;
+                logout_button.opacity = 1
+            }
+            if(state=="0"){
+                timer_CheckPayment.stop()
+                logout_button.anchors.horizontalCenterOffset = 0
+            }
+            if(state=="2"){
+                keepChooseChannel.enabled = false
+                logout_button.enabled = false
+            }
+            if(state=="3"){
+                timer_Reset.restart()
+            }
+        }
+        Image {
+            id: displayQRcode
+            x: 681
+            y: 488
+            width: 200
+            height: 200
+            anchors.horizontalCenterOffset: 270
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 80
+            source: "image://colors/"+ui.itemQRcode
+            sourceSize.width: 200
+            sourceSize.height: 200
+            //            MouseArea{
+            //                anchors.fill: parent
+            //                onClicked: {
+            //                    ui.checkPayment()
+            //                }
+            //            }
+        }
+
+        Text {
+            id: itemName
+            text: "商品名稱："+ui.itemNameDisplay
+            anchors.left: parent.left
+            anchors.leftMargin: 85
+            anchors.top: parent.top
+            anchors.topMargin: 226
+            font.pixelSize: 36
+            font.family: "Microsoft YaHei UI"
+
+        }
+        Text {
+            id: payingNotify_Text
+            x: 636
+            y: 404
+            color: "#b70000"
+            text: qsTr("此為付款條碼\n請使用【台灣pay】掃此QR碼")
+            anchors.horizontalCenterOffset: 270
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pointSize: 18
+            verticalAlignment: Text.AlignBottom
+            horizontalAlignment: Text.AlignHCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 286
+            font.family: "Microsoft YaHei UI"
+
+        }
+
+        Image {
+            id: paying_brand
+            width: 300
+            height: 300
+            anchors.verticalCenterOffset: -280
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            source: "img/brandIcon2.png"
+            fillMode: Image.PreserveAspectFit
+        }
+
+        Text {
+            id: reset_notify_paying
+            color: "#b70000"
+            text: qsTr("請注意，如果您已經付款完成。\n但畫面已經回朔，請再選一次便會自動開櫃")
+            font.family: "Microsoft YaHei UI"
+            font.pointSize: 18
+            anchors.left: parent.left
+            anchors.leftMargin: 85
+            anchors.top: parent.top
+            anchors.topMargin: 531
+            horizontalAlignment: Text.AlignLeft
+        }
+
+        Text {
+            id: itemPrice
+            y: 300
+            text: "價格："+ui.itemPriceDisplay
+            anchors.left: parent.left
+            anchors.leftMargin: 85
+            anchors.top: parent.top
+            anchors.topMargin: 352
+            font.pixelSize: 36
+            font.family: "Microsoft YaHei UI"
+
+        }
+        Text {
+            id: itemRemark
+            text: "備註："+ui.itemRemarkDisplay
+            visible: false
+            anchors.left: parent.left
+            anchors.leftMargin: 129
+            anchors.top: parent.top
+            anchors.topMargin: 400
+            font.pixelSize: 36
+            font.family: "Microsoft YaHei UI"
+
+        }
+
+
+
+    }
+    Image {
+        id: choseChannel
+        anchors.fill: parent
+        source: "img/background.jpg"
+        state: ui.choseChannelVisible
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: choseChannel
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: choseChannel
+                    opacity: 1
+                    enabled: true
+                }
+            },
+            State {
+                name: "2"
+                PropertyChanges {
+                    target: choseChannel
+                    opacity: 1
+                    enabled: false
+                }
+            },
+            State {
+                name: "3"
+                PropertyChanges {
+                    target: choseChannel
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        onStateChanged: {
+            if(state=="3"){
+                keepChooseChannel.enabled = false
+                keepChooseChannel.opacity = 0
+            }
+            if(state=="2"){
+                logout_button.enabled = false
+                logout_button.opacity = .5
+            }
+            if(state=="1"){
+                logout_button.enabled = true
+                logout_button.opacity = 1
+            }
+        }
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 1000;
+                }
+            }
+        ]
+        Item {
+            id: choseChannel_Item
+            anchors.fill: parent
+
+            Image {
+                id: choseChannel_1
+                x: 60
+                y: 60
+                width: 100
+                height: 100
+                state: ui.ch1State
+                anchors.top: parent.top
+                enabled: true
+                anchors.left: parent.left
+                anchors.topMargin: 20
+                anchors.leftMargin: 30
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.restart()
+
+                        ui.setBox_ch(1)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_1
+                            opacity: 1
+                            source: "img/channel/01-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_1
+                            opacity: 0.3
+                            source: "img/channel/01-01.png"
+                            enabled: false
+                        }
+                    }
+                ]
+            }
+
+            Image {
+                id: choseChannel_2
+                y: 60
+                width: 100
+                height: 100
+                state: ui.ch2State
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.topMargin: 20
+                anchors.leftMargin: 150
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.restart()
+
+                        ui.setBox_ch(2)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_2
+                            opacity: 1
+                            source: "img/channel/02-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_2
+                            opacity: 0.3
+                            source: "img/channel/02-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_3
+                x: 300
+                y: 60
+                width: 100
+                height: 100
+                state: ui.ch3State
+                anchors.top: parent.top
+                enabled: false
+                anchors.left: parent.left
+                anchors.topMargin: 20
+                anchors.leftMargin: 270
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.restart()
+
+                        ui.setBox_ch(3)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_3
+                            opacity: 1
+                            source: "img/channel/03-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_3
+                            opacity: 0.3
+                            source: "img/channel/03-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_4
+                width: 100
+                height: 100
+                visible: true
+                state: ui.ch4State
+                anchors.top: parent.top
+                enabled: false
+                anchors.left: parent.left
+                anchors.topMargin: 130
+                anchors.leftMargin: 30
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.restart()
+
+                        ui.setBox_ch(4)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_4
+                            opacity: 1
+                            source: "img/channel/04-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_4
+                            opacity: 0.3
+                            source: "img/channel/04-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_5
+                x: -9
+                y: -9
+                width: 100
+                height: 100
+                state: ui.ch5State
+                anchors.top: parent.top
+                enabled: false
+                anchors.left: parent.left
+                anchors.topMargin: 130
+                anchors.leftMargin: 150
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.restart()
+
+                        ui.setBox_ch(5)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_5
+                            opacity: 1
+                            source: "img/channel/05-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_5
+                            opacity: 0.3
+                            source: "img/channel/05-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_6
+                x: -9
+                y: -9
+                width: 100
+                height: 100
+                visible: true
+                state: ui.ch6State
+                anchors.top: parent.top
+                enabled: false
+                anchors.left: parent.left
+                anchors.topMargin: 130
+                anchors.leftMargin: 270
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.restart()
+
+                        ui.setBox_ch(6)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_6
+                            opacity: 1
+                            source: "img/channel/06-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_6
+                            opacity: 0.3
+                            source: "img/channel/06-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_7
+                x: -9
+                y: -9
+                width: 167
+                height: 120
+                state: ui.ch7State
+                anchors.top: parent.top
+                enabled: false
+                anchors.left: parent.left
+                anchors.topMargin: 240
+                anchors.leftMargin: 30
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(7)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_7
+                            opacity: 1
+                            source: "img/channel/07-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_7
+                            opacity: 0.3
+                            source: "img/channel/07-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_8
+                x: -9
+                y: -9
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch8State
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.topMargin: 240
+                anchors.leftMargin: 203
+                MouseArea {
+                    id: mouseArea
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(8)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_8
+                            opacity: 1
+                            source: "img/channel/08-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_8
+                            opacity: 0.3
+                            source: "img/channel/08-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_9
+                x: -9
+                y: -9
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch9State
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.topMargin: 366
+                anchors.leftMargin: 30
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(9)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_9
+                            opacity: 1
+                            source: "img/channel/09-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_9
+                            opacity: 0.3
+                            source: "img/channel/09-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_10
+                x: -9
+                y: -9
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch10State
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.topMargin: 366
+                anchors.leftMargin: 203
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(10)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_10
+                            opacity: 1
+                            source: "img/channel/10-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_10
+                            opacity: 0.3
+                            source: "img/channel/10-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_11
+                x: 30
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch11State
+                anchors.rightMargin: 827
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.topMargin: 492
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(11)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_11
+                            opacity: 1
+                            source: "img/channel/11-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_11
+                            opacity: 0.3
+                            source: "img/channel/11-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_12
+                x: 203
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch12State
+                anchors.rightMargin: 654
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.topMargin: 492
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(12)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_12
+                            opacity: 1
+                            source: "img/channel/12-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_12
+                            opacity: 0.3
+                            source: "img/channel/12-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_13
+                x: 30
+                y: 5
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch13State
+                anchors.rightMargin: 827
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.topMargin: 618
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(13)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_13
+                            opacity: 1
+                            source: "img/channel/13-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_13
+                            opacity: 0.3
+                            source: "img/channel/13-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_14
+                x: 203
+                y: 5
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch14State
+                anchors.rightMargin: 654
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.topMargin: 618
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(14)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_14
+                            opacity: 1
+                            source: "img/channel/14-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_14
+                            opacity: 0.3
+                            source: "img/channel/14-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_15
+                x: 656
+                y: 69
+                width: 100
+                height: 100
+                state: ui.ch15State
+                anchors.rightMargin: 268
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.topMargin: 20
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(15)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_15
+                            opacity: 0.3
+                            source: "img/channel/15-01.png"
+                            enabled: false
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_15
+                            opacity: 0.3
+                            source: "img/channel/15-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_16
+                x: 776
+                y: 69
+                width: 100
+                height: 100
+                state: ui.ch16State
+                anchors.rightMargin: 148
+                anchors.top: parent.top
+                anchors.right: parent.right
+                enabled: false
+                anchors.topMargin: 20
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(16)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_16
+                            opacity: 0.3
+                            source: "img/channel/16-01.png"
+                            enabled: false
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_16
+                            opacity: 0.3
+                            source: "img/channel/16-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_17
+                x: 896
+                y: 9
+                width: 100
+                height: 100
+                visible: true
+                state: ui.ch17State
+                anchors.rightMargin: 28
+                anchors.top: parent.top
+                anchors.right: parent.right
+                enabled: false
+                anchors.topMargin: 20
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(17)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_17
+                            opacity: 0.3
+                            source: "img/channel/17-01.png"
+                            enabled: false
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_17
+                            opacity: 0.3
+                            source: "img/channel/17-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_18
+                x: 656
+                y: 9
+                width: 100
+                height: 100
+                state: ui.ch18State
+                anchors.rightMargin: 268
+                anchors.top: parent.top
+                anchors.right: parent.right
+                enabled: false
+                anchors.topMargin: 126
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(18)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_18
+                            opacity: 0.3
+                            source: "img/channel/18-01.png"
+                            enabled: false
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_18
+                            opacity: 0.3
+                            source: "img/channel/18-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_19
+                x: 776
+                y: 9
+                width: 100
+                height: 100
+                visible: true
+                state: ui.ch19State
+                anchors.rightMargin: 148
+                anchors.top: parent.top
+                anchors.right: parent.right
+                enabled: false
+                anchors.topMargin: 126
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(19)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_19
+                            opacity: 0.3
+                            source: "img/channel/19-01.png"
+                            enabled: false
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_19
+                            opacity: 0.3
+                            source: "img/channel/19-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_20
+                x: 896
+                y: 69
+                width: 100
+                height: 100
+                state: ui.ch20State
+                anchors.rightMargin: 28
+                anchors.top: parent.top
+                anchors.right: parent.right
+                enabled: true
+                anchors.topMargin: 126
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(20)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_20
+                            opacity: 0.3
+                            source: "img/channel/20-01.png"
+                            enabled: false
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_20
+                            opacity: 0.3
+                            source: "img/channel/20-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_21
+                x: -6
+                y: -6
+                width: 167
+                height: 120
+                state: ui.ch21State
+                anchors.top: parent.top
+                enabled: false
+                anchors.left: parent.left
+                anchors.topMargin: 240
+                anchors.leftMargin: 656
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(21)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_21
+                            opacity: 1
+                            source: "img/channel/21-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_21
+                            opacity: 0.3
+                            source: "img/channel/21-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_22
+                x: -15
+                y: -15
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch22State
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.topMargin: 240
+                anchors.leftMargin: 829
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(22)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_22
+                            opacity: 1
+                            source: "img/channel/22-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_22
+                            opacity: 0.3
+                            source: "img/channel/22-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_23
+                x: -15
+                y: -15
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch23State
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.topMargin: 366
+                anchors.leftMargin: 656
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(23)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_23
+                            opacity: 1
+                            source: "img/channel/23-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_23
+                            opacity: 0.3
+                            source: "img/channel/23-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_24
+                x: -15
+                y: -15
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch24State
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.topMargin: 366
+                anchors.leftMargin: 829
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(24)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_24
+                            opacity: 1
+                            source: "img/channel/24-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_24
+                            opacity: 0.3
+                            source: "img/channel/24-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_25
+                x: 656
+                y: -6
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch25State
+                anchors.rightMargin: 201
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.topMargin: 492
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(25)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_25
+                            opacity: 1
+                            source: "img/channel/25-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_25
+                            opacity: 0.3
+                            source: "img/channel/25-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_26
+                x: 829
+                y: -6
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch26State
+                anchors.rightMargin: 28
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.topMargin: 492
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(26)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_26
+                            opacity: 1
+                            source: "img/channel/26-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_26
+                            opacity: 0.3
+                            source: "img/channel/26-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_27
+                x: 656
+                y: -1
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch27State
+                anchors.rightMargin: 201
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.topMargin: 618
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(27)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_27
+                            opacity: 1
+                            source: "img/channel/27-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_27
+                            opacity: 0.3
+                            source: "img/channel/27-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_28
+                x: 829
+                y: -1
+                width: 167
+                height: 120
+                visible: true
+                state: ui.ch28State
+                anchors.rightMargin: 28
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.topMargin: 618
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_Reset.stop()
+                        timer_Reset.start()
+
+                        ui.setBox_ch(28)
+                        ui.execFunction()
+                    }
+                }
+                states: [
+                    State {
+                        name: "1"
+                        PropertyChanges {
+                            target: choseChannel_28
+                            opacity: 1
+                            source: "img/channel/28-01.png"
+                            enabled: true
+                        }
+                    },
+                    State {
+                        name: "0"
+                        PropertyChanges {
+                            target: choseChannel_28
+                            opacity: 0.3
+                            source: "img/channel/28-01.png"
+                            enabled: false
+                        }
+                    }]
+            }
+
+            Image {
+                id: choseChannel_icon
+                width: 300
+                height: 300
+                anchors.verticalCenterOffset: -280
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/brandIcon2.png"
+                fillMode: Image.PreserveAspectFit
+            }
+
+        }
+        Text {
+            id: choseChannel_notifyText
+            color: "#e60000"
+            text: ui.choseChannel_notifyText
+            font.family: "Microsoft YaHei UI"
+            anchors.horizontalCenterOffset: 0
+            anchors.verticalCenterOffset: -144
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            verticalAlignment: Text.AlignTop
+            horizontalAlignment: Text.AlignHCenter
+            font.pointSize: 12
+        }
+        Text {
+            id: choseChannel_contract_Text
+            text: ui.choseChannel_contract_Text
+            font.family: "Microsoft YaHei UI"
+            font.pointSize: 12
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            verticalAlignment: Text.AlignTop
+            horizontalAlignment: Text.AlignHCenter
+        }
+        Image {
+            id: toSeeContract
+            width: 50
+            height: 50
+            state: ui.toSeeContractState
+            states: [
+                State {
+                    name: "0"
+                    PropertyChanges {
+                        target: toSeeContract
+                        opacity: 0
+                        enabled: false
+                    }
+                },
+                State {
+                    name: "1"
+                    PropertyChanges {
+                        target: toSeeContract
+                        opacity: 1
+                        enabled: true
+                    }
+                }
+            ]
+            anchors.horizontalCenterOffset: -20
+            anchors.verticalCenterOffset: 40
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            source: "img/dataFile.png"
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    timer_Reset.restart()
+                    ui.toSeeContract()
+                }
+                onPressed: {
+                    parent.opacity = 0.5
+                }
+                onReleased: {
+                    parent.opacity = 1
+                }
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*##^##
 Designer {
-    D{i:3;invisible:true}D{i:4;invisible:true}D{i:22;anchors_height:200;anchors_width:200;invisible:true}
-D{i:21;anchors_height:200;anchors_width:200;invisible:true}D{i:18;anchors_height:200;anchors_width:200;invisible:true}
-D{i:17;anchors_height:200;anchors_width:200;invisible:true}D{i:20;anchors_height:200;anchors_width:200;invisible:true}
-D{i:19;anchors_height:200;anchors_width:200;invisible:true}D{i:24;anchors_height:150;anchors_width:1024;invisible:true}
-D{i:25;anchors_height:150;anchors_width:1024;invisible:true}D{i:26;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:16;anchors_height:200;anchors_width:200;invisible:true}D{i:33;anchors_height:200;anchors_width:200;invisible:true}
-D{i:32;anchors_height:200;anchors_width:200;invisible:true}D{i:29;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:28;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:31;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:30;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:34;anchors_height:200;anchors_width:200;invisible:true}D{i:35;anchors_height:200;anchors_width:200;invisible:true}
-D{i:27;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:44;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:43;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:40;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:39;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:42;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:41;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:37;anchors_height:150;anchors_width:1024;anchors_x:664;anchors_y:133;invisible:true}
-D{i:38;anchors_height:150;anchors_width:1024;anchors_x:664;anchors_y:133;invisible:true}
-D{i:36;anchors_height:150;anchors_x:664;anchors_y:133;invisible:true}D{i:53;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:52;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:49;anchors_height:150;anchors_width:1024;anchors_x:664;anchors_y:133;invisible:true}
-D{i:48;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:51;anchors_height:150;anchors_width:1024;anchors_x:664;anchors_y:133;invisible:true}
-D{i:50;anchors_height:150;anchors_width:1024;anchors_x:664;anchors_y:133;invisible:true}
-D{i:46;anchors_height:200;anchors_width:200;anchors_x:664;anchors_y:133;invisible:true}
-D{i:47;anchors_height:200;anchors_width:200;anchors_x:664;anchors_y:133;invisible:true}
-D{i:45;anchors_height:200;anchors_width:200;anchors_x:664;anchors_y:133;invisible:true}
-D{i:60;anchors_height:200;anchors_width:200;anchors_x:664;anchors_y:133;invisible:true}
-D{i:59;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:56;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:55;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:58;anchors_height:200;anchors_width:200;anchors_x:664;anchors_y:133;invisible:true}
-D{i:57;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:61;anchors_height:200;anchors_width:200;anchors_x:664;invisible:true}D{i:62;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:54;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:69;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:68;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:65;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:64;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:67;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:66;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:70;anchors_height:200;anchors_width:200;anchors_x:108;anchors_y:88;invisible:true}
-D{i:71;anchors_x:664;anchors_y:133;invisible:true}D{i:72;anchors_x:664;anchors_y:133;invisible:true}
-D{i:63;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:83;anchors_height:150;anchors_width:200;anchors_x:664;anchors_y:133;invisible:true}
-D{i:82;anchors_height:200;anchors_width:200;anchors_x:203;anchors_y:216;invisible:true}
-D{i:75;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:74;anchors_height:200;anchors_width:200;anchors_x:664;anchors_y:133;invisible:true}
-D{i:77;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:76;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:79;anchors_height:200;anchors_width:200;anchors_x:694;anchors_y:88;invisible:true}
-D{i:78;anchors_height:200;anchors_width:200;anchors_x:694;anchors_y:133;invisible:true}
-D{i:81;anchors_height:200;anchors_width:200;anchors_x:203;anchors_y:216;invisible:true}
-D{i:80;anchors_height:200;anchors_width:200;anchors_x:203;anchors_y:216;invisible:true}
-D{i:85;anchors_height:200;anchors_width:200;anchors_x:664;anchors_y:133;invisible:true}
-D{i:84;anchors_height:150;anchors_width:200;anchors_x:664;anchors_y:133;invisible:true}
-D{i:87;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:86;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:89;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:90;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:91;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:92;anchors_height:150;anchors_width:1024;invisible:true}D{i:88;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:93;anchors_height:150;anchors_width:1024;invisible:true}D{i:94;anchors_height:150;anchors_width:200;anchors_x:664;invisible:true}
-D{i:95;anchors_height:150;anchors_width:200;anchors_x:664;invisible:true}D{i:96;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:73;anchors_height:150;anchors_width:200;anchors_x:664;anchors_y:133;invisible:true}
-D{i:103;anchors_height:200;anchors_width:200;anchors_x:108;anchors_y:88;invisible:true}
-D{i:102;anchors_height:200;anchors_width:200;anchors_x:108;anchors_y:88;invisible:true}
-D{i:99;anchors_height:200;anchors_width:200;anchors_x:108;anchors_y:88;invisible:true}
-D{i:98;anchors_height:200;anchors_width:200;anchors_x:108;anchors_y:88;invisible:true}
-D{i:101;anchors_height:200;anchors_width:200;anchors_x:108;anchors_y:88;invisible:true}
-D{i:100;anchors_height:200;anchors_width:200;anchors_x:108;anchors_y:88;invisible:true}
-D{i:104;anchors_height:200;anchors_width:200;anchors_x:108;anchors_y:88;invisible:true}
-D{i:105;anchors_height:150;anchors_width:1024;anchors_x:664;invisible:true}D{i:97;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:116;anchors_height:200;anchors_width:200;anchors_x:694;anchors_y:88;invisible:true}
-D{i:115;anchors_height:200;anchors_width:200;anchors_x:694;anchors_y:88;invisible:true}
-D{i:108;anchors_height:200;anchors_width:200;anchors_x:664;anchors_y:88;invisible:true}
-D{i:107;anchors_height:150;anchors_width:200;anchors_x:664;anchors_y:88;invisible:true}
-D{i:110;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:109;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:112;anchors_height:150;anchors_width:1024;anchors_x:694;anchors_y:133;invisible:true}
-D{i:111;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:114;anchors_height:200;anchors_width:200;anchors_x:694;anchors_y:88;invisible:true}
-D{i:113;anchors_height:200;anchors_width:200;anchors_x:694;anchors_y:88;invisible:true}
-D{i:121;anchors_height:200;anchors_width:200;invisible:true}D{i:120;anchors_height:200;anchors_width:200;anchors_x:664;invisible:true}
-D{i:123;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:122;anchors_height:200;anchors_width:200;invisible:true}D{i:119;anchors_height:200;anchors_width:200;invisible:true}
-D{i:118;anchors_height:200;anchors_width:200;anchors_x:664;anchors_y:88;invisible:true}
-D{i:127;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:126;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:129;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:128;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:125;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:124;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:133;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:132;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:135;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:134;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:131;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:130;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:139;anchors_height:768;anchors_width:1024;invisible:true}D{i:138;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:141;anchors_height:200;anchors_width:200;anchors_x:664;invisible:true}D{i:140;anchors_height:768;anchors_width:1024;invisible:true}
-D{i:137;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:136;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:145;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:144;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:147;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:146;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:143;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:142;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:151;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:150;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:153;anchors_height:768;anchors_width:1024;invisible:true}D{i:152;anchors_height:768;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:149;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:148;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:157;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:156;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:159;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:158;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:155;anchors_height:200;anchors_width:200;anchors_x:664;anchors_y:133;invisible:true}
-D{i:154;anchors_height:768;anchors_width:1024;invisible:true}D{i:163;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:162;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:165;anchors_height:768;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:164;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:161;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:160;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:169;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:168;anchors_height:768;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:171;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:170;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:167;anchors_height:768;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:166;anchors_height:768;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:175;anchors_height:150;anchors_width:1024;anchors_x:664;invisible:true}D{i:174;anchors_height:150;anchors_width:1024;invisible:true}
-D{i:177;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:176;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:173;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:172;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:181;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:180;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:183;anchors_x:123;anchors_y:133;invisible:true}D{i:182;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:179;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:178;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:187;anchors_height:768;anchors_width:1024;invisible:true}D{i:186;anchors_height:768;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:189;anchors_height:200;anchors_width:200;anchors_x:664;invisible:true}D{i:188;anchors_height:768;anchors_width:1024;invisible:true}
-D{i:185;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:184;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:193;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:192;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:195;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:194;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:191;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:190;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:199;anchors_height:768;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:198;anchors_x:123;anchors_y:133;invisible:true}D{i:201;anchors_height:768;anchors_width:1024;invisible:true}
-D{i:200;anchors_height:768;anchors_width:1024;invisible:true}D{i:197;anchors_x:123;anchors_y:133;invisible:true}
-D{i:196;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:205;anchors_height:200;anchors_width:200;invisible:true}D{i:204;anchors_height:200;anchors_width:200;invisible:true}
-D{i:207;anchors_height:200;anchors_width:200;invisible:true}D{i:206;anchors_height:200;anchors_width:200;invisible:true}
-D{i:203;anchors_height:200;anchors_width:200;invisible:true}D{i:202;anchors_height:768;anchors_width:1024;invisible:true}
-D{i:210;invisible:true}D{i:209;anchors_height:200;anchors_width:200;invisible:true}
-D{i:208;anchors_height:200;anchors_width:200;invisible:true}D{i:117;anchors_height:150;anchors_width:1024;anchors_x:694;anchors_y:88;invisible:true}
-D{i:106;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:303;anchors_height:150;anchors_width:1024;anchors_x:694;anchors_y:88;invisible:true}
-D{i:302;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:299;anchors_height:200;anchors_width:200;anchors_x:664;invisible:true}D{i:298;anchors_height:150;anchors_width:200;anchors_x:664;invisible:true}
-D{i:301;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:300;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:295;anchors_height:150;anchors_width:1024;invisible:true}D{i:312;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:311;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:308;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:307;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:310;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:309;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:305;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:306;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:304;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:321;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:320;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:315;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:314;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:317;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:316;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:319;anchors_x:123;anchors_y:133;invisible:true}D{i:318;anchors_x:123;anchors_y:133;invisible:true}
-D{i:323;anchors_height:150;anchors_x:123;anchors_y:133;invisible:true}D{i:324;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:325;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:326;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:327;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:328;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:329;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:330;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:332;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:331;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:322;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:313;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:339;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:338;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:335;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:334;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:337;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:336;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:342;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:341;anchors_height:150;anchors_x:123;anchors_y:133;invisible:true}D{i:343;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:344;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:345;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:346;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:347;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:348;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:349;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:350;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:340;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:333;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:357;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:356;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:353;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:352;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:355;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:354;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:360;invisible:true}D{i:361;invisible:true}D{i:362;invisible:true}D{i:363;invisible:true}
-D{i:364;anchors_x:203;anchors_y:216;invisible:true}D{i:351;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:371;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:370;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:367;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:366;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:369;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:368;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:373;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:374;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:375;anchors_height:150;anchors_x:123;anchors_y:133;invisible:true}D{i:376;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:377;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:378;anchors_height:150;anchors_width:1024;invisible:true}D{i:379;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:380;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:381;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:382;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:383;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:384;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:385;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:386;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:388;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:387;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:389;anchors_height:150;anchors_x:123;anchors_y:133;invisible:true}D{i:390;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:372;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133}D{i:365;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:397;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:396;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:393;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:392;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:395;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:394;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:399;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:400;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:401;anchors_height:150;anchors_x:123;anchors_y:133;invisible:true}D{i:402;anchors_height:150;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:404;anchors_x:203;anchors_y:216;invisible:true}D{i:403;invisible:true}D{i:398;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133}
-D{i:391;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:417;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:416;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:413;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:412;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:415;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:414;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:408;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:434;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:433;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:430;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:429;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:432;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:431;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:436;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:438;anchors_height:150;anchors_x:123;anchors_y:133;invisible:true}D{i:437;anchors_height:150;anchors_x:123;anchors_y:133;invisible:true}
-D{i:440;invisible:true}D{i:439;anchors_height:150;anchors_x:123;anchors_y:133;invisible:true}
-D{i:441;anchors_x:203;anchors_y:216;invisible:true}D{i:444;invisible:true}D{i:445;invisible:true}
-D{i:448;anchors_x:416;anchors_y:216}D{i:447;anchors_x:416}D{i:450;anchors_x:203;anchors_y:216;invisible:true}
-D{i:449;anchors_x:203;anchors_y:216}D{i:435;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:428;anchors_height:200;anchors_width:200;anchors_x:123;anchors_y:133;invisible:true}
-D{i:457;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:456;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:453;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:452;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:455;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:454;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
-D{i:460;anchors_x:123;anchors_y:133}D{i:459;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:462;anchors_height:150;anchors_x:123;anchors_y:133;invisible:true}D{i:461;anchors_height:150;anchors_x:123;anchors_y:133;invisible:true}
-D{i:464;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:463;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:458;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:471;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:470;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:467;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:466;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:469;anchors_height:150;anchors_width:1024;invisible:true}D{i:468;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:472;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:474;anchors_x:123;anchors_y:133}D{i:475;anchors_height:150;invisible:true}D{i:476;invisible:true}
-D{i:478;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:477;anchors_height:150;anchors_width:1024;invisible:true}D{i:465;anchors_height:150;anchors_width:1024;anchors_x:123;anchors_y:133;invisible:true}
-D{i:485;anchors_height:150;anchors_width:1024;invisible:true}D{i:484;anchors_height:150;anchors_width:1024;invisible:true}
-D{i:481;anchors_height:150;anchors_width:1024;invisible:true}D{i:480;anchors_height:150;anchors_width:1024}
-D{i:483;anchors_height:150;anchors_width:1024;invisible:true}D{i:482;anchors_height:150;anchors_width:1024;invisible:true}
-D{i:489;invisible:true}D{i:492;invisible:true}D{i:493;invisible:true}D{i:499;invisible:true}
-D{i:504;invisible:true}D{i:506;invisible:true}D{i:505;invisible:true}D{i:479;anchors_height:150;anchors_width:1024;invisible:true}
-D{i:451;anchors_height:150;anchors_width:1024;anchors_x:203;anchors_y:216;invisible:true}
+    D{i:217;anchors_x:64;anchors_y:247}D{i:219;anchors_x:64;anchors_y:247}D{i:221;anchors_x:64;anchors_y:247}
+D{i:223;anchors_x:64;anchors_y:247}D{i:225;anchors_x:64;anchors_y:247}D{i:227;anchors_x:64;anchors_y:247}
+D{i:229;anchors_x:64;anchors_y:247}
 }
 ##^##*/

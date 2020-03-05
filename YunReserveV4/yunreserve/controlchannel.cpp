@@ -48,3 +48,17 @@ bool controlChannel::checkChannel(){
         return true;
     }
 }
+
+void controlChannel::admin_openChannel(int i){
+    QString control_path = "C:/Users/user/Desktop/cabinet/Control.txt";
+    QFile file(control_path);
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
+        qDebug()<<"無法建立檔案";
+        return;
+    }else{
+        QTextStream out(&file);
+        out << "Cmd=Unlock-"+QString::number(i)+"\nEnd";
+        file.close();
+        return;
+    }
+}

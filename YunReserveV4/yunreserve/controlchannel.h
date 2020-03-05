@@ -14,6 +14,7 @@ public:
     controlChannel();
     bool checkChannel();
     bool openChannel(int i);
+    void admin_openChannel(int i);
 };
 
 #endif // CONTROLCHANNEL_H

@@ -1,21 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>img/channel/01-01.jpg</file>
-        <file>img/channel/02-01.jpg</file>
-        <file>img/channel/03-01.jpg</file>
-        <file>img/channel/04-01.jpg</file>
-        <file>img/channel/05-01.jpg</file>
-        <file>img/channel/06-01.jpg</file>
-        <file>img/channel/07-01.jpg</file>
-        <file>img/channel/08-01.jpg</file>
-        <file>img/channel/09-01.jpg</file>
-        <file>img/channel/10-01.jpg</file>
-        <file>img/channel/11-01.jpg</file>
-        <file>img/channel/12-01.jpg</file>
-        <file>img/channel/13-01.jpg</file>
-        <file>img/channel/14-01.jpg</file>
-        <file>img/channel/15-01.jpg</file>
         <file>img/alreadyhave_button.png</file>
         <file>img/background.jpg</file>
         <file>img/signup_button.png</file>
@@ -44,5 +29,34 @@
         <file>img/signup_qrcode.jpg</file>
         <file>img/changeUser_qrcode.jpg</file>
         <file>img/forgetUser_qrcode.jpg</file>
+        <file>img/channel/01-01.png</file>
+        <file>img/channel/02-01.png</file>
+        <file>img/channel/03-01.png</file>
+        <file>img/channel/04-01.png</file>
+        <file>img/channel/05-01.png</file>
+        <file>img/channel/10-01.png</file>
+        <file>img/channel/11-01.png</file>
+        <file>img/channel/12-01.png</file>
+        <file>img/channel/13-01.png</file>
+        <file>img/channel/14-01.png</file>
+        <file>img/channel/15-01.png</file>
+        <file>img/channel/16-01.png</file>
+        <file>img/channel/17-01.png</file>
+        <file>img/channel/18-01.png</file>
+        <file>img/channel/19-01.png</file>
+        <file>img/channel/20-01.png</file>
+        <file>img/channel/21-01.png</file>
+        <file>img/channel/22-01.png</file>
+        <file>img/channel/23-01.png</file>
+        <file>img/channel/24-01.png</file>
+        <file>img/channel/25-01.png</file>
+        <file>img/channel/26-01.png</file>
+        <file>img/channel/27-01.png</file>
+        <file>img/channel/28-01.png</file>
+        <file>img/channel/06-01.png</file>
+        <file>img/channel/07-01.png</file>
+        <file>img/channel/08-01.png</file>
+        <file>img/channel/09-01.png</file>
+        <file>img/contract_qrcode.png</file>
     </qresource>
 </RCC>
