@@ -13,11 +13,28 @@
 #include <QRegularExpressionMatch>
 #include <QCryptographicHash>
 
+#include <QCoreApplication>
+#include <QDateTime>
+
+#include <QFile>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QHttpMultiPart>
+
+
 #include "channel.h"
 
 class UI : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString welcome READ welcome NOTIFY welcomeChanged)
+    Q_PROPERTY(QString chooseFunction READ chooseFunction NOTIFY chooseFunctionChanged)
+    Q_PROPERTY(QString chooseChannel READ chooseChannel NOTIFY chooseChannelChanged)
+    Q_PROPERTY(QString contract READ contract NOTIFY contractChanged)
+    Q_PROPERTY(QString scanQrcode READ scanQrcode NOTIFY scanQrcodeChanged)
+    Q_PROPERTY(QString upload_itemInfo READ upload_itemInfo NOTIFY upload_itemInfoChanged)
+    Q_PROPERTY(QString login READ login NOTIFY loginChanged)
+
     Q_PROPERTY(QString ch01 READ ch01 NOTIFY ch01Changed)
     Q_PROPERTY(QString ch02 READ ch02 NOTIFY ch02Changed)
     Q_PROPERTY(QString ch03 READ ch03 NOTIFY ch03Changed)
@@ -201,6 +218,14 @@ public:
             break;
         }
     }
+    QString welcome(){return welcome_state;}
+    QString chooseFunction(){return state;}
+    QString chooseChannel(){return state;}
+    QString contract(){return state;}
+    QString scanQrcode(){return state;}
+    QString upload_itemInfo(){return state;}
+    QString login(){return state;}
+
     QString ch01(){return state;}
     QString ch02(){return state;}
     QString ch03(){return state;}
@@ -236,6 +261,14 @@ public:
     QString login_notify(){return notify;}
     QString upload_notify(){return notify;}
 signals:
+    void welcomeChanged();
+    void chooseFunctionChanged();
+    void chooseChannelChanged();
+    void contractChanged();
+    void scanQrcodeChanged();
+    void upload_itemInfoChanged();
+    void loginChanged();
+
     void ch01Changed();
     void ch02Changed();
     void ch03Changed();
@@ -271,6 +304,17 @@ signals:
     void login_notifyChanged();
     void upload_notifyChanged();
 public slots:
+    void reset();
+    void welcome_clicked();
+    void choose_perchase();
+    void toContract();
+    void chooseChannel_toChooseFunction();
+    void contract_toChooseChannel();
+    void chooseChannel_chosen();
+    void scanQrcode_toChooseChannel();
+    void toLogin();
+    void login_toChooseFunction();
+
     void setFunction(QString i);
     void setChannelVisible();
     void setChannel(QString channel);
@@ -280,15 +324,24 @@ public slots:
     void setItemInfo();
     bool login_submit(QString acc, QString pwd);
     bool upload_submit(QString item, QString price);
+    bool upload_sendMail();
+    bool checkChannel();
 private:
     QString functionHandler;
     QString box_ch;
+
+    QString userACC;
+    QString userName;
+    QString userEmail;
+    QString item_Name;
+    QString item_Price;
 
     QString itemInfo;
     QString notify;
 
     QSqlDatabase db_yunreserve;
     QString state;
+    QString welcome_state;
 };
 
 #endif // UI_H

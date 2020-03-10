@@ -53,5 +53,6 @@
         <file>img/channel/26-01.png</file>
         <file>img/channel/27-01.png</file>
         <file>img/channel/28-01.png</file>
+        <file>img/qrcode/contract_qrcode.png</file>
     </qresource>
 </RCC>

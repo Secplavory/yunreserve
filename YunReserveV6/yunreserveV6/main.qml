@@ -9,7 +9,6 @@ Window {
     width: 1024
     height: 768
     title: qsTr("芯生文創")
-
     Image {
         id: background
         source: "img/background/background.jpg"
@@ -18,7 +17,7 @@ Window {
             id: welcome
             width: parent.width
             height: parent.height
-            state: "1"
+            state: ui.welcome
             Image {
                 id: welcome_welcomText
                 width: 600
@@ -38,8 +37,7 @@ Window {
                 anchors.fill: parent
                 onClicked: {
                     timer_reset.restart()
-                    parent.state = "0"
-                    chooseFunction.state = "1"
+                    ui.welcome_clicked()
                 }
             }
             states: [
@@ -65,16 +63,18 @@ Window {
                     NumberAnimation {
                         property: "opacity";
                         easing.type: Easing.InOutQuad;
-                        duration: 1000;
+                        duration: 500;
                     }
                 }
             ]
         }
         Item {
             id: chooseFunction
+            x: 0
+            y: 0
             width: parent.width
             height: parent.height
-            state: "0"
+            state: ui.chooseFunction
             Image {
                 id: chooseFunction_perchase
                 source: "img/button/perchase.png"
@@ -87,12 +87,17 @@ Window {
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
-                        timer_reset.restart()
-                        ui.setFunction("1")
-                        parent.parent.state = "0"
-                        chooseChannel.state = "1"
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.restart()
+                            ui.setFunction("1")
+                            ui.choose_perchase()
+                        }
                     }
-                    onPressed: parent.opacity=0.3
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity=0.3
+                        }
+                    }
                     onReleased: parent.opacity=1
                 }
             }
@@ -108,13 +113,124 @@ Window {
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
-                        timer_reset.restart()
-                        ui.setFunction("2")
-                        parent.parent.state = "0"
-                        login.state = "1"
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.restart()
+                            ui.setFunction("2")
+                            ui.toLogin()
+                        }
                     }
-                    onPressed: parent.opacity = "0.3"
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                           parent.opacity = "0.3"
+                        }
+                    }
                     onReleased: parent.opacity = "1"
+                }
+            }
+            Image {
+                id: chooseFunction_takeOFF
+                source: "img/button/takeOff.png"
+                width: 200
+                height: 200
+                anchors.horizontalCenterOffset: 250
+                anchors.verticalCenterOffset: -50
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                MouseArea{
+                    scale: 1
+                    transformOrigin: Item.Center
+                    anchors.fill: parent
+                    onClicked: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.restart()
+                            ui.setFunction("3")
+                            ui.toLogin()
+                        }
+                    }
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = 0.3
+                        }
+                    }
+                    onReleased: parent.opacity = 1
+                }
+            }
+            Image {
+                id: chooseChannel_signup
+                source: "img/button/signup.png"
+                width: 150
+                height: 150
+                anchors.horizontalCenterOffset: -175
+                anchors.verticalCenterOffset: 175
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.restart()
+                            parent.parent.state = "0"
+                            signup.state = "1"
+                        }
+                    }
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = 0.3
+                        }
+                    }
+                    onReleased: parent.opacity = 1
+                }
+            }
+            Image {
+                id: chooseChannel_changeUser
+                source: "img/button/changeUser.png"
+                width: 150
+                height: 150
+                anchors.horizontalCenterOffset: 0
+                anchors.verticalCenterOffset: 175
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.restart()
+                            parent.parent.state = "0"
+                            changeUser.state = "1"
+                        }
+                    }
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = 0.3
+                        }
+                    }
+                    onReleased: parent.opacity = 1
+                }
+            }
+            Image {
+                id: chooseChannel_forgetUser
+                source: "img/button/forgetUser.png"
+                width: 150
+                height: 150
+                anchors.horizontalCenterOffset: 175
+                anchors.verticalCenterOffset: 175
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.restart()
+                            parent.parent.state = "0"
+                            forgetUser.state = "1"
+                        }
+                    }
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = 0.3
+                        }
+                    }
+                    onReleased: parent.opacity = 1
                 }
             }
             states: [
@@ -140,7 +256,7 @@ Window {
                     NumberAnimation {
                         property: "opacity";
                         easing.type: Easing.InOutQuad;
-                        duration: 1000;
+                        duration: 500;
                     }
                 }
             ]
@@ -149,7 +265,7 @@ Window {
             id: chooseChannel
             width: parent.width
             height: parent.height
-            state: "0"
+            state: ui.chooseChannel
             onStateChanged: {
                 if(state=="1"){
                     ui.setChannelVisible()
@@ -170,11 +286,7 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("1")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){
-                            scanQrcode.state = "1"
-                        }
-                        if(ui.getFunction()===2){upload_itemInfo.state="1"}
+                        ui.chooseChannel_chosen()
                     }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
@@ -213,11 +325,7 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("2")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){
-                            scanQrcode.state = "1"
-                        }
-                        if(ui.getFunction()===2){upload_itemInfo.state="1"}
+                        ui.chooseChannel_chosen()
                     }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
@@ -256,8 +364,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("3")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -295,8 +403,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("4")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -334,8 +442,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("5")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -373,8 +481,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("6")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -414,8 +522,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("7")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -455,8 +563,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("8")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -496,8 +604,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("9")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -537,8 +645,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("10")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -578,8 +686,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("11")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -619,8 +727,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("12")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -660,8 +768,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("13")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -701,8 +809,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("14")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -742,8 +850,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("15")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -783,8 +891,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("16")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -824,8 +932,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("17")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -865,8 +973,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("18")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -906,8 +1014,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("19")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -947,8 +1055,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("20")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -988,8 +1096,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("21")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -1029,8 +1137,9 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("22")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
+
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -1070,8 +1179,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("23")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -1111,8 +1220,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("24")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -1152,8 +1261,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("25")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -1193,8 +1302,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("26")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -1234,8 +1343,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("27")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -1275,8 +1384,8 @@ Window {
                     onClicked: {
                         timer_reset.restart()
                         ui.setChannel("28")
-                        parent.parent.state="0"
-                        if(ui.getFunction()===1){scanQrcode.state = "1"}  if(ui.getFunction()===2){upload_itemInfo.state="1"}		}
+                        ui.chooseChannel_chosen()
+                    }
                     onPressed: parent.opacity=0.3
                     onReleased: parent.opacity=1
                 }
@@ -1299,7 +1408,24 @@ Window {
                     }
                 ]
             }
-
+            Image {
+                id: chooseChannel_toContract
+                width: 75
+                height: 75
+                anchors.verticalCenterOffset: 50
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/button/contract.png"
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_reset.restart()
+                        ui.toContract()
+                    }
+                    onPressed: parent.opacity=0.3
+                    onReleased: parent.opacity=1
+                }
+            }
             Image {
                 id: chooseChannel_toChooseFunction
                 source: "img/button/HOME.png"
@@ -1311,13 +1437,28 @@ Window {
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
-                        timer_reset.restart()
-                        parent.parent.state = "0"
-                        chooseFunction.state = "1"
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.restart()
+                            ui.chooseChannel_toChooseFunction()
+                        }
                     }
-                    onPressed: parent.opacity=0.3
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                        parent.opacity=0.3
+                        }
+                    }
                     onReleased: parent.opacity=1
                 }
+            }
+
+            Text {
+                id: chooseChannel_contractText
+                text: qsTr("請查看合約內容")
+                anchors.verticalCenterOffset: 0
+                font.pointSize: 16
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                horizontalAlignment: Text.AlignHCenter
             }
             states: [
                 State {
@@ -1342,7 +1483,74 @@ Window {
                     NumberAnimation {
                         property: "opacity";
                         easing.type: Easing.InOutQuad;
-                        duration: 1000;
+                        duration: 500;
+                    }
+                }
+            ]
+        }
+        Item {
+            id: contract
+            width: parent.width
+            height: parent.height
+            state: ui.contract
+            Text {
+                id: contract_text
+                text: "請掃碼閱讀合約內容"
+                anchors.verticalCenterOffset: -75
+                font.pointSize: 20
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            Image {
+                id: contract_qrcode
+                anchors.verticalCenterOffset: 50
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/qrcode/contract_qrcode.png"
+            }
+
+            Image {
+                id: contract_toChooseChannel
+                width: 75
+                height: 75
+                anchors.verticalCenterOffset: 300
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/button/keepChooseChannel.png"
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_reset.restart()
+                        ui.contract_toChooseChannel()
+                    }
+                    onPressed: parent.opacity=0.3
+                    onReleased: parent.opacity=1
+                }
+            }
+            states: [
+                State {
+                    name: "0"
+                    PropertyChanges {
+                        target: contract
+                        opacity: 0
+                        enabled: false
+                    }
+                },
+                State {
+                    name: "1"
+                    PropertyChanges {
+                        target: contract
+                        opacity: 1
+                        enabled: true
+                    }
+                }
+            ]
+            transitions: [
+                Transition {
+                    NumberAnimation {
+                        property: "opacity";
+                        easing.type: Easing.InOutQuad;
+                        duration: 500;
                     }
                 }
             ]
@@ -1351,7 +1559,7 @@ Window {
             id: scanQrcode
             width: parent.width
             height: parent.height
-            state: "0"
+            state: ui.scanQrcode
             onStateChanged: ui.setItemInfo()
             Text {
                 id: scanQrcode_itemName
@@ -1383,8 +1591,7 @@ Window {
                     anchors.fill: parent
                     onClicked: {
                         timer_reset.restart()
-                        parent.parent.state = "0"
-                        chooseChannel.state = "1"
+                        ui.scanQrcode_toChooseChannel()
                     }
                     onPressed: parent.opacity = "0.3"
                     onReleased: parent.opacity = "1"
@@ -1413,7 +1620,7 @@ Window {
                     NumberAnimation {
                         property: "opacity";
                         easing.type: Easing.InOutQuad;
-                        duration: 1000;
+                        duration: 500;
                     }
                 }
             ]
@@ -1424,8 +1631,13 @@ Window {
             height: parent.height
             x: 0
             y: 0
-            state: "0"
-
+            state: ui.login
+            onStateChanged: {
+                if(state=="0"){
+                    login_accField.text = ""
+                    login_pwdField.text = ""
+                }
+            }
             Text {
                 id: login_title
                 text: "帳號登入"
@@ -1499,16 +1711,28 @@ Window {
                 source: "img/button/submit.png"
                 MouseArea{
                     anchors.fill: parent
+                    property bool handler: false
                     onClicked: {
-                        timer_reset.restart()
-                        if(ui.login_submit(login_accField.text, login_pwdField.text)){
-                            parent.parent.state = "0"
-                            chooseChannel.state = "1"
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.restart()
+                            parent.parent.state = "2"
+                            if(ui.login_submit(login_accField.text, login_pwdField.text)){
+                                parent.parent.state = "0"
+                                chooseChannel.state = "1"
+                                login_accField.text = ""
+                                login_pwdField.text = ""
+                            }else{
+                                parent.parent.state = "1"
+                            }
+
+                            parent.opacity = 1
                         }
-                        login_accField.text = ""
-                        login_pwdField.text = ""
                     }
-                    onPressed: parent.opacity = 0.3
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = 0.3
+                        }
+                    }
                     onReleased: parent.opacity = 1
                 }
             }
@@ -1523,10 +1747,15 @@ Window {
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
-                        parent.parent.state = "0"
-                        chooseFunction.state = "1"
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            ui.login_toChooseFunction()
+                        }
                     }
-                    onPressed: parent.opacity = 0.3
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                        parent.opacity = 0.3
+                        }
+                    }
                     onReleased: parent.opacity = 1
                 }
             }
@@ -1547,6 +1776,14 @@ Window {
                         opacity: 1
                         enabled: true
                     }
+                },
+                State {
+                    name: "2"
+                    PropertyChanges {
+                        target: login
+                        opacity: 1
+                        enabled: false
+                    }
                 }
             ]
             transitions: [
@@ -1554,12 +1791,12 @@ Window {
                     NumberAnimation {
                         property: "opacity";
                         easing.type: Easing.InOutQuad;
-                        duration: 1000;
+                        duration: 500;
                     }
                 }
             ]
             NumberAnimation{
-                id: animateY
+                id: login_animateY
                 target: login
                 properties: "y"
                 from: 0
@@ -1567,7 +1804,7 @@ Window {
                 easing.type: Easing.InOutQuad
             }
             NumberAnimation{
-                id: animateY_reverse
+                id: login_animateY_reverse
                 target: login
                 properties: "y"
                 from: -75
@@ -1579,7 +1816,14 @@ Window {
             id: upload_itemInfo
             width: parent.width
             height: parent.height
-            state: "0"
+            state: ui.upload_itemInfo
+            onStateChanged: {
+                if(state=="0"){
+                    upload_itemField.text = ""
+                    upload_priceField.text = ""
+                }
+            }
+
             Text {
                 id: upload_title
                 text: "商品資訊"
@@ -1612,6 +1856,8 @@ Window {
                 id: upload_itemField
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
+                onPressed: timer_reset.restart()
+                onTextChanged: timer_reset.restart()
             }
 
             Text {
@@ -1629,6 +1875,8 @@ Window {
                 anchors.verticalCenterOffset: 100
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
+                onPressed: timer_reset.restart()
+                onTextChanged: timer_reset.restart()
             }
 
             Image {
@@ -1644,12 +1892,51 @@ Window {
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
-                        timer_reset.restart()
-                        if(ui.upload_submit(upload_itemField.text, upload_priceField.text)){
-                            console.log("123123")
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.restart()
+                            if(ui.upload_submit(upload_itemField.text, upload_priceField.text)){
+                                parent.parent.state = "0"
+                                waitClose.state = "1"
+                                upload_itemField.text = ""
+                                upload_priceField.text = ""
+                                ui.upload_sendMail()
+                            }
+                            parent.opacity = 1
                         }
                     }
-                    onPressed: parent.opacity = 0.3
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = 0.3
+                        }
+                    }
+                    onReleased: parent.opacity = 1
+                }
+            }
+            Image {
+                id: upload_toChooseChannel
+                width: 75
+                height: 75
+                anchors.verticalCenterOffset: 300
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                fillMode: Image.PreserveAspectFit
+                source: "img/button/keepChooseChannel.png"
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.restart()
+                            parent.parent.state = "0"
+                            chooseChannel.state = "1"
+                            upload_itemField.text = ""
+                            upload_priceField.text = ""
+                        }
+                    }
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = 0.3
+                        }
+                    }
                     onReleased: parent.opacity = 1
                 }
             }
@@ -1676,7 +1963,304 @@ Window {
                     NumberAnimation {
                         property: "opacity";
                         easing.type: Easing.InOutQuad;
-                        duration: 1000;
+                        duration: 500;
+                    }
+                }
+            ]
+            NumberAnimation{
+                id: upload_animateY
+                target: upload_itemInfo
+                properties: "y"
+                from: 0
+                to: -75
+                easing.type: Easing.InOutQuad
+            }
+            NumberAnimation{
+                id: upload_animateY_reverse
+                target: upload_itemInfo
+                properties: "y"
+                from: -75
+                to: 0
+                easing.type: Easing.InOutQuad
+            }
+        }
+        Item {
+            id: signup
+            width: parent.width
+            height: parent.height
+            state: "0"
+            Text {
+                id: signup_title
+                text: "請掃碼註冊"
+                font.pointSize: 20
+                anchors.verticalCenterOffset: -75
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                horizontalAlignment: Text.AlignHCenter
+            }
+            Image {
+                id: signup_qrcode
+                width: 166
+                height: 166
+                anchors.verticalCenterOffset: 50
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/qrcode/signup.jpg"
+                fillMode: Image.PreserveAspectFit
+            }
+            Image {
+                id: signup_toChooseFunction
+                source: "img/button/HOME.png"
+                width: 75
+                height: 75
+                anchors.verticalCenterOffset: 300
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.parent.state = "0"
+                            chooseFunction.state = "1"
+                        }
+                    }
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = 0.3
+                        }
+                    }
+                    onReleased: parent.opacity=1
+                }
+            }
+            states: [
+                State {
+                    name: "0"
+                    PropertyChanges {
+                        target: signup
+                        opacity: 0
+                        enabled: false
+                    }
+                },
+                State {
+                    name: "1"
+                    PropertyChanges {
+                        target: signup
+                        opacity: 1
+                        enabled: true
+                    }
+                }
+            ]
+            transitions: [
+                Transition {
+                    NumberAnimation {
+                        property: "opacity";
+                        easing.type: Easing.InOutQuad;
+                        duration: 500;
+                    }
+                }
+            ]
+        }
+        Item {
+            id: changeUser
+            width: parent.width
+            height: parent.height
+            state: "0"
+            Text {
+                id: changeUser_title
+                text: "請掃碼更改使用者資訊"
+                font.pointSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                anchors.verticalCenterOffset: -75
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Image {
+                id: changeUser_qrcode
+                width: 166
+                height: 166
+                anchors.verticalCenterOffset: 50
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/qrcode/changeUser.jpg"
+                fillMode: Image.PreserveAspectFit
+            }
+            Image {
+                id: changeUser_toChooseFunction
+                width: 75
+                height: 75
+                anchors.verticalCenterOffset: 300
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/button/HOME.png"
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.parent.state = "0"
+                            chooseFunction.state = "1"
+                        }
+                    }
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = 0.3
+                        }
+                    }
+                    onReleased: parent.opacity=1
+                }
+            }
+            states: [
+                State {
+                    name: "0"
+                    PropertyChanges {
+                        target: changeUser
+                        opacity: 0
+                        enabled: false
+                    }
+                },
+                State {
+                    name: "1"
+                    PropertyChanges {
+                        target: changeUser
+                        opacity: 1
+                        enabled: true
+                    }
+                }
+            ]
+            transitions: [
+                Transition {
+                    NumberAnimation {
+                        property: "opacity";
+                        easing.type: Easing.InOutQuad;
+                        duration: 500;
+                    }
+                }
+            ]
+        }
+        Item {
+            id: forgetUser
+            width: parent.width
+            height: parent.height
+            state: "0"
+            Text {
+                id: forgetUser_title
+                text: "請掃碼更改使用者資訊"
+                font.pointSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                anchors.verticalCenterOffset: -75
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Image {
+                id: forgetUser_qrcode
+                width: 166
+                height: 166
+                anchors.verticalCenterOffset: 50
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/qrcode/forgetUser.jpg"
+                fillMode: Image.PreserveAspectFit
+            }
+            Image {
+                id: forgetUser_toChooseFunction
+                width: 75
+                height: 75
+                anchors.verticalCenterOffset: 300
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/button/HOME.png"
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.parent.state = "0"
+                            chooseFunction.state = "1"
+                        }
+                    }
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = 0.3
+                        }
+                    }
+                    onReleased: parent.opacity=1
+                }
+            }
+            states: [
+                State {
+                    name: "0"
+                    PropertyChanges {
+                        target: forgetUser
+                        opacity: 0
+                        enabled: false
+                    }
+                },
+                State {
+                    name: "1"
+                    PropertyChanges {
+                        target: forgetUser
+                        opacity: 1
+                        enabled: true
+                    }
+                }
+            ]
+            transitions: [
+                Transition {
+                    NumberAnimation {
+                        property: "opacity";
+                        easing.type: Easing.InOutQuad;
+                        duration: 500;
+                    }
+                }
+            ]
+        }
+        Item {
+            id: waitClose
+            width: parent.width
+            height: parent.height
+            state: "0"
+            onStateChanged: {
+                if(state=="1"){
+                    timer_reset.stop()
+                    timer_waitClose.start()
+                }
+            }
+
+            AnimatedImage {
+                id: waitClose_text
+                width: 500
+                height: 100
+                playing: true
+                anchors.verticalCenterOffset: 60
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/word/close.gif"
+            }
+
+            states: [
+                State {
+                    name: "0"
+                    PropertyChanges {
+                        target: waitClose
+                        opacity: 0
+                        enabled: false
+                    }
+                },
+                State {
+                    name: "1"
+                    PropertyChanges {
+                        target: waitClose
+                        opacity: 1
+                        enabled: true
+                    }
+                }
+            ]
+            transitions: [
+                Transition {
+                    NumberAnimation {
+                        property: "opacity";
+                        easing.type: Easing.InOutQuad;
+                        duration: 500;
                     }
                 }
             ]
@@ -1694,14 +2278,131 @@ Window {
         fillMode: Image.PreserveAspectFit
         source: "img/icon/brandIcon.png"
     }
+    Image {
+        id: reset_notify
+        anchors.fill: parent
+//        width: 762
+//        height: 382
+//        anchors.verticalCenterOffset: 20
+//        anchors.horizontalCenter: parent.horizontalCenter
+//        anchors.verticalCenter: parent.verticalCenter
+        source: "img/background/background.jpg"
+        state: "0"
+        onStateChanged: {
+            if(state=="1"){
+                timer_reset.stop()
+                timer_countdown.restart()
+            }
+        }
+        MouseArea{
+            width: parent.width
+            height: parent.height
+        }
+        Button{
+            id: cancel_tmp
+            text: "繼續操作"
+            anchors.horizontalCenterOffset: 100
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 25
+            anchors.horizontalCenter: parent.horizontalCenter
+            onClicked: {
+                timer_countdown.stop()
+                timer_reset.restart()
+                parent.state = "0"
+            }
+        }
+        Button {
+            id: reset_tmp
+            text: qsTr("回主畫面")
+            anchors.horizontalCenterOffset: -100
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 25
+            anchors.horizontalCenter: parent.horizontalCenter
+            onClicked: {
+                timer_countdown.stop()
+                parent.state = "0"
+                ui.reset()
+            }
+        }
+        Text {
+            id: reset_notify_counter
+            text: ""
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignBottom
+            font.pointSize: 12
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 35
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        states: [
+            State {
+                name: "0"
+                PropertyChanges {
+                    target: reset_notify
+                    opacity: 0
+                    enabled: false
+                }
+            },
+            State {
+                name: "1"
+                PropertyChanges {
+                    target: reset_notify
+                    opacity: 1
+                    enabled: true
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation {
+                    property: "opacity";
+                    easing.type: Easing.InOutQuad;
+                    duration: 500;
+                }
+            }
+        ]
+    }
     Timer{
         id: timer_reset
-        interval: 8000
+        interval: 5000
         repeat: false
         running: false
         triggeredOnStart: false
         onTriggered: {
-            reset()
+            timer_countdown.count = 8
+            reset_notify.state = "1"
+        }
+    }
+    Timer{
+        id: timer_countdown
+        property int count: 8
+        interval: 1000
+        repeat: true
+        running: false
+        triggeredOnStart: false
+        onTriggered: {
+            count -= 1
+            reset_notify_counter.text = "還剩餘"+ count +"秒"
+            if(count===0){
+                timer_countdown.stop()
+                reset_notify.state = "0"
+                ui.reset()
+                reset_notify_counter.text = ""
+            }
+        }
+    }
+    Timer{
+        id: timer_waitClose
+        interval: 3000
+        repeat: true
+        running: false
+        triggeredOnStart: false
+        onTriggered: {
+            if(ui.checkChannel){
+                console.log("test")
+                timer_waitClose.stop()
+                waitClose.state = "0"
+            }
         }
     }
     function reset(){
@@ -1711,6 +2412,10 @@ Window {
         scanQrcode.state = "0"
         login.state = "0"
         upload_itemInfo.state = "0"
+        contract.state = "0"
+        signup.state = "0"
+        changeUser.state = "0"
+        forgetUser.state = "0"
     }
 
 
@@ -1731,10 +2436,12 @@ Window {
         }
         onActiveChanged: {
             if(active){
-                animateY.start()
+                login_animateY.start()
+                upload_animateY.start()
             }
             if(!active){
-                animateY_reverse.start()
+                login_animateY_reverse.start()
+                upload_animateY_reverse.start()
                 background.forceActiveFocus()
             }
         }
@@ -1753,3 +2460,4 @@ Window {
         }
     }
 }
+
