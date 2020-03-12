@@ -69,6 +69,15 @@ void UI::chooseChannel_chosen(){
         emit upload_itemInfoChanged();
     }
 }
+void UI::upload_toChooseChannel(){
+    notify = "";
+    emit upload_notifyChanged();
+    state = "0";
+    emit upload_itemInfoChanged();
+    state = "1";
+    emit chooseChannelChanged();
+}
+
 
 void UI::scanQrcode_toChooseChannel(){
     state = "0";
@@ -168,12 +177,16 @@ void UI::setItemInfo(){
 bool UI::login_submit(QString acc, QString pwd){
     notify = "處理中 請稍號";
     emit login_notifyChanged();
+    state = "2";
+    emit loginChanged();
     QEventLoop eventLoop;
     QTimer::singleShot(50,&eventLoop,SLOT(quit()));
     eventLoop.exec();
     if(!db_yunreserve.open()){
         notify = "資料庫錯誤，請稍號在試";
         emit login_notifyChanged();
+        state = "1";
+        emit loginChanged();
         return false;
     }
     QRegularExpression re_acc("^\\w{6,12}$", QRegularExpression::CaseInsensitiveOption);
@@ -183,11 +196,17 @@ bool UI::login_submit(QString acc, QString pwd){
     if(!match_acc.hasMatch()){
         notify = "帳號請輸入六碼英數組合";
         emit login_notifyChanged();
+        db_yunreserve.close();
+        state = "1";
+        emit loginChanged();
         return false;
     }
     if(!match_pwd.hasMatch()){
         notify = "密碼請輸入六碼英數組合";
         emit login_notifyChanged();
+        db_yunreserve.close();
+        state = "1";
+        emit loginChanged();
         return false;
     }
     QCryptographicHash *hash = new QCryptographicHash(QCryptographicHash::Sha256);
@@ -202,6 +221,9 @@ bool UI::login_submit(QString acc, QString pwd){
     if(!query.next()){
         notify = "帳密錯誤，無法登入";
         emit login_notifyChanged();
+        db_yunreserve.close();
+        state = "1";
+        emit loginChanged();
         return false;
     }
     notify = "";
@@ -209,12 +231,19 @@ bool UI::login_submit(QString acc, QString pwd){
     userACC = acc;
     userName = query.value(0).toString();
     userEmail = query.value(1).toString();
+    db_yunreserve.close();
+    state = "0";
+    emit loginChanged();
+    state = "1";
+    emit chooseChannelChanged();
     return true;
 }
 
 bool UI::upload_submit(QString item, QString price){
     notify = "處理中 請稍後";
     emit upload_notifyChanged();
+    state = "2";
+    emit upload_itemInfoChanged();
     QEventLoop eventLoop;
     QTimer::singleShot(50,&eventLoop,SLOT(quit()));
     eventLoop.exec();
@@ -225,16 +254,22 @@ bool UI::upload_submit(QString item, QString price){
     if(!match_item.hasMatch()){
         notify = "商品名稱只能包含、中英數字";
         emit upload_notifyChanged();
+        state = "1";
+        emit upload_itemInfoChanged();
         return false;
     }
     if(!match_price.hasMatch()){
         notify = "請輸入數字（最低賣十元）";
         emit upload_notifyChanged();
+        state = "1";
+        emit upload_itemInfoChanged();
         return false;
     }
     if(!db_yunreserve.open()){
         notify = "資料庫連接失敗，請聯絡機台負責人員";
         emit upload_notifyChanged();
+        state = "1";
+        emit upload_itemInfoChanged();
         return false;
     }
     QString upload_dateTime = QDateTime::currentDateTime().toString("yyyyMMdd");
@@ -250,6 +285,9 @@ bool UI::upload_submit(QString item, QString price){
     if(!query.exec()){
         notify = "資料庫連接失敗，請聯絡機台負責人員";
         emit upload_notifyChanged();
+        db_yunreserve.close();
+        state = "1";
+        emit upload_itemInfoChanged();
         return false;
     }
     QString filePath="C:/Users/user/Desktop/cabinet/Control.txt";
@@ -258,6 +296,9 @@ bool UI::upload_submit(QString item, QString price){
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
         notify = "資料庫連接失敗，請聯絡機台負責人員";
         emit upload_notifyChanged();
+        db_yunreserve.close();
+        state = "1";
+        emit upload_itemInfoChanged();
         return false;
     }else{
         QTextStream out(&file);
@@ -273,6 +314,11 @@ bool UI::upload_submit(QString item, QString price){
     }
     notify = "";
     emit upload_notifyChanged();
+    db_yunreserve.close();
+    state = "0";
+    emit upload_itemInfoChanged();
+    state = "1";
+    emit waitCloseChanged();
     return true;
 }
 
@@ -350,6 +396,10 @@ bool UI::checkChannel(){
                 return false;
             }
         }
+        state = "0";
+        emit waitCloseChanged();
+        state = "1";
+        emit thanksYouChanged();
         return true;
     }
 }

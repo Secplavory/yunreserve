@@ -1560,7 +1560,11 @@ Window {
             width: parent.width
             height: parent.height
             state: ui.scanQrcode
-            onStateChanged: ui.setItemInfo()
+            onStateChanged: {
+                if(state=="1"){
+                    ui.setItemInfo()
+                }
+            }
             Text {
                 id: scanQrcode_itemName
                 text: "商品：" + ui.itemName
@@ -1590,10 +1594,16 @@ Window {
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
-                        timer_reset.restart()
-                        ui.scanQrcode_toChooseChannel()
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.restart()
+                            ui.scanQrcode_toChooseChannel()
+                        }
                     }
-                    onPressed: parent.opacity = "0.3"
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = "0.3"
+                        }
+                    }
                     onReleased: parent.opacity = "1"
                 }
             }
@@ -1715,17 +1725,7 @@ Window {
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
                             timer_reset.restart()
-                            parent.parent.state = "2"
-                            if(ui.login_submit(login_accField.text, login_pwdField.text)){
-                                parent.parent.state = "0"
-                                chooseChannel.state = "1"
-                                login_accField.text = ""
-                                login_pwdField.text = ""
-                            }else{
-                                parent.parent.state = "1"
-                            }
-
-                            parent.opacity = 1
+                            ui.login_submit(login_accField.text, login_pwdField.text)
                         }
                     }
                     onPressed: {
@@ -1894,14 +1894,7 @@ Window {
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
                             timer_reset.restart()
-                            if(ui.upload_submit(upload_itemField.text, upload_priceField.text)){
-                                parent.parent.state = "0"
-                                waitClose.state = "1"
-                                upload_itemField.text = ""
-                                upload_priceField.text = ""
-                                ui.upload_sendMail()
-                            }
-                            parent.opacity = 1
+                            ui.upload_submit(upload_itemField.text, upload_priceField.text)
                         }
                     }
                     onPressed: {
@@ -1926,10 +1919,7 @@ Window {
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
                             timer_reset.restart()
-                            parent.parent.state = "0"
-                            chooseChannel.state = "1"
-                            upload_itemField.text = ""
-                            upload_priceField.text = ""
+                            ui.upload_toChooseChannel()
                         }
                     }
                     onPressed: {
@@ -1955,6 +1945,14 @@ Window {
                         target: upload_itemInfo
                         opacity: 1
                         enabled: true
+                    }
+                },
+                State {
+                    name: "2"
+                    PropertyChanges {
+                        target: upload_itemInfo
+                        opacity: 1
+                        enabled: false
                     }
                 }
             ]
@@ -2218,7 +2216,7 @@ Window {
             id: waitClose
             width: parent.width
             height: parent.height
-            state: "0"
+            state: ui.waitClose
             onStateChanged: {
                 if(state=="1"){
                     timer_reset.stop()
@@ -2231,6 +2229,7 @@ Window {
                 width: 500
                 height: 100
                 playing: true
+                paused: false
                 anchors.verticalCenterOffset: 60
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
@@ -2265,7 +2264,98 @@ Window {
                 }
             ]
         }
+        Item {
+            id: thanksYou
+            width: parent.width
+            height: parent.height
+            state: ui.thanksYou
+            AnimatedImage {
+                id: thanksYou_text
+                width: 512
+                height: 206
+                anchors.verticalCenterOffset: 30
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/word/thanks.png"
+            }
 
+            Image {
+                id: thanksYou_toChooseChannel
+                width: 75
+                height: 75
+                anchors.horizontalCenterOffset: -100
+                anchors.verticalCenterOffset: 300
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/button/keepChooseChannel.png"
+                fillMode: Image.PreserveAspectFit
+                MouseArea{
+                    onClicked: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+
+                        }
+                    }
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = 0.3
+                        }
+                    }
+                    onReleased: parent.opacity = 1
+                }
+            }
+
+            Image {
+                id: thanksYou_toHome
+                width: 75
+                height: 75
+                anchors.verticalCenterOffset: 300
+                anchors.horizontalCenterOffset: 100
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "img/button/HOME.png"
+                fillMode: Image.PreserveAspectFit
+                MouseArea{
+                    onClicked: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+
+                        }
+                    }
+                    onPressed: {
+                        if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            parent.opacity = 0.3
+                        }
+                    }
+                    onReleased: parent.opacity = 1
+                }
+            }
+            states: [
+                State {
+                    name: "0"
+                    PropertyChanges {
+                        target: thanksYou
+                        opacity: 0
+                        enabled: false
+                    }
+                },
+                State {
+                    name: "1"
+                    PropertyChanges {
+                        target: thanksYou
+                        opacity: 1
+                        enabled: true
+                    }
+                }
+            ]
+            transitions: [
+                Transition {
+                    NumberAnimation {
+                        property: "opacity";
+                        easing.type: Easing.InOutQuad;
+                        duration: 500;
+                    }
+                }
+            ]
+        }
     }
     Image {
         id: brandIcon
@@ -2398,10 +2488,8 @@ Window {
         running: false
         triggeredOnStart: false
         onTriggered: {
-            if(ui.checkChannel){
-                console.log("test")
+            if(ui.checkChannel()){
                 timer_waitClose.stop()
-                waitClose.state = "0"
             }
         }
     }

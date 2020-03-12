@@ -34,6 +34,8 @@ class UI : public QObject
     Q_PROPERTY(QString scanQrcode READ scanQrcode NOTIFY scanQrcodeChanged)
     Q_PROPERTY(QString upload_itemInfo READ upload_itemInfo NOTIFY upload_itemInfoChanged)
     Q_PROPERTY(QString login READ login NOTIFY loginChanged)
+    Q_PROPERTY(QString waitClose READ waitClose NOTIFY waitCloseChanged)
+    Q_PROPERTY(QString thanksYou READ thanksYou NOTIFY thanksYouChanged)
 
     Q_PROPERTY(QString ch01 READ ch01 NOTIFY ch01Changed)
     Q_PROPERTY(QString ch02 READ ch02 NOTIFY ch02Changed)
@@ -225,6 +227,8 @@ public:
     QString scanQrcode(){return state;}
     QString upload_itemInfo(){return state;}
     QString login(){return state;}
+    QString waitClose(){return state;}
+    QString thanksYou(){return state;}
 
     QString ch01(){return state;}
     QString ch02(){return state;}
@@ -268,6 +272,8 @@ signals:
     void scanQrcodeChanged();
     void upload_itemInfoChanged();
     void loginChanged();
+    void waitCloseChanged();
+    void thanksYouChanged();
 
     void ch01Changed();
     void ch02Changed();
@@ -314,6 +320,7 @@ public slots:
     void scanQrcode_toChooseChannel();
     void toLogin();
     void login_toChooseFunction();
+    void upload_toChooseChannel();
 
     void setFunction(QString i);
     void setChannelVisible();
