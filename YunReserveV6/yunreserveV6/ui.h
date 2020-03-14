@@ -21,8 +21,23 @@
 #include <QNetworkReply>
 #include <QHttpMultiPart>
 
+#include <QJsonObject>
+#include <QJsonDocument>
 
-#include "channel.h"
+#include "qrcode_generater/QrCode.hpp"
+#include <QQuickImageProvider>
+using namespace qrcodegen;
+
+class ColorImageProvider : public QQuickImageProvider
+  {
+  public:
+      ColorImageProvider()
+          : QQuickImageProvider(QQuickImageProvider::Pixmap)
+      {
+      }
+      QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
+  };
+
 
 class UI : public QObject
 {
@@ -36,6 +51,9 @@ class UI : public QObject
     Q_PROPERTY(QString login READ login NOTIFY loginChanged)
     Q_PROPERTY(QString waitClose READ waitClose NOTIFY waitCloseChanged)
     Q_PROPERTY(QString thanksYou READ thanksYou NOTIFY thanksYouChanged)
+    Q_PROPERTY(QString signup READ signup NOTIFY signupChanged)
+    Q_PROPERTY(QString changeUser READ changeUser NOTIFY changeUserChanged)
+    Q_PROPERTY(QString forgetUser READ forgetUser NOTIFY forgetUserChanged)
 
     Q_PROPERTY(QString ch01 READ ch01 NOTIFY ch01Changed)
     Q_PROPERTY(QString ch02 READ ch02 NOTIFY ch02Changed)
@@ -66,11 +84,14 @@ class UI : public QObject
     Q_PROPERTY(QString ch27 READ ch27 NOTIFY ch27Changed)
     Q_PROPERTY(QString ch28 READ ch28 NOTIFY ch28Changed)
 
+    Q_PROPERTY(QString scanQrcode_qrcode READ scanQrcode_qrcode NOTIFY scanQrcode_qrcodeChanged)
+
     Q_PROPERTY(QString itemName READ itemName NOTIFY itemNameChanged)
     Q_PROPERTY(QString itemPrice READ itemPrice NOTIFY itemPriceChanged)
 
     Q_PROPERTY(QString login_notify READ login_notify NOTIFY login_notifyChanged)
     Q_PROPERTY(QString upload_notify READ upload_notify NOTIFY upload_notifyChanged)
+    Q_PROPERTY(QString scanQrcode_notify READ scanQrcode_notify NOTIFY scanQrcode_notifyChanged)
 public:
     explicit UI(QObject *parent = nullptr);
     void setChannelState(int handler,int box_ch){
@@ -229,6 +250,9 @@ public:
     QString login(){return state;}
     QString waitClose(){return state;}
     QString thanksYou(){return state;}
+    QString signup(){return state;}
+    QString changeUser(){return state;}
+    QString forgetUser(){return state;}
 
     QString ch01(){return state;}
     QString ch02(){return state;}
@@ -259,11 +283,14 @@ public:
     QString ch27(){return state;}
     QString ch28(){return state;}
 
+    QString scanQrcode_qrcode(){return scanQrcode_qrcode_text;}
+
     QString itemName(){return itemInfo;}
     QString itemPrice(){return itemInfo;}
 
     QString login_notify(){return notify;}
     QString upload_notify(){return notify;}
+    QString scanQrcode_notify(){return notify;}
 signals:
     void welcomeChanged();
     void chooseFunctionChanged();
@@ -274,6 +301,9 @@ signals:
     void loginChanged();
     void waitCloseChanged();
     void thanksYouChanged();
+    void signupChanged();
+    void changeUserChanged();
+    void forgetUserChanged();
 
     void ch01Changed();
     void ch02Changed();
@@ -304,11 +334,14 @@ signals:
     void ch27Changed();
     void ch28Changed();
 
+    void scanQrcode_qrcodeChanged();
+
     void itemNameChanged();
     void itemPriceChanged();
 
     void login_notifyChanged();
     void upload_notifyChanged();
+    void scanQrcode_notifyChanged();
 public slots:
     void reset();
     void welcome_clicked();
@@ -321,6 +354,16 @@ public slots:
     void toLogin();
     void login_toChooseFunction();
     void upload_toChooseChannel();
+    void chooseChannel_signup();
+    void signup_toChooseFunction();
+    void chooseChannel_changeUser();
+    void changeUser_toChooseFunction();
+    void chooseChannel_forgetUser();
+    void forgetUser_toChooseFunction();
+    void thanksYou_toChooseChannel();
+    void thanksYou_toHome();
+    void scanQrcode_PayMoney();
+    void admin();
 
     void setFunction(QString i);
     void setChannelVisible();
@@ -340,13 +383,17 @@ private:
     QString userACC;
     QString userName;
     QString userEmail;
+    QString item_ID;
     QString item_Name;
     QString item_Price;
+
+    QString scanQrcode_qrcode_text;
 
     QString itemInfo;
     QString notify;
 
     QSqlDatabase db_yunreserve;
+
     QString state;
     QString welcome_state;
 };

@@ -118,3 +118,6 @@ YunReserveV6/build-yunreserveV6-Desktop_Qt_5_12_3_MinGW_64_bit-Release/release/q
 YunReserveV6/build-yunreserveV6-Desktop_Qt_5_12_3_MinGW_64_bit-Release/release/qrc_qml_qmlcache.o
 YunReserveV6/build-yunreserveV6-Desktop_Qt_5_12_3_MinGW_64_bit-Release/release/ui.o
 YunReserveV6/build-yunreserveV6-Desktop_Qt_5_12_3_MinGW_64_bit-Release/release/yunreserveV6.exe
+YunReserveV6/build-yunreserveV6-Desktop_Qt_5_12_3_MinGW_64_bit-Release/release/BitBuffer.o
+YunReserveV6/build-yunreserveV6-Desktop_Qt_5_12_3_MinGW_64_bit-Release/release/QrCode.o
+YunReserveV6/build-yunreserveV6-Desktop_Qt_5_12_3_MinGW_64_bit-Release/release/QrSegment.o

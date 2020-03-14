@@ -16,6 +16,8 @@ int main(int argc, char *argv[])
     UI ui;
     context->setContextProperty("ui",&ui);
 
+    engine.addImageProvider(QLatin1String("colors"), new ColorImageProvider);
+
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
     return app.exec();
 }

@@ -1,5 +1,28 @@
 ﻿#include "ui.h"
 
+QPixmap ColorImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
+{
+    QByteArray ba = QUrl::toPercentEncoding(id);
+    QString tmpstr = ba.constData();
+
+    QrCode qr0 = QrCode::encodeText(tmpstr.toUtf8(), QrCode::Ecc::MEDIUM);
+    QImage QrCode_Image=QImage(qr0.getSize(),qr0.getSize(),QImage::Format_RGB888);
+
+    for (int y = 0; y < qr0.getSize(); y++) {
+        for (int x = 0; x < qr0.getSize(); x++) {
+            if(qr0.getModule(x, y)==0)
+                QrCode_Image.setPixel(x,y,qRgb(255,255,255));
+            else
+                QrCode_Image.setPixel(x,y,qRgb(0,0,0));
+        }
+    }
+    QrCode_Image=QrCode_Image.scaled(320,320,Qt::KeepAspectRatio);
+
+    return QPixmap::fromImage(QrCode_Image);
+}
+
+
+
 UI::UI(QObject *parent) : QObject(parent)
 {
     db_yunreserve = QSqlDatabase::addDatabase("QMYSQL");
@@ -20,6 +43,8 @@ void UI::reset(){
     emit contractChanged();
     emit scanQrcodeChanged();
     emit loginChanged();
+    emit signupChanged();
+    emit thanksYouChanged();
 
     emit upload_itemInfoChanged();
 }
@@ -64,9 +89,68 @@ void UI::chooseChannel_chosen(){
     state = "1";
     if(getFunction()==1){
         emit scanQrcodeChanged();
+        notify = "";
+        emit scanQrcode_notifyChanged();
     }
     if(getFunction()==2){
         emit upload_itemInfoChanged();
+    }
+    if(getFunction()==3){
+        if(!db_yunreserve.open()){
+            return;
+        }
+        QSqlQuery query;
+        query.prepare("DELETE FROM inchannel WHERE seller=? AND box_ch=?");
+        query.addBindValue(userACC);
+        query.addBindValue(box_ch);
+        if(!query.exec()){
+            db_yunreserve.close();
+            return ;
+        }
+        db_yunreserve.close();
+        QString filePath="C:/Users/user/Desktop/cabinet/Control.txt";
+        QString statuPath="C:/Users/user/Desktop/cabinet/Status.txt";
+        QFile file(filePath);
+        if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
+            notify = "資料庫連接失敗，請聯絡機台負責人員";
+            emit upload_notifyChanged();
+            state = "1";
+            emit upload_itemInfoChanged();
+            return;
+        }else{
+            QTextStream out(&file);
+            out << "Cmd=Unlock-"+box_ch+"\nEnd";
+            file.close();
+            QEventLoop loop;
+            QTimer::singleShot(1000,&loop,SLOT(quit()));
+            loop.exec();
+            QFile file(statuPath);
+            file.remove();
+            QTimer::singleShot(1000,&loop,SLOT(quit()));
+            loop.exec();
+        }
+        emit waitCloseChanged();
+    }
+    if(getFunction()==99){
+        QString filePath="C:/Users/user/Desktop/cabinet/Control.txt";
+        QString statuPath="C:/Users/user/Desktop/cabinet/Status.txt";
+        QFile file(filePath);
+        if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
+            emit chooseChannelChanged();
+            return;
+        }else{
+            QTextStream out(&file);
+            out << "Cmd=Unlock-"+box_ch+"\nEnd";
+            file.close();
+            QEventLoop loop;
+            QTimer::singleShot(1000,&loop,SLOT(quit()));
+            loop.exec();
+            QFile file(statuPath);
+            file.remove();
+            QTimer::singleShot(1000,&loop,SLOT(quit()));
+            loop.exec();
+            emit chooseChannelChanged();
+        }
     }
 }
 void UI::upload_toChooseChannel(){
@@ -76,6 +160,54 @@ void UI::upload_toChooseChannel(){
     emit upload_itemInfoChanged();
     state = "1";
     emit chooseChannelChanged();
+}
+void UI::signup_toChooseFunction(){
+    state = "0";
+    emit signupChanged();
+    state = "1";
+    emit chooseFunctionChanged();
+}
+
+void UI::chooseChannel_changeUser(){
+    state = "0";
+    emit chooseFunctionChanged();
+    state = "1";
+    emit changeUserChanged();
+}
+void UI::changeUser_toChooseFunction(){
+    state = "0";
+    emit changeUserChanged();
+    state = "1";
+    emit chooseFunctionChanged();
+}
+
+void UI::chooseChannel_forgetUser(){
+    state = "0";
+    emit chooseFunctionChanged();
+    state = "1";
+    emit forgetUserChanged();
+
+}
+void UI::forgetUser_toChooseFunction(){
+    state = "0";
+    emit forgetUserChanged();
+    state = "1";
+    emit chooseFunctionChanged();
+}
+
+void UI::thanksYou_toChooseChannel(){
+    state = "0";
+    emit thanksYouChanged();
+    state = "1";
+    emit chooseChannelChanged();
+
+}
+void UI::thanksYou_toHome(){
+    state = "0";
+    emit thanksYouChanged();
+    state = "1";
+    emit chooseFunctionChanged();
+
 }
 
 
@@ -98,6 +230,13 @@ void UI::login_toChooseFunction(){
     emit loginChanged();
     state = "1";
     emit chooseFunctionChanged();
+}
+
+void UI::chooseChannel_signup(){
+    state = "0";
+    emit chooseFunctionChanged();
+    state = "1";
+    emit signupChanged();
 }
 
 void UI::setFunction(QString i){
@@ -135,13 +274,16 @@ void UI::setChannelVisible(){
     if(functionHandler=="3"){
         setChannelState(0, 99);
         QSqlQuery query;
-        query.exec("SELECT box_ch FROM inchannel WHERE studentNumber=?");
+        query.prepare("SELECT box_ch FROM inchannel WHERE seller=?");
         query.addBindValue(userACC);
         query.exec();
         while (query.next()) {
             int box_ch = query.value(0).toInt();
             setChannelState(1, box_ch);
         }
+    }
+    if(functionHandler=="99"){
+        setChannelState(1, 99);
     }
     db_yunreserve.close();
 }
@@ -158,20 +300,31 @@ void UI::setItemInfo(){
     eventLoop.exec();
     itemInfo = "";
     emit itemNameChanged();
+    emit itemPriceChanged();
+    scanQrcode_qrcode_text = "";
+    emit scanQrcode_qrcodeChanged();
     if(!db_yunreserve.open()){
         return;
     }
     QSqlQuery query;
-    query.prepare("SELECT item, price FROM inchannel WHERE box_ch=?");
+    query.prepare("SELECT id, item, price FROM inchannel WHERE box_ch=?");
     query.addBindValue(box_ch);
     query.exec();
     if(query.next()){
-        itemInfo = query.value(0).toString();
+        item_ID = query.value(0).toString();
+        item_Name = query.value(1).toString();
+        item_Price = query.value(2).toString();
+        itemInfo = item_Name;
         emit itemNameChanged();
-        itemInfo = query.value(1).toString();
+        itemInfo = item_Price;
         emit itemPriceChanged();
     }
     db_yunreserve.close();
+
+    QString id = QString("%1").arg(item_ID.toInt()%1000000, 6,10,QLatin1Char('0'));
+
+    scanQrcode_qrcode_text = "TWQRP://藏藝點/158/01/V1?D1="+item_Price+"00&D2="+id+"&D3=AeHoYzwSULbZ&D10=901&D11=00,00400482497653500150010001;01,00400482497653500150010001";
+    emit scanQrcode_qrcodeChanged();
 }
 
 bool UI::login_submit(QString acc, QString pwd){
@@ -319,6 +472,8 @@ bool UI::upload_submit(QString item, QString price){
     emit upload_itemInfoChanged();
     state = "1";
     emit waitCloseChanged();
+    item_Name = item;
+    item_Price = price;
     return true;
 }
 
@@ -404,3 +559,121 @@ bool UI::checkChannel(){
     }
 }
 
+void UI::scanQrcode_PayMoney(){
+    state = "2";
+    emit scanQrcodeChanged();
+    notify = "處理中 請稍後";
+    emit scanQrcode_notifyChanged();
+    QEventLoop loop;
+    QTimer::singleShot(50,&loop,SLOT(quit()));
+    loop.exec();
+
+    db_yunreserve.setDatabaseName("xmlstorage");
+    if(!db_yunreserve.open()){
+        state = "1";
+        emit scanQrcodeChanged();
+        notify = "資料庫錯誤";
+        emit scanQrcode_notifyChanged();
+        return;
+    }
+    QString orderNumber = QString("%1").arg(item_ID.toInt()%1000000, 6,10,QLatin1Char('0'));
+    QString orderPrice = QString("%1").arg(item_Price.toInt()*100, 12, 10, QLatin1Char('0'));
+    QSqlQuery query;
+    query.prepare("SELECT otherInfo FROM xmlPost_testing WHERE orderNumber=? AND amt=?");
+    query.addBindValue(orderNumber);
+    query.addBindValue(orderPrice);
+    query.exec();
+    if(!query.next()){
+        db_yunreserve.close();
+        db_yunreserve.setDatabaseName("yunreserve");
+        state = "1";
+        emit scanQrcodeChanged();
+        notify = "您尚未付款";
+        emit scanQrcode_notifyChanged();
+        return;
+    }
+    QString otherInfo = query.value(0).toString();
+
+    db_yunreserve.close();
+    db_yunreserve.setDatabaseName("yunreserve");
+    QJsonObject obj;
+    QJsonDocument doc;
+    if(otherInfo.length()!=0){
+        doc = QJsonDocument::fromJson(otherInfo.toUtf8());
+        if(doc.isObject()){
+            obj = doc.object();
+        }
+    }
+    if(obj["tag11"].toString()!="0000"){
+        state = "1";
+        emit scanQrcodeChanged();
+        notify = "付款資訊有誤，請聯絡管理員";
+        emit scanQrcode_notifyChanged();
+        return;
+    }
+    if(!db_yunreserve.open()){
+        state = "1";
+        emit scanQrcodeChanged();
+        notify = "資料庫錯誤";
+        emit scanQrcode_notifyChanged();
+        return;
+    }
+    query.prepare("DELETE FROM inchannel WHERE id=?");
+    query.addBindValue(item_ID);
+    if(!query.exec()){
+        db_yunreserve.close();
+        state = "1";
+        emit scanQrcodeChanged();
+        notify = "資料庫錯誤";
+        emit scanQrcode_notifyChanged();
+        return;
+    }
+    db_yunreserve.close();
+
+    QString filePath="C:/Users/user/Desktop/cabinet/Control.txt";
+    QString statuPath="C:/Users/user/Desktop/cabinet/Status.txt";
+    QFile file(filePath);
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
+        state = "1";
+        emit scanQrcodeChanged();
+        notify = "資料庫錯誤";
+        emit scanQrcode_notifyChanged();
+        return;
+    }else{
+        QTextStream out(&file);
+        out << "Cmd=Unlock-"+box_ch+"\nEnd";
+        file.close();
+        QTimer::singleShot(1000,&loop,SLOT(quit()));
+        loop.exec();
+        QFile file(statuPath);
+        file.remove();
+        QTimer::singleShot(1000,&loop,SLOT(quit()));
+        loop.exec();
+    }
+    state = "0";
+    emit scanQrcodeChanged();
+    state = "1";
+    emit waitCloseChanged();
+    notify = "";
+    emit scanQrcode_notifyChanged();
+}
+
+void UI::admin(){
+    if(!db_yunreserve.open()){
+        return;
+    }
+    QSqlQuery query;
+    query.prepare("SELECT * FROM admin WHERE id=\"1\" AND handler=\"1\"");
+    if(!query.exec()){
+        db_yunreserve.close();
+        return;
+    }
+    if(query.next()){
+        setFunction("99");
+        state = "0";
+        emit chooseFunctionChanged();
+        state = "1";
+        emit chooseChannelChanged();
+    }
+    db_yunreserve.close();
+}

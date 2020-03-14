@@ -9,7 +9,6 @@
         <file>img/button/HOME.png</file>
         <file>img/button/keepChooseChannel.png</file>
         <file>img/button/perchase.png</file>
-        <file>img/button/signup.png</file>
         <file>img/button/submit.png</file>
         <file>img/button/takeOff.png</file>
         <file>img/button/lanch.png</file>
@@ -18,7 +17,6 @@
         <file>img/qrcode/bankCode.png</file>
         <file>img/qrcode/changeUser.jpg</file>
         <file>img/qrcode/forgetUser.jpg</file>
-        <file>img/qrcode/signup.jpg</file>
         <file>img/word/close.gif</file>
         <file>img/word/mail.gif</file>
         <file>img/word/clickText.gif</file>
@@ -54,5 +52,11 @@
         <file>img/channel/27-01.png</file>
         <file>img/channel/28-01.png</file>
         <file>img/qrcode/contract_qrcode.png</file>
+        <file>img/button/O.png</file>
+        <file>img/button/X.png</file>
+        <file>img/background/windows.png</file>
+        <file>img/button/checkpayment.png</file>
+        <file>img/qrcode/signup.png</file>
+        <file>img/button/signup.png</file>
     </qresource>
 </RCC>

@@ -2,10 +2,14 @@
 import QtQuick.Window 2.12
 import QtQuick.VirtualKeyboard 2.4
 import QtQuick.Controls 2.12
+import QtQuick.VirtualKeyboard.Settings 2.0
+import QtQuick.Controls.Styles 1.2
+
 
 Window {
     id: window
     visible: true
+    visibility: Window.FullScreen
     width: 1024
     height: 768
     title: qsTr("芯生文創")
@@ -95,10 +99,14 @@ Window {
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.stop()
                             parent.opacity=0.3
                         }
                     }
-                    onReleased: parent.opacity=1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
             }
             Image {
@@ -121,10 +129,14 @@ Window {
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
-                           parent.opacity = "0.3"
+                            timer_reset.stop()
+                            parent.opacity = "0.3"
                         }
                     }
-                    onReleased: parent.opacity = "1"
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity = "1"
+                    }
                 }
             }
             Image {
@@ -149,10 +161,14 @@ Window {
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.stop()
                             parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity = 1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity = 1
+                    }
                 }
             }
             Image {
@@ -169,16 +185,19 @@ Window {
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
                             timer_reset.restart()
-                            parent.parent.state = "0"
-                            signup.state = "1"
+                            ui.chooseChannel_signup()
                         }
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.stop()
                             parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity = 1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity = 1
+                    }
                 }
             }
             Image {
@@ -195,16 +214,19 @@ Window {
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
                             timer_reset.restart()
-                            parent.parent.state = "0"
-                            changeUser.state = "1"
+                            ui.chooseChannel_changeUser()
                         }
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.stop()
                             parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity = 1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity = 1
+                    }
                 }
             }
             Image {
@@ -221,16 +243,31 @@ Window {
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
                             timer_reset.restart()
-                            parent.parent.state = "0"
-                            forgetUser.state = "1"
+                            ui.chooseChannel_forgetUser()
                         }
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.stop()
                             parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity = 1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity = 1
+                    }
+                }
+            }
+            Button {
+                id: button
+                y: 728
+                anchors.bottom: parent.bottom
+                anchors.leftMargin: 0
+                anchors.bottomMargin: 0
+                opacity: 0
+                anchors.left: parent.left
+                onClicked: {
+                    ui.admin()
                 }
             }
             states: [
@@ -288,8 +325,14 @@ Window {
                         ui.setChannel("1")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -327,8 +370,14 @@ Window {
                         ui.setChannel("2")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -366,8 +415,14 @@ Window {
                         ui.setChannel("3")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -405,8 +460,14 @@ Window {
                         ui.setChannel("4")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -444,8 +505,14 @@ Window {
                         ui.setChannel("5")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -483,8 +550,14 @@ Window {
                         ui.setChannel("6")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -524,8 +597,14 @@ Window {
                         ui.setChannel("7")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -565,8 +644,14 @@ Window {
                         ui.setChannel("8")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -606,8 +691,14 @@ Window {
                         ui.setChannel("9")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -647,8 +738,14 @@ Window {
                         ui.setChannel("10")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -688,8 +785,14 @@ Window {
                         ui.setChannel("11")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -729,8 +832,14 @@ Window {
                         ui.setChannel("12")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -770,8 +879,14 @@ Window {
                         ui.setChannel("13")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -811,8 +926,14 @@ Window {
                         ui.setChannel("14")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -852,8 +973,14 @@ Window {
                         ui.setChannel("15")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -868,8 +995,8 @@ Window {
                         name: "1"
                         PropertyChanges {
                             target: ch15
-                            opacity: 1
-                            enabled: true
+                            opacity: 0.3
+                            enabled: false
                         }
                     }
                 ]
@@ -893,8 +1020,14 @@ Window {
                         ui.setChannel("16")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -934,8 +1067,14 @@ Window {
                         ui.setChannel("17")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -975,8 +1114,14 @@ Window {
                         ui.setChannel("18")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -1016,8 +1161,14 @@ Window {
                         ui.setChannel("19")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -1057,8 +1208,14 @@ Window {
                         ui.setChannel("20")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -1098,8 +1255,14 @@ Window {
                         ui.setChannel("21")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -1140,8 +1303,14 @@ Window {
                         ui.chooseChannel_chosen()
                     }
 
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -1181,8 +1350,14 @@ Window {
                         ui.setChannel("23")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -1222,8 +1397,14 @@ Window {
                         ui.setChannel("24")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -1263,8 +1444,14 @@ Window {
                         ui.setChannel("25")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -1304,8 +1491,14 @@ Window {
                         ui.setChannel("26")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -1345,8 +1538,14 @@ Window {
                         ui.setChannel("27")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -1386,8 +1585,14 @@ Window {
                         ui.setChannel("28")
                         ui.chooseChannel_chosen()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
                 states: [
                     State {
@@ -1422,8 +1627,14 @@ Window {
                         timer_reset.restart()
                         ui.toContract()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
             }
             Image {
@@ -1444,16 +1655,21 @@ Window {
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
-                        parent.opacity=0.3
+                            timer_reset.stop()
+                            parent.opacity=0.3
                         }
                     }
-                    onReleased: parent.opacity=1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
             }
 
             Text {
                 id: chooseChannel_contractText
                 text: qsTr("請查看合約內容")
+                font.family: "Microsoft YaHei UI"
                 anchors.verticalCenterOffset: 0
                 font.pointSize: 16
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -1496,6 +1712,7 @@ Window {
             Text {
                 id: contract_text
                 text: "請掃碼閱讀合約內容"
+                font.family: "Microsoft YaHei UI"
                 anchors.verticalCenterOffset: -75
                 font.pointSize: 20
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -1523,8 +1740,14 @@ Window {
                         timer_reset.restart()
                         ui.contract_toChooseChannel()
                     }
-                    onPressed: parent.opacity=0.3
-                    onReleased: parent.opacity=1
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
             }
             states: [
@@ -1568,20 +1791,46 @@ Window {
             Text {
                 id: scanQrcode_itemName
                 text: "商品：" + ui.itemName
+                font.family: "Microsoft YaHei UI"
                 anchors.left: parent.left
-                anchors.leftMargin: 53
-                anchors.verticalCenterOffset: -150
+                anchors.leftMargin: 60
+                anchors.verticalCenterOffset: -125
                 anchors.verticalCenter: parent.verticalCenter
-                font.pointSize: 18
+                font.pointSize: 24
                 horizontalAlignment: Text.AlignLeft
             }
             Text {
                 id: scanQrcode_itemPrice
                 text: "價格：" + ui.itemPrice + "元"
+                anchors.verticalCenterOffset: 50
+                font.family: "Microsoft YaHei UI"
                 anchors.left: parent.left
-                anchors.leftMargin: 57
+                anchors.leftMargin: 60
                 anchors.verticalCenter: parent.verticalCenter
+                font.pointSize: 24
+            }
+            Text {
+                id: scanQrcode_notify
+                color: "#ff0c0c"
+                font.family: "Microsoft YaHei UI"
+                text: ui.scanQrcode_notify
+                anchors.horizontalCenterOffset: 300
+                anchors.horizontalCenter: parent.horizontalCenter
+                verticalAlignment: Text.AlignBottom
+                anchors.verticalCenterOffset: 23
+                horizontalAlignment: Text.AlignHCenter
+                font.pointSize: 14
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            Text {
+                id: scanQrcode_checkPayment_text
+                text: "付款完畢請按"
+                font.family: "Microsoft YaHei UI"
+                anchors.verticalCenterOffset: 300
+                anchors.horizontalCenterOffset: 260
                 font.pointSize: 18
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
             }
             Image {
                 id: scanQrcode_toChooseChannel
@@ -1601,11 +1850,67 @@ Window {
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
-                            parent.opacity = "0.3"
+                            timer_reset.stop()
+                            parent.opacity=0.3
                         }
                     }
-                    onReleased: parent.opacity = "1"
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
+            }
+            Image {
+                id: scanQrcode_PayMoney
+                source: "img/button/checkpayment.png"
+                width: 75
+                height: 75
+                anchors.verticalCenterOffset: 300
+                anchors.horizontalCenterOffset: 385
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                MouseArea{
+                    anchors.rightMargin: 0
+                    anchors.bottomMargin: 0
+                    anchors.leftMargin: 0
+                    anchors.topMargin: 0
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_reset.restart()
+                        ui.scanQrcode_PayMoney()
+                    }
+                    onPressed: {
+                        timer_reset.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
+                }
+            }
+            Image {
+                id: scanQrcode_qrcode
+                width: 200
+                height: 200
+                anchors.verticalCenterOffset: 150
+                anchors.horizontalCenterOffset: 300
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                source: "image://colors/"+ui.scanQrcode_qrcode
+                sourceSize.width: 200
+                sourceSize.height: 200
+            }
+
+            Text {
+                id: scanQrcode_text
+                text: qsTr("請使用台灣pay掃碼支付")
+                horizontalAlignment: Text.AlignHCenter
+                anchors.horizontalCenterOffset: 300
+                font.pointSize: 18
+                anchors.verticalCenterOffset: -13
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
             }
             states: [
                 State {
@@ -1622,6 +1927,14 @@ Window {
                         target: scanQrcode
                         opacity: 1
                         enabled: true
+                    }
+                },
+                State {
+                    name: "2"
+                    PropertyChanges {
+                        target: scanQrcode
+                        opacity: 1
+                        enabled: false
                     }
                 }
             ]
@@ -1653,6 +1966,7 @@ Window {
                 text: "帳號登入"
                 anchors.verticalCenterOffset: -75
                 anchors.horizontalCenter: parent.horizontalCenter
+                font.family: "Microsoft YaHei UI"
                 anchors.verticalCenter: parent.verticalCenter
                 font.pointSize: 20
             }
@@ -1662,6 +1976,7 @@ Window {
                 color: "#ea0000"
                 text: ui.login_notify
                 verticalAlignment: Text.AlignTop
+                font.family: "Microsoft YaHei UI"
                 horizontalAlignment: Text.AlignHCenter
                 anchors.verticalCenterOffset: -35
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -1673,6 +1988,7 @@ Window {
                 id: login_accText
                 text: qsTr("帳號：")
                 anchors.horizontalCenterOffset: -150
+                font.family: "Microsoft YaHei UI"
                 anchors.verticalCenterOffset: 0
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
@@ -1681,6 +1997,7 @@ Window {
 
             TextField {
                 id: login_accField
+                maximumLength: 18
                 anchors.horizontalCenterOffset: 0
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
@@ -1692,6 +2009,7 @@ Window {
                 id: login_pwdText
                 text: qsTr("密碼：")
                 anchors.horizontalCenterOffset: -150
+                font.family: "Microsoft YaHei UI"
                 anchors.verticalCenterOffset: 100
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
@@ -1701,6 +2019,7 @@ Window {
             TextField {
                 id: login_pwdField
                 echoMode: "Password"
+                maximumLength: 12
                 anchors.horizontalCenterOffset: 0
                 anchors.verticalCenterOffset: 100
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -1730,10 +2049,14 @@ Window {
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.stop()
                             parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity = 1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity = 1
+                    }
                 }
             }
             Image {
@@ -1748,15 +2071,20 @@ Window {
                     anchors.fill: parent
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.restart()
                             ui.login_toChooseFunction()
                         }
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
-                        parent.opacity = 0.3
+                            timer_reset.stop()
+                            parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity = 1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity = 1
+                    }
                 }
             }
 
@@ -1829,6 +2157,7 @@ Window {
                 text: "商品資訊"
                 anchors.verticalCenterOffset: -75
                 font.pointSize: 20
+                font.family: "Microsoft YaHei UI"
                 horizontalAlignment: Text.AlignHCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
@@ -1837,6 +2166,7 @@ Window {
                 id: upload_notify
                 color: "#ff1919"
                 text: ui.upload_notify
+                font.family: "Microsoft YaHei UI"
                 anchors.verticalCenterOffset: -35
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
@@ -1849,6 +2179,7 @@ Window {
                 anchors.horizontalCenterOffset: -150
                 font.pointSize: 18
                 anchors.horizontalCenter: parent.horizontalCenter
+                font.family: "Microsoft YaHei UI"
                 anchors.verticalCenter: parent.verticalCenter
             }
 
@@ -1858,12 +2189,14 @@ Window {
                 anchors.verticalCenter: parent.verticalCenter
                 onPressed: timer_reset.restart()
                 onTextChanged: timer_reset.restart()
+                maximumLength: 18
             }
 
             Text {
                 id: upload_priceText
                 text: "價格："
                 font.pointSize: 18
+                font.family: "Microsoft YaHei UI"
                 anchors.verticalCenterOffset: 100
                 anchors.horizontalCenterOffset: -150
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -1877,6 +2210,7 @@ Window {
                 anchors.verticalCenter: parent.verticalCenter
                 onPressed: timer_reset.restart()
                 onTextChanged: timer_reset.restart()
+                maximumLength: 5
             }
 
             Image {
@@ -1894,15 +2228,21 @@ Window {
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
                             timer_reset.restart()
-                            ui.upload_submit(upload_itemField.text, upload_priceField.text)
+                            if(ui.upload_submit(upload_itemField.text, upload_priceField.text)){
+                                ui.upload_sendMail()
+                            }
                         }
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.stop()
                             parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity = 1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity = 1
+                    }
                 }
             }
             Image {
@@ -1924,10 +2264,14 @@ Window {
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.stop()
                             parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity = 1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity = 1
+                    }
                 }
             }
             states: [
@@ -1986,11 +2330,12 @@ Window {
             id: signup
             width: parent.width
             height: parent.height
-            state: "0"
+            state: ui.signup
             Text {
                 id: signup_title
                 text: "請掃碼註冊"
                 font.pointSize: 20
+                font.family: "Microsoft YaHei UI"
                 anchors.verticalCenterOffset: -75
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
@@ -2003,7 +2348,7 @@ Window {
                 anchors.verticalCenterOffset: 50
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
-                source: "img/qrcode/signup.jpg"
+                source: "img/qrcode/signup.png"
                 fillMode: Image.PreserveAspectFit
             }
             Image {
@@ -2018,16 +2363,20 @@ Window {
                     anchors.fill: parent
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
-                            parent.parent.state = "0"
-                            chooseFunction.state = "1"
+                            timer_reset.restart()
+                            ui.signup_toChooseFunction()
                         }
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.stop()
                             parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity=1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
             }
             states: [
@@ -2062,10 +2411,11 @@ Window {
             id: changeUser
             width: parent.width
             height: parent.height
-            state: "0"
+            state: ui.changeUser
             Text {
                 id: changeUser_title
                 text: "請掃碼更改使用者資訊"
+                font.family: "Microsoft YaHei UI"
                 font.pointSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 anchors.verticalCenterOffset: -75
@@ -2095,16 +2445,20 @@ Window {
                     anchors.fill: parent
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
-                            parent.parent.state = "0"
-                            chooseFunction.state = "1"
+                            timer_reset.restart()
+                            ui.changeUser_toChooseFunction()
                         }
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.stop()
                             parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity=1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
             }
             states: [
@@ -2139,12 +2493,13 @@ Window {
             id: forgetUser
             width: parent.width
             height: parent.height
-            state: "0"
+            state: ui.forgetUser
             Text {
                 id: forgetUser_title
                 text: "請掃碼更改使用者資訊"
                 font.pointSize: 20
                 horizontalAlignment: Text.AlignHCenter
+                font.family: "Microsoft YaHei UI"
                 anchors.verticalCenterOffset: -75
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
@@ -2172,16 +2527,20 @@ Window {
                     anchors.fill: parent
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
-                            parent.parent.state = "0"
-                            chooseFunction.state = "1"
+                            timer_reset.restart()
+                            ui.forgetUser_toChooseFunction()
                         }
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            timer_reset.stop()
                             parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity=1
+                    onReleased: {
+                        timer_reset.start()
+                        parent.opacity=1
+                    }
                 }
             }
             states: [
@@ -2269,6 +2628,14 @@ Window {
             width: parent.width
             height: parent.height
             state: ui.thanksYou
+            onStateChanged: {
+                if(state=="1"){
+                    timer_reset.stop()
+                    thanksYou_timer.count=8
+                    thanksYou_timer.restart()
+                }
+            }
+
             AnimatedImage {
                 id: thanksYou_text
                 width: 512
@@ -2290,17 +2657,25 @@ Window {
                 source: "img/button/keepChooseChannel.png"
                 fillMode: Image.PreserveAspectFit
                 MouseArea{
+                    anchors.fill: parent
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
-
+                            thanksYou_timer.stop();
+                            timer_reset.restart()
+                            ui.thanksYou_toChooseChannel()
+                            thanksYou_notify.text = ""
                         }
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            thanksYou_timer.stop();
                             parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity = 1
+                    onReleased: {
+                        thanksYou_timer.start();
+                        parent.opacity = 1
+                    }
                 }
             }
 
@@ -2315,19 +2690,58 @@ Window {
                 source: "img/button/HOME.png"
                 fillMode: Image.PreserveAspectFit
                 MouseArea{
+                    anchors.fill: parent
                     onClicked: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
-
+                            thanksYou_timer.stop();
+                            timer_reset.restart()
+                            ui.thanksYou_toHome()
+                            thanksYou_notify.text = ""
                         }
                     }
                     onPressed: {
                         if(Math.sqrt(Math.pow(mouseX-parent.width/2,2)+Math.pow(mouseY-parent.height/2,2)) < parent.width/2){
+                            thanksYou_timer.stop();
                             parent.opacity = 0.3
                         }
                     }
-                    onReleased: parent.opacity = 1
+                    onReleased: {
+                        thanksYou_timer.start();
+                        parent.opacity = 1
+                    }
                 }
             }
+
+            Text {
+                id: thanksYou_notify
+                text: ""
+                font.family: "Microsoft YaHei UI"
+                font.pointSize: 12
+                anchors.verticalCenterOffset: 240
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                verticalAlignment: Text.AlignTop
+                horizontalAlignment: Text.AlignHCenter
+            }
+
+            Timer{
+                id: thanksYou_timer
+                interval: 1000
+                property int count
+                repeat: true
+                running: false
+                triggeredOnStart: false
+                onTriggered: {
+                    count -= 1
+                    thanksYou_notify.text = "結束交易剩餘" + count + "秒"
+                    if(count<=0){
+                        ui.reset()
+                        thanksYou_timer.stop();
+                        thanksYou_notify.text = ""
+                    }
+                }
+            }
+
             states: [
                 State {
                     name: "0"
@@ -2371,11 +2785,6 @@ Window {
     Image {
         id: reset_notify
         anchors.fill: parent
-//        width: 762
-//        height: 382
-//        anchors.verticalCenterOffset: 20
-//        anchors.horizontalCenter: parent.horizontalCenter
-//        anchors.verticalCenter: parent.verticalCenter
         source: "img/background/background.jpg"
         state: "0"
         onStateChanged: {
@@ -2388,41 +2797,94 @@ Window {
             width: parent.width
             height: parent.height
         }
-        Button{
-            id: cancel_tmp
-            text: "繼續操作"
-            anchors.horizontalCenterOffset: 100
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 25
+        Image {
+            id: reset_window
+            source: "img/background/windows.png"
+            width: 778
+            height: 500
+            anchors.verticalCenterOffset: 20
             anchors.horizontalCenter: parent.horizontalCenter
-            onClicked: {
-                timer_countdown.stop()
-                timer_reset.restart()
-                parent.state = "0"
+            anchors.verticalCenter: parent.verticalCenter
+            Image {
+                id: reset_notify_keepOperate
+                y: 270
+                width: 82
+                height: 63
+                source: "img/button/O.png"
+                anchors.horizontalCenterOffset: 151
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 104
+                anchors.horizontalCenter: parent.horizontalCenter
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_countdown.stop()
+                        timer_reset.restart()
+                        parent.parent.parent.state = "0"
+                    }
+                    onPressed: {
+                        timer_countdown.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_countdown.start()
+                        parent.opacity=1
+                    }
+                }
             }
-        }
-        Button {
-            id: reset_tmp
-            text: qsTr("回主畫面")
-            anchors.horizontalCenterOffset: -100
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 25
-            anchors.horizontalCenter: parent.horizontalCenter
-            onClicked: {
-                timer_countdown.stop()
-                parent.state = "0"
-                ui.reset()
+            Image {
+                id: reset_notify_home
+                y: 270
+                width: 82
+                height: 63
+                source: "img/button/X.png"
+                anchors.horizontalCenterOffset: -149
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 104
+                anchors.horizontalCenter: parent.horizontalCenter
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        timer_countdown.stop()
+                        parent.parent.parent.state = "0"
+                        ui.reset()
+                    }
+                    onPressed: {
+                        timer_countdown.stop()
+                        parent.opacity=0.3
+                    }
+                    onReleased: {
+                        timer_countdown.start()
+                        parent.opacity=1
+                    }
+                }
             }
-        }
-        Text {
-            id: reset_notify_counter
-            text: ""
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignBottom
-            font.pointSize: 12
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 35
-            anchors.horizontalCenter: parent.horizontalCenter
+            Text {
+                id: reset_notify_counter
+                y: 416
+                text: ""
+                anchors.horizontalCenterOffset: 1
+                font.family: "Microsoft YaHei UI"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignBottom
+                font.pointSize: 12
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 64
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Text {
+                id: reset_notify_text
+                text: "是否仍在使用機台"
+                anchors.verticalCenterOffset: -20
+                font.family: "Microsoft YaHei UI"
+                anchors.horizontalCenterOffset: 0
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                font.pointSize: 24
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
         }
         states: [
             State {
@@ -2454,25 +2916,25 @@ Window {
     }
     Timer{
         id: timer_reset
-        interval: 5000
+        interval: 45000
         repeat: false
         running: false
         triggeredOnStart: false
         onTriggered: {
-            timer_countdown.count = 8
+            timer_countdown.count = 12
             reset_notify.state = "1"
         }
     }
     Timer{
         id: timer_countdown
-        property int count: 8
+        property int count: 12
         interval: 1000
         repeat: true
         running: false
         triggeredOnStart: false
         onTriggered: {
             count -= 1
-            reset_notify_counter.text = "還剩餘"+ count +"秒"
+            reset_notify_counter.text = "若不點選，將在"+ count +"秒後返回主畫面"
             if(count===0){
                 timer_countdown.stop()
                 reset_notify.state = "0"
@@ -2493,6 +2955,8 @@ Window {
             }
         }
     }
+
+    /*
     function reset(){
         welcome.state = "1"
         chooseFunction.state = "0"
@@ -2505,6 +2969,7 @@ Window {
         changeUser.state = "0"
         forgetUser.state = "0"
     }
+*/
 
 
     InputPanel {
@@ -2533,6 +2998,11 @@ Window {
                 background.forceActiveFocus()
             }
         }
+        Component.onCompleted: {
+            VirtualKeyboardSettings.activeLocales=["zh_TW","en_US"]
+            VirtualKeyboardSettings.styleName
+        }
+
 
         transitions: Transition {
             from: ""
@@ -2549,3 +3019,18 @@ Window {
     }
 }
 
+/*##^##
+Designer {
+    D{i:2;invisible:true}D{i:12;invisible:true}D{i:31;invisible:true}D{i:211;invisible:true}
+D{i:238;invisible:true}D{i:240;invisible:true}D{i:239;invisible:true}D{i:242;invisible:true}
+D{i:243;invisible:true}D{i:244;invisible:true}D{i:245;invisible:true}D{i:246;invisible:true}
+D{i:247;invisible:true}D{i:248;invisible:true}D{i:260;invisible:true}D{i:261;invisible:true}
+D{i:259;invisible:true}D{i:241;invisible:true}D{i:281;invisible:true}D{i:282;invisible:true}
+D{i:280;invisible:true}D{i:262;invisible:true}D{i:291;invisible:true}D{i:293;invisible:true}
+D{i:292;invisible:true}D{i:283;invisible:true}D{i:302;invisible:true}D{i:304;invisible:true}
+D{i:303;invisible:true}D{i:294;invisible:true}D{i:313;invisible:true}D{i:315;invisible:true}
+D{i:314;invisible:true}D{i:305;invisible:true}D{i:321;invisible:true}D{i:323;invisible:true}
+D{i:322;invisible:true}D{i:316;invisible:true}D{i:337;invisible:true}D{i:336;invisible:true}
+D{i:324;invisible:true}D{i:338;invisible:true}D{i:339;invisible:true}
+}
+##^##*/
