@@ -13,6 +13,17 @@ Window {
     width: 1024
     height: 768
     title: qsTr("芯生文創")
+    BusyIndicator{
+        id: busyindicator
+        z:99
+        opacity: ui.BusyIndicator
+        width: 120
+        height: 120
+        anchors.verticalCenterOffset: 50
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+    }
+
     Image {
         id: background
         source: "img/background/background.jpg"
@@ -1897,7 +1908,8 @@ Window {
                 anchors.horizontalCenterOffset: 300
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
-                source: "image://colors/"+ui.scanQrcode_qrcode
+//                source: "image://colors/"+ui.scanQrcode_qrcode
+                source: ui.scanQrcode_qrcode
                 sourceSize.width: 200
                 sourceSize.height: 200
             }
@@ -1905,6 +1917,7 @@ Window {
             Text {
                 id: scanQrcode_text
                 text: qsTr("請使用台灣pay掃碼支付")
+                font.family: "Microsoft YaHei UI"
                 horizontalAlignment: Text.AlignHCenter
                 anchors.horizontalCenterOffset: 300
                 font.pointSize: 18

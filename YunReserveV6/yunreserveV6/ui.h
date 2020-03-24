@@ -92,6 +92,8 @@ class UI : public QObject
     Q_PROPERTY(QString login_notify READ login_notify NOTIFY login_notifyChanged)
     Q_PROPERTY(QString upload_notify READ upload_notify NOTIFY upload_notifyChanged)
     Q_PROPERTY(QString scanQrcode_notify READ scanQrcode_notify NOTIFY scanQrcode_notifyChanged)
+
+    Q_PROPERTY(int BusyIndicator READ BusyIndicator NOTIFY BusyIndicatorChanged)
 public:
     explicit UI(QObject *parent = nullptr);
     void setChannelState(int handler,int box_ch){
@@ -291,6 +293,8 @@ public:
     QString login_notify(){return notify;}
     QString upload_notify(){return notify;}
     QString scanQrcode_notify(){return notify;}
+
+    int BusyIndicator(){return busyIndicator_state;}
 signals:
     void welcomeChanged();
     void chooseFunctionChanged();
@@ -342,6 +346,8 @@ signals:
     void login_notifyChanged();
     void upload_notifyChanged();
     void scanQrcode_notifyChanged();
+
+    void BusyIndicatorChanged();
 public slots:
     void reset();
     void welcome_clicked();
@@ -381,6 +387,7 @@ private:
     QString box_ch;
 
     QString userACC;
+    QString userPWD;
     QString userName;
     QString userEmail;
     QString item_ID;
@@ -392,10 +399,10 @@ private:
     QString itemInfo;
     QString notify;
 
-    QSqlDatabase db_yunreserve;
-
     QString state;
     QString welcome_state;
+
+    int busyIndicator_state;
 };
 
 #endif // UI_H

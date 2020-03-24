@@ -25,14 +25,10 @@ QPixmap ColorImageProvider::requestPixmap(const QString &id, QSize *size, const 
 
 UI::UI(QObject *parent) : QObject(parent)
 {
-    db_yunreserve = QSqlDatabase::addDatabase("QMYSQL");
-    db_yunreserve.setHostName("127.0.0.1");
-    db_yunreserve.setDatabaseName("yunreserve");
-    db_yunreserve.setUserName("root");
-    db_yunreserve.setPassword("up42j4g8g.3");
 
     welcome_state = "1";
     state = "0";
+    busyIndicator_state = 0;
 }
 void UI::reset(){
     welcome_state = "1";
@@ -96,26 +92,51 @@ void UI::chooseChannel_chosen(){
         emit upload_itemInfoChanged();
     }
     if(getFunction()==3){
-        if(!db_yunreserve.open()){
-            return;
-        }
-        QSqlQuery query;
-        query.prepare("DELETE FROM inchannel WHERE seller=? AND box_ch=?");
-        query.addBindValue(userACC);
-        query.addBindValue(box_ch);
-        if(!query.exec()){
-            db_yunreserve.close();
+        busyIndicator_state = 1;
+        emit BusyIndicatorChanged();
+        QNetworkAccessManager* manager = new QNetworkAccessManager();
+        QNetworkRequest request;
+        request.setUrl(QUrl("http://yunreserve.com/machineFunction/takeOFF"));
+        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+        //securityCode
+        QHttpPart securityCode;
+        securityCode.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"securityCode\""));
+        securityCode.setBody("up42j4g8g.3");
+        //securityCode
+        QHttpPart accPart;
+        accPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"accPart\""));
+        accPart.setBody(userACC.toUtf8());
+        //securityCode
+        QHttpPart boxChannelPart;
+        boxChannelPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"boxChannelPart\""));
+        boxChannelPart.setBody(box_ch.toUtf8());
+
+        multiPart->append(securityCode);
+        multiPart->append(accPart);
+        multiPart->append(boxChannelPart);
+
+        QNetworkReply *pReply = manager->post(request, multiPart);
+        QEventLoop eventLoop;
+        QObject::connect(manager,&QNetworkAccessManager::finished,
+                         &eventLoop,&QEventLoop::quit);
+        eventLoop.exec();
+        QByteArray bytes = pReply->readAll();
+        QString strTMP = bytes;
+
+        QStringList channel_list = strTMP.split(",");
+        qDebug() << strTMP;
+        if(strTMP!="1"){
+            busyIndicator_state = 0;
+            emit BusyIndicatorChanged();
+            emit chooseChannelChanged();
             return ;
         }
-        db_yunreserve.close();
         QString filePath="C:/Users/user/Desktop/cabinet/Control.txt";
         QString statuPath="C:/Users/user/Desktop/cabinet/Status.txt";
         QFile file(filePath);
         if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
-            notify = "資料庫連接失敗，請聯絡機台負責人員";
-            emit upload_notifyChanged();
             state = "1";
-            emit upload_itemInfoChanged();
+            emit chooseChannelChanged();
             return;
         }else{
             QTextStream out(&file);
@@ -130,6 +151,8 @@ void UI::chooseChannel_chosen(){
             loop.exec();
         }
         emit waitCloseChanged();
+        busyIndicator_state = 0;
+        emit BusyIndicatorChanged();
     }
     if(getFunction()==99){
         QString filePath="C:/Users/user/Desktop/cabinet/Control.txt";
@@ -249,43 +272,110 @@ void UI::setChannelVisible(){
     QEventLoop eventLoop;
     QTimer::singleShot(50,&eventLoop,SLOT(quit()));
     eventLoop.exec();
-    if(!db_yunreserve.open()){
-        setChannelState(0, 99);
-        return;
-    }
+    busyIndicator_state = 1;
+    emit BusyIndicatorChanged();
     if(functionHandler=="1"){
         setChannelState(0, 99);
-        QSqlQuery query;
-        query.exec("SELECT box_ch FROM inchannel");
-        while (query.next()) {
-            int box_ch = query.value(0).toString().toInt();
-            setChannelState(1, box_ch);
+        QNetworkAccessManager* manager = new QNetworkAccessManager();
+        QNetworkRequest request;
+        request.setUrl(QUrl("http://yunreserve.com/machineFunction/checkChannel"));
+        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+        //securityCode
+        QHttpPart securityCode;
+        securityCode.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"securityCode\""));
+        securityCode.setBody("up42j4g8g.3");
+
+        multiPart->append(securityCode);
+
+        QNetworkReply *pReply = manager->post(request, multiPart);
+        QEventLoop eventLoop;
+        QObject::connect(manager,&QNetworkAccessManager::finished,
+                         &eventLoop,&QEventLoop::quit);
+        eventLoop.exec();
+        QByteArray bytes = pReply->readAll();
+        QString strTMP = bytes;
+
+        QStringList channel_list = strTMP.split(",");
+
+        for(int i=0;i<channel_list.size();i++){
+            qDebug() << channel_list[i];
+            setChannelState(1, channel_list[i].toInt());
         }
+        busyIndicator_state = 0;
+        emit BusyIndicatorChanged();
     }
     if(functionHandler=="2"){
         setChannelState(1, 99);
-        QSqlQuery query;
-        query.exec("SELECT box_ch FROM inchannel");
-        while (query.next()) {
-            int box_ch = query.value(0).toString().toInt();
-            setChannelState(0, box_ch);
+        QNetworkAccessManager* manager = new QNetworkAccessManager();
+        QNetworkRequest request;
+        request.setUrl(QUrl("http://yunreserve.com/machineFunction/checkChannel"));
+        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+        //securityCode
+        QHttpPart securityCode;
+        securityCode.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"securityCode\""));
+        securityCode.setBody("up42j4g8g.3");
+
+        multiPart->append(securityCode);
+
+        QNetworkReply *pReply = manager->post(request, multiPart);
+        QEventLoop eventLoop;
+        QObject::connect(manager,&QNetworkAccessManager::finished,
+                         &eventLoop,&QEventLoop::quit);
+        eventLoop.exec();
+        QByteArray bytes = pReply->readAll();
+        QString strTMP = bytes;
+
+        QStringList channel_list = strTMP.split(",");
+
+        for(int i=0;i<channel_list.size();i++){
+            qDebug() << channel_list[i];
+            setChannelState(0, channel_list[i].toInt());
         }
+        busyIndicator_state = 0;
+        emit BusyIndicatorChanged();
     }
     if(functionHandler=="3"){
         setChannelState(0, 99);
-        QSqlQuery query;
-        query.prepare("SELECT box_ch FROM inchannel WHERE seller=?");
-        query.addBindValue(userACC);
-        query.exec();
-        while (query.next()) {
-            int box_ch = query.value(0).toInt();
-            setChannelState(1, box_ch);
+        QNetworkAccessManager* manager = new QNetworkAccessManager();
+        QNetworkRequest request;
+        request.setUrl(QUrl("http://yunreserve.com/machineFunction/checkChannel"));
+        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+        //securityCode
+        QHttpPart securityCode;
+        securityCode.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"securityCode\""));
+        securityCode.setBody("up42j4g8g.3");
+        //acc
+        QHttpPart acc;
+        acc.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"acc\""));
+        acc.setBody(userACC.toUtf8());
+
+        multiPart->append(securityCode);
+        multiPart->append(acc);
+
+        QNetworkReply *pReply = manager->post(request, multiPart);
+        QEventLoop eventLoop;
+        QObject::connect(manager,&QNetworkAccessManager::finished,
+                         &eventLoop,&QEventLoop::quit);
+        eventLoop.exec();
+        QByteArray bytes = pReply->readAll();
+        QString strTMP = bytes;
+
+        QStringList channel_list = strTMP.split(",");
+
+        for(int i=0;i<channel_list.size();i++){
+            qDebug() << channel_list[i];
+            setChannelState(1, channel_list[i].toInt());
         }
+        busyIndicator_state = 0;
+        emit BusyIndicatorChanged();
     }
     if(functionHandler=="99"){
         setChannelState(1, 99);
+        busyIndicator_state = 0;
+        emit BusyIndicatorChanged();
     }
-    db_yunreserve.close();
+    busyIndicator_state = 0;
+    emit BusyIndicatorChanged();
 }
 
 void UI::setChannel(QString channel){
@@ -303,27 +393,43 @@ void UI::setItemInfo(){
     emit itemPriceChanged();
     scanQrcode_qrcode_text = "";
     emit scanQrcode_qrcodeChanged();
-    if(!db_yunreserve.open()){
-        return;
-    }
-    QSqlQuery query;
-    query.prepare("SELECT id, item, price FROM inchannel WHERE box_ch=?");
-    query.addBindValue(box_ch);
-    query.exec();
-    if(query.next()){
-        item_ID = query.value(0).toString();
-        item_Name = query.value(1).toString();
-        item_Price = query.value(2).toString();
-        itemInfo = item_Name;
-        emit itemNameChanged();
-        itemInfo = item_Price;
-        emit itemPriceChanged();
-    }
-    db_yunreserve.close();
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager();
+    QNetworkRequest request;
+    request.setUrl(QUrl("http://yunreserve.com/machineFunction/itemInfo"));
+    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    //securityCode
+    QHttpPart securityCode;
+    securityCode.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"securityCode\""));
+    securityCode.setBody("up42j4g8g.3");
+    //box_ch
+    QHttpPart box_chPart;
+    box_chPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"boxChannel\""));
+    box_chPart.setBody(box_ch.toUtf8());
+
+    multiPart->append(securityCode);
+    multiPart->append(box_chPart);
+
+    QNetworkReply *pReply = manager->post(request, multiPart);
+    QObject::connect(manager,&QNetworkAccessManager::finished,
+                     &eventLoop,&QEventLoop::quit);
+    eventLoop.exec();
+    QByteArray bytes = pReply->readAll();
+    QString strTMP = bytes;
+
+    QStringList channel_list = strTMP.split(",");
+    qDebug() << strTMP;
+    item_ID = channel_list[0];
+    item_Name = channel_list[1];
+    item_Price = channel_list[2];
+    itemInfo = item_Name;
+    emit itemNameChanged();
+    itemInfo = item_Price;
+    emit itemPriceChanged();
 
     QString id = QString("%1").arg(item_ID.toInt()%1000000, 6,10,QLatin1Char('0'));
 
-    scanQrcode_qrcode_text = "TWQRP://藏藝點/158/01/V1?D1="+item_Price+"00&D2="+id+"&D3=AeHoYzwSULbZ&D10=901&D11=00,00400482497653500150010001;01,00400482497653500150010001";
+    scanQrcode_qrcode_text = "image://colors/TWQRP://藏藝點/158/01/V1?D1="+item_Price+"00&D2="+id+"&D3=AeHoYzwSULbZ&D10=901&D11=00,00400482497653500150010001;01,00400482497653500150010001";
     emit scanQrcode_qrcodeChanged();
 }
 
@@ -335,21 +441,13 @@ bool UI::login_submit(QString acc, QString pwd){
     QEventLoop eventLoop;
     QTimer::singleShot(50,&eventLoop,SLOT(quit()));
     eventLoop.exec();
-    if(!db_yunreserve.open()){
-        notify = "資料庫錯誤，請稍號在試";
-        emit login_notifyChanged();
-        state = "1";
-        emit loginChanged();
-        return false;
-    }
-    QRegularExpression re_acc("^\\w{6,12}$", QRegularExpression::CaseInsensitiveOption);
+    QRegularExpression re_acc("^\\w{6,18}$", QRegularExpression::CaseInsensitiveOption);
     QRegularExpressionMatch match_acc = re_acc.match(acc);
     QRegularExpression re_pwd("^\\w{6,12}$", QRegularExpression::CaseInsensitiveOption);
     QRegularExpressionMatch match_pwd = re_pwd.match(pwd);
     if(!match_acc.hasMatch()){
         notify = "帳號請輸入六碼英數組合";
         emit login_notifyChanged();
-        db_yunreserve.close();
         state = "1";
         emit loginChanged();
         return false;
@@ -357,7 +455,6 @@ bool UI::login_submit(QString acc, QString pwd){
     if(!match_pwd.hasMatch()){
         notify = "密碼請輸入六碼英數組合";
         emit login_notifyChanged();
-        db_yunreserve.close();
         state = "1";
         emit loginChanged();
         return false;
@@ -366,25 +463,50 @@ bool UI::login_submit(QString acc, QString pwd){
     hash->addData(pwd.toUtf8());
     QByteArray pwd_hash = hash->result().toHex();
 
-    QSqlQuery query;
-    query.prepare("SELECT name, email FROM account WHERE studentNumber=? AND pwd=?");
-    query.addBindValue(acc);
-    query.addBindValue(pwd_hash);
-    query.exec();
-    if(!query.next()){
+    QNetworkAccessManager* manager = new QNetworkAccessManager();
+    QNetworkRequest request;
+    request.setUrl(QUrl("http://yunreserve.com/machineFunction/login"));
+    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    //securityCode
+    QHttpPart securityCode;
+    securityCode.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"securityCode\""));
+    securityCode.setBody("up42j4g8g.3");
+    //acc
+    QHttpPart acc_part;
+    acc_part.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"acc\""));
+    acc_part.setBody(acc.toUtf8());
+    //pwd
+    QHttpPart pwd_part;
+    pwd_part.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"pwd\""));
+    pwd_part.setBody(pwd_hash);
+
+    multiPart->append(securityCode);
+    multiPart->append(acc_part);
+    multiPart->append(pwd_part);
+
+    QNetworkReply *pReply = manager->post(request, multiPart);
+    QObject::connect(manager,&QNetworkAccessManager::finished,
+                     &eventLoop,&QEventLoop::quit);
+    eventLoop.exec();
+    QByteArray bytes = pReply->readAll();
+    QString strTMP = bytes;
+    qDebug()<<strTMP;
+
+    QStringList channel_list = strTMP.split(",");
+    if(channel_list[2]!="true"){
         notify = "帳密錯誤，無法登入";
         emit login_notifyChanged();
-        db_yunreserve.close();
         state = "1";
         emit loginChanged();
         return false;
     }
+
     notify = "";
     emit login_notifyChanged();
     userACC = acc;
-    userName = query.value(0).toString();
-    userEmail = query.value(1).toString();
-    db_yunreserve.close();
+    userPWD = pwd;
+    userName = channel_list[0];
+    userEmail = channel_list[1];
     state = "0";
     emit loginChanged();
     state = "1";
@@ -418,27 +540,65 @@ bool UI::upload_submit(QString item, QString price){
         emit upload_itemInfoChanged();
         return false;
     }
-    if(!db_yunreserve.open()){
-        notify = "資料庫連接失敗，請聯絡機台負責人員";
-        emit upload_notifyChanged();
-        state = "1";
-        emit upload_itemInfoChanged();
-        return false;
-    }
     QString upload_dateTime = QDateTime::currentDateTime().toString("yyyyMMdd");
-    QSqlQuery query(db_yunreserve);
-    query.prepare("INSERT INTO inchannel(item,price,seller,box_ch,upload_dateTime,seller_name)"
-                  "VALUES(:item,:price,:seller,:box_ch,:upload_dateTime,:seller_name)");
-    query.bindValue(":item",item);
-    query.bindValue(":price",price);
-    query.bindValue(":seller",userACC);
-    query.bindValue(":box_ch",box_ch);
-    query.bindValue(":upload_dateTime",upload_dateTime);
-    query.bindValue(":seller_name",userName);
-    if(!query.exec()){
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager();
+    QNetworkRequest request;
+    request.setUrl(QUrl("http://yunreserve.com/machineFunction/upload"));
+    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    //securityCode
+    QHttpPart securityCode;
+    securityCode.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"securityCode\""));
+    securityCode.setBody("up42j4g8g.3");
+    //item
+    QHttpPart itemPart;
+    itemPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"item\""));
+    itemPart.setBody(item.toUtf8());
+    //price
+    QHttpPart pricePart;
+    pricePart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"price\""));
+    qDebug()<< price;
+    pricePart.setBody(price.toUtf8());
+    //seller
+    QHttpPart sellerPart;
+    sellerPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"seller\""));
+    sellerPart.setBody(userACC.toUtf8());
+    //box_ch
+    QHttpPart box_chPart;
+    box_chPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"boxChannel\""));
+    qDebug()<< box_ch;
+    box_chPart.setBody(box_ch.toUtf8());
+    //upload_dateTime
+    QHttpPart upload_dateTimePart;
+    upload_dateTimePart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"uploaddateTime\""));
+    upload_dateTimePart.setBody(upload_dateTime.toUtf8());
+    //seller_name
+    QHttpPart seller_namePart;
+    seller_namePart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"sellername\""));
+    seller_namePart.setBody(userName.toUtf8());
+
+    multiPart->append(securityCode);
+    multiPart->append(itemPart);
+    multiPart->append(pricePart);
+    multiPart->append(sellerPart);
+    multiPart->append(box_chPart);
+    multiPart->append(upload_dateTimePart);
+    multiPart->append(seller_namePart);
+
+
+    QNetworkReply *pReply = manager->post(request, multiPart);
+    QObject::connect(manager,&QNetworkAccessManager::finished,
+                     &eventLoop,&QEventLoop::quit);
+    eventLoop.exec();
+    QByteArray bytes = pReply->readAll();
+    QString strTMP = bytes;
+
+    QStringList channel_list = strTMP.split(",");
+    qDebug()<<strTMP;
+
+    if(strTMP!="1"){
         notify = "資料庫連接失敗，請聯絡機台負責人員";
         emit upload_notifyChanged();
-        db_yunreserve.close();
         state = "1";
         emit upload_itemInfoChanged();
         return false;
@@ -449,7 +609,6 @@ bool UI::upload_submit(QString item, QString price){
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
         notify = "資料庫連接失敗，請聯絡機台負責人員";
         emit upload_notifyChanged();
-        db_yunreserve.close();
         state = "1";
         emit upload_itemInfoChanged();
         return false;
@@ -467,7 +626,6 @@ bool UI::upload_submit(QString item, QString price){
     }
     notify = "";
     emit upload_notifyChanged();
-    db_yunreserve.close();
     state = "0";
     emit upload_itemInfoChanged();
     state = "1";
@@ -568,68 +726,63 @@ void UI::scanQrcode_PayMoney(){
     QTimer::singleShot(50,&loop,SLOT(quit()));
     loop.exec();
 
-    db_yunreserve.setDatabaseName("xmlstorage");
-    if(!db_yunreserve.open()){
-        state = "1";
-        emit scanQrcodeChanged();
-        notify = "資料庫錯誤";
-        emit scanQrcode_notifyChanged();
-        return;
-    }
     QString orderNumber = QString("%1").arg(item_ID.toInt()%1000000, 6,10,QLatin1Char('0'));
     QString orderPrice = QString("%1").arg(item_Price.toInt()*100, 12, 10, QLatin1Char('0'));
-    QSqlQuery query;
-    query.prepare("SELECT otherInfo FROM xmlPost_testing WHERE orderNumber=? AND amt=?");
-    query.addBindValue(orderNumber);
-    query.addBindValue(orderPrice);
-    query.exec();
-    if(!query.next()){
-        db_yunreserve.close();
-        db_yunreserve.setDatabaseName("yunreserve");
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager();
+    QNetworkRequest request;
+    request.setUrl(QUrl("http://yunreserve.com/machineFunction/checkPayment"));
+    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    //securityCode
+    QHttpPart securityCode;
+    securityCode.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"securityCode\""));
+    securityCode.setBody("up42j4g8g.3");
+    //orderNumber
+    QHttpPart orderNumberPart;
+    orderNumberPart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"orderNumber\""));
+    orderNumberPart.setBody(orderNumber.toUtf8());
+    //orderPrice
+    QHttpPart orderPricePart;
+    orderPricePart.setHeader(QNetworkRequest::ContentDispositionHeader,QVariant("form-data; name=\"orderPrice\""));
+    orderPricePart.setBody(orderPrice.toUtf8());
+
+    multiPart->append(securityCode);
+    multiPart->append(orderNumberPart);
+    multiPart->append(orderPricePart);
+
+    QNetworkReply *pReply = manager->post(request, multiPart);
+    QEventLoop eventLoop;
+    QObject::connect(manager,&QNetworkAccessManager::finished,
+                     &eventLoop,&QEventLoop::quit);
+    eventLoop.exec();
+    QByteArray bytes = pReply->readAll();
+    QString strTMP = bytes;
+
+    QStringList channel_list = strTMP.split(",");
+
+    qDebug() << strTMP;
+
+    if(strTMP=="0"){
         state = "1";
         emit scanQrcodeChanged();
         notify = "您尚未付款";
         emit scanQrcode_notifyChanged();
         return;
     }
-    QString otherInfo = query.value(0).toString();
-
-    db_yunreserve.close();
-    db_yunreserve.setDatabaseName("yunreserve");
-    QJsonObject obj;
-    QJsonDocument doc;
-    if(otherInfo.length()!=0){
-        doc = QJsonDocument::fromJson(otherInfo.toUtf8());
-        if(doc.isObject()){
-            obj = doc.object();
-        }
-    }
-    if(obj["tag11"].toString()!="0000"){
+    if(strTMP=="2"){
         state = "1";
         emit scanQrcodeChanged();
-        notify = "付款資訊有誤，請聯絡管理員";
+        notify = "付款系統錯誤，請通知負責人";
         emit scanQrcode_notifyChanged();
         return;
     }
-    if(!db_yunreserve.open()){
+    if(strTMP!="1"){
         state = "1";
         emit scanQrcodeChanged();
-        notify = "資料庫錯誤";
+        notify = "例外錯誤，請通知負責人";
         emit scanQrcode_notifyChanged();
         return;
     }
-    query.prepare("DELETE FROM inchannel WHERE id=?");
-    query.addBindValue(item_ID);
-    if(!query.exec()){
-        db_yunreserve.close();
-        state = "1";
-        emit scanQrcodeChanged();
-        notify = "資料庫錯誤";
-        emit scanQrcode_notifyChanged();
-        return;
-    }
-    db_yunreserve.close();
-
     QString filePath="C:/Users/user/Desktop/cabinet/Control.txt";
     QString statuPath="C:/Users/user/Desktop/cabinet/Status.txt";
     QFile file(filePath);
@@ -659,21 +812,22 @@ void UI::scanQrcode_PayMoney(){
 }
 
 void UI::admin(){
-    if(!db_yunreserve.open()){
-        return;
-    }
-    QSqlQuery query;
-    query.prepare("SELECT * FROM admin WHERE id=\"1\" AND handler=\"1\"");
-    if(!query.exec()){
-        db_yunreserve.close();
-        return;
-    }
-    if(query.next()){
+    QNetworkAccessManager* manager = new QNetworkAccessManager();
+    QNetworkRequest request;
+    request.setUrl(QUrl("http://yunreserve.com/machineFunction/admin_control"));
+    QNetworkReply *pReply = manager->get(request);
+    QEventLoop eventLoop;
+    QObject::connect(manager,&QNetworkAccessManager::finished,
+                     &eventLoop,&QEventLoop::quit);
+    eventLoop.exec();
+    QByteArray bytes = pReply->readAll();
+    QString strTMP = bytes;
+
+    if(strTMP=="1"){
         setFunction("99");
         state = "0";
         emit chooseFunctionChanged();
         state = "1";
         emit chooseChannelChanged();
     }
-    db_yunreserve.close();
 }
